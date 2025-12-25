@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Interactive Portfolio</title>
+
+    <!-- 모바일 대응 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- 기본 리셋 (선택) -->
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000; /* WebGL 실패 시 fallback */
+      }
+
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 
+      ❗ canvas를 직접 만들지 않는다.
+      Three.js가 renderer.domElement로 생성해서 붙이게 둔다.
+    -->
+    <!-- <canvas id="app"></canvas> -->
+    <!-- Vite 엔트리 -->
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
