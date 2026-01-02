@@ -20,6 +20,7 @@ export class EpilogueScene implements Scene {
         this.onFinished = onFinished
         this.enabled = false
     }
+    
     run() {
         this.enabled = true
     }
@@ -30,6 +31,10 @@ export class EpilogueScene implements Scene {
 
     update(_: number): void {
         // Update logic for EpilogueScene if needed
+    }
+
+    resize(): void {
+        
     }
 
     finish(): void {

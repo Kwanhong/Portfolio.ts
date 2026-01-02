@@ -7,10 +7,13 @@ export interface TextStyle {
     lineHeight?: number
     textAlign?: 'left' | 'center' | 'right' | 'justify'
     textTransform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize'
+    anchorX?: 'left' | 'center' | 'right'
+    anchorY?: 'top' | 'middle' | 'bottom'
 }
 
 export interface BaselineStyle extends TextStyle {
-    marginBottom?: string
+    marginBottom?: string,
+    textAlign?: 'left' | 'center' | 'right' | 'justify'
 }
 
 export const defaultBaselineStyle: BaselineStyle = {
@@ -19,6 +22,16 @@ export const defaultBaselineStyle: BaselineStyle = {
     marginBottom: '15px',
     font: '/fonts/NotoSansCJKkr-Medium.ttf',
 }
+
+export const uiBaselineStyle: BaselineStyle = {
+    fontSize: 14,
+    color: '#ffffff',
+    font: '/fonts/NotoSansCJKkr-Medium.ttf',
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    letterSpacing: 0.12,
+}   
 
 export const highlightedBaselineStyle: BaselineStyle = {
     fontSize: 16,
@@ -64,11 +77,23 @@ export interface HeadlineStyle extends TextStyle {
 
 export const defaultHeadlineStyle: HeadlineStyle = {
     fontSize: 32,
-    color: '#ffffff',
+    color: '#dfdddd',
     textTransform: 'none',
     marginBottom: '20px',
     font: '/fonts/NotoSansCJKkr-Bold.ttf'
 }
+
+export const uiHeadlineStyle: BaselineStyle = {
+    fontSize: 15,
+    color: '#dfdddd',
+    textTransform: 'none',
+    marginBottom: '20px',
+    font: '/fonts/NotoSansCJKkr-Bold.ttf',
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    letterSpacing: 0.12,
+}   
 
 export const highlightedHeadlineStyle: HeadlineStyle = {
     fontSize: 32,
