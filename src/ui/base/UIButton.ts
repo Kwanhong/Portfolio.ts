@@ -6,6 +6,8 @@ import { EventManager } from '../../event/EventManager';
 import { Camera } from '../../scene/Camera';
 import { Helper } from '../../core/Helper';
 
+import { SVGLoader } from 'three/examples/jsm/Addons.js';
+
 interface UIButtonOptions {
     width?: number;
     height?: number;
@@ -16,22 +18,48 @@ interface UIButtonOptions {
     onClick?: () => void;
 }
 
+export type buttonStatus = 'hover' | 'press' | 'blur'
+
 export class UIButton extends UIObject {
     backgroundMesh: THREE.Mesh
     backgroundMeshMaxOpacity: number = 0.8
     text: UIText
-    eventEnabled: boolean = true
+    status: buttonStatus = 'hover'
+    private color: THREE.Color = new THREE.Color(1, 1, 1);
+    private _eventEnabled: boolean = true;
+    set eventEnabled(value: boolean) {
+        if (!value) {
+            this.onBlur();
+        }
+        this._eventEnabled = value;
+    }
+    get eventEnabled(): boolean {
+        return this._eventEnabled;
+    }
+    onClick?: () => void
 
     onBlur(): void {
-        this.backgroundMesh.material = new THREE.MeshBasicMaterial({ color: Color.helper.getHex('button.blur'), transparent: true, opacity: this.backgroundMeshMaxOpacity });
+        const material = this.backgroundMesh.material as THREE.MeshBasicMaterial
+        material.color = Color.helper.get('button.blur').multiply(this.color);
+        material.transparent = true;
+        material.opacity = this.backgroundMeshMaxOpacity
+        this.status = 'blur'
     }
 
     onHover(): void {
-        this.backgroundMesh.material = new THREE.MeshBasicMaterial({ color: Color.helper.getHex('button.hover'), transparent: true, opacity: this.backgroundMeshMaxOpacity });
+        const material = this.backgroundMesh.material as THREE.MeshBasicMaterial
+        material.color = Color.helper.get('button.hover').multiply(this.color);
+        material.transparent = true;
+        material.opacity = this.backgroundMeshMaxOpacity
+        this.status = 'hover'
     }
 
     onPress(): void {
-        this.backgroundMesh.material = new THREE.MeshBasicMaterial({ color: Color.helper.getHex('button.press'), transparent: true, opacity: this.backgroundMeshMaxOpacity });
+        const material = this.backgroundMesh.material as THREE.MeshBasicMaterial
+        material.color = Color.helper.get('button.press').multiply(this.color);
+        material.transparent = true;
+        material.opacity = this.backgroundMeshMaxOpacity
+        this.status = 'press'
     }
 
     private width: number = 100
@@ -42,8 +70,8 @@ export class UIButton extends UIObject {
         height = 50,
         text = "",
         style = uiBaselineStyle,
-        color = Color.helper.getHexNumber('button.blur'),
-        cornerRadius = 10,
+        color = new THREE.Color(1, 1, 1).getHex(),
+        cornerRadius = 15,
         onClick
     }: UIButtonOptions = {}) {
         super();
@@ -62,8 +90,10 @@ export class UIButton extends UIObject {
         const material = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.8 });
         this.backgroundMesh = new THREE.Mesh(geometry, material);
         this.add(this.backgroundMesh);
+        this.color = new THREE.Color().setHex(color);
 
         if (onClick) {
+            this.onClick = onClick;
             EventManager.self.addPointerMoveListener((event) => {
                 if (EventManager.self.pointerPressed || !this.eventEnabled) return;
                 if (this.isInBounds(width, height, event)) {
@@ -81,14 +111,18 @@ export class UIButton extends UIObject {
 
             EventManager.self.addPointerUpListener((event) => {
                 if (!this.eventEnabled) return;
-                if (this.isInBounds(width, height, event))
-                    onClick();
+                if (this.isInBounds(width, height, event)) {
+                    this.onHover();
+                    this.onClick?.();
+                } else {
+                    this.onBlur();
+                }
             });
         }
     }
 
     get size() {
-        return  { width: this.width, height: this.height };
+        return { width: this.width, height: this.height };
     }
 
     private isInBounds(width: number, height: number, event: PointerEvent): boolean {
@@ -111,25 +145,14 @@ export class UIButton extends UIObject {
 export class UIOpaqueBlurButton extends UIButton {
     opaqueBackground: THREE.Mesh
     opaqueBackgroundMaxOpacity: number = 0.8
-    onBlur(): void {
-        this.backgroundMesh.material = new THREE.MeshBasicMaterial({ color: Color.helper.getHex('button.blur'), transparent: true, opacity: this.backgroundMeshMaxOpacity });
-    }
-
-    onHover(): void {
-        this.backgroundMesh.material = new THREE.MeshBasicMaterial({ color: Color.helper.getHex('button.hover'), transparent: true, opacity: this.backgroundMeshMaxOpacity });
-    }
-
-    onPress(): void {
-        this.backgroundMesh.material = new THREE.MeshBasicMaterial({ color: Color.helper.getHex('button.press'), transparent: true, opacity: this.backgroundMeshMaxOpacity });
-    }
 
     constructor({
         width = 100,
         height = 50,
         text = "",
         style = uiBaselineStyle,
-        color = Color.helper.getHexNumber('button.blur'),
-        cornerRadius = 10,
+        color = new THREE.Color(1, 1, 1).getHex(),
+        cornerRadius = 20,
         onClick
     }: UIButtonOptions = {}) {
         super({ width, height, text, style, color, cornerRadius, onClick });

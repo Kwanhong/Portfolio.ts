@@ -45,4 +45,10 @@ export class Color {
     getHexNumber(colorType: colorType): number {
         return parseInt(this.colors[colorType].replace('#', '0x'));
     }
+    getHexStringFromColor(color: THREEColor): string {
+        return `#${color.getHexString()}`;
+    }
+    getHexNumberFromColor(color: THREEColor): number {
+        return parseInt(this.getHexStringFromColor(color).replace('#', '0x'));
+    }
 }

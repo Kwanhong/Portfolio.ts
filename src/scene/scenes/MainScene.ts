@@ -9,8 +9,8 @@ import {
     defaultDescriptionStyle,
     defaultHeadlineStyle
 } from '@styles/TextStyle'
-import { FlowField } from '../../physics/FlowField'
-import { Agent } from '@objects/Agent'
+import { FlowField } from '../../objects/main/FlowField'
+import { Agent } from '@objects/main/Agent'
 import { EventManager } from '../../event/EventManager'
 import { FileManager } from '../../core/FIleManager'
 import { Helper } from '../../core/Helper'
@@ -60,6 +60,7 @@ export class MainScene implements Scene {
                 this.finish()
             }
         })
+        button.visible = false
 
         this.autherText = new UIText(Language.helper.get('main.auther'), autherStyle)
         this.descriptionText = new UIText(Language.helper.get('main.description'), descriptionStyle)
@@ -80,6 +81,7 @@ export class MainScene implements Scene {
             this.autherText.position.set(this.offsetX + 5, -87, 100)
             let opacity = 0
             let fadeInDuration = 1
+            button.visible = true
             Time.coroutineSec(fadeInDuration, () => {
                 opacity += Time.self!.deltaTime / fadeInDuration
                 this.headlineText.setOpacity(opacity)
@@ -224,7 +226,7 @@ export class MainScene implements Scene {
         let originalZ = this.head?.rotation.z ?? 0
         let target = new THREE.Vector3(this.lastMousePosition.x, this.lastMousePosition.y, 500)
         let currentTarget = this.head?.userData.currentTarget as THREE.Vector3 || new THREE.Vector3();
-        currentTarget.lerp(target, 0.1); 
+        currentTarget.lerp(target, 0.1);
 
         if (this.head) {
             this.head.userData.currentTarget = currentTarget
