@@ -9,6 +9,8 @@ export type starInfo = {
     depth: number
     index?: number,
     radius?: number,
+    url?: string,
+    urlUuid?: string,
     substars?: starInfo[]
     onClick?: ()=>void
 }

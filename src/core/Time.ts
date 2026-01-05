@@ -1,3 +1,4 @@
+import { deltaTime } from "three/tsl"
 import { Helper } from "./Helper"
 
 export class Time {
@@ -55,7 +56,7 @@ export class Time {
         })
     }
 
-    static async coroutineSec(waitForSecond: number, update: () => void = () => { }, complete: () => void = () => { }) {
+    static async coroutineSec(waitForSecond: number, update: (dt: number) => void = () => { }, complete: () => void = () => { }) {
         return new Promise<void>((resolve) => {
             if (this.terminationCount > this.terminationThreshold) {
                 console.warn('Coroutine termination threshold exceeded. Cannot start new coroutine.')
@@ -76,7 +77,7 @@ export class Time {
                         resolve()
                     }
                     requestAnimationFrame(checkCondition)
-                    update()
+                    update(this.self?.deltaTime ?? 0)
                 }
             }
             checkCondition()
