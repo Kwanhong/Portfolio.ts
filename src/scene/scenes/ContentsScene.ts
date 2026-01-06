@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import type { Scene } from './Scene'
 import { UIOpaqueBlurButton } from '@ui/base/UIButton'
 import { Camera } from '../Camera'
-import { ContentStar } from '@objects/contents/ContentStar'
+import { ContentStar, type starInfo } from '@objects/contents/ContentStar'
 import { EventManager } from '../../event/EventManager'
 import { Helper } from '../../core/Helper'
 import { SceneObject } from '@objects/SceneObject'
@@ -16,6 +16,7 @@ export class ContentsScene implements Scene {
     self: THREE.Object3D = new THREE.Object3D()
     onFinished?: (() => void) | undefined
     onReturned?: (() => void) | undefined
+    onProceeded?: ((info: starInfo) => void) | undefined
 
     private _enabled: boolean = false;
     get enabled(): boolean { return this._enabled; }
@@ -35,11 +36,12 @@ export class ContentsScene implements Scene {
     private currentBackgroundIndex: number = 0;
     private transitionDimmer: THREE.Mesh;
 
-    constructor(scene: THREE.Scene, onReturned: () => void = () => { }, onFinished: () => void = () => { }) {
+    constructor(scene: THREE.Scene, onReturned: () => void = () => { }, onProceeded: (info: starInfo) => void = () => { }, onFinished: () => void = () => { }) {
         this.mother = scene;
         this.mother.add(this.self);
         this.onFinished = onFinished;
         this.onReturned = onReturned;
+        this.onProceeded = onProceeded;
         this.enabled = false;
 
         const info = {
@@ -66,7 +68,11 @@ export class ContentsScene implements Scene {
                             index: 0,
                             depth: 2,
                             onClick: () => {
-                                // Go to Scene Moon 1-1
+                                this.proceed({
+                                    title: '🌑',
+                                    size: 12,
+                                    depth: 2
+                                })
                             },
                         },
                         {
@@ -75,6 +81,11 @@ export class ContentsScene implements Scene {
                             index: 1,
                             depth: 2,
                             onClick: () => {
+                                this.proceed({
+                                    title: '🌒',
+                                    size: 12,
+                                    depth: 2
+                                })
                                 // Go to Scene Moon 1-2
                             },
                         }
@@ -97,7 +108,11 @@ export class ContentsScene implements Scene {
                             index: 0,
                             depth: 2,
                             onClick: () => {
-                                // Go to Scene Moon 2-1
+                                this.proceed({
+                                    title: '🌓',
+                                    size: 12,
+                                    depth: 2,
+                                })
                             },
                         },
                     ]
@@ -108,7 +123,11 @@ export class ContentsScene implements Scene {
                     index: 2,
                     depth: 1,
                     onClick: () => {
-                        // Go to Scene Planet 3
+                        this.proceed({
+                            title: '🌕',
+                            size: 70,
+                            depth: 1
+                        })
                     },
                 }
             ]
@@ -316,7 +335,7 @@ export class ContentsScene implements Scene {
     }
 
     update(dt: number): void {
-
+        if (!this.enabled) return
         let star = this.currentStar
 
         let radius = 10
@@ -396,6 +415,11 @@ export class ContentsScene implements Scene {
     return(): void {
         this.enabled = false
         this.onReturned?.()
+    }
+
+    proceed(info: starInfo): void {
+        this.enabled = false
+        this.onProceeded?.(info)
     }
 
     finish(): void {

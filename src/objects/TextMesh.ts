@@ -27,14 +27,17 @@ export class TextMesh extends SceneObject {
         this.textMesh.sync()
         this.textMesh.geometry.computeBoundingBox();
 
-        this.textMesh.addEventListener("synccomplete" as any, () => {
+        const listener = () => {
             const bounds = this.textMesh.geometry.boundingBox;
             if (!bounds) return;
             const width = bounds.max.x - bounds.min.x;
             const height = bounds.max.y - bounds.min.y;
             console.log(`TextMesh synccomplete: width=${width}, height=${height}`);
             onRender({ min: bounds.min, max: bounds.max }, { width, height });
-        });
+            this.textMesh.removeEventListener("synccomplete" as any, listener);
+        }
+
+        this.textMesh.addEventListener("synccomplete" as any, listener);
     }
 
     setSize(size: { width: number, height: number }) {
@@ -44,7 +47,7 @@ export class TextMesh extends SceneObject {
 
     setBounds(bounds: { min: { x: number, y: number }, max: { x: number, y: number } }) {
         this.textMesh.maxWidth = bounds.max.x - bounds.min.x
-        this.textMesh.position.set(-bounds.min.x, -bounds.min.y, 0)
+        // this.textMesh.position.set(-bounds.min.x, -bounds.min.y, 0)
         this.textMesh.geometry.computeBoundingBox();
         this.textMesh.sync()
     }

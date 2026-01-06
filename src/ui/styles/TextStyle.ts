@@ -57,6 +57,8 @@ export const defaultDescriptionStyle: DescriptionStyle = {
     lineHeight: 1.5,
     letterSpacing: 0.02,
     textAlign: 'left',
+    anchorX: 'left',
+    anchorY: 'top',
     font: '/fonts/NotoSansCJKkr-Thin.ttf',
 }
 

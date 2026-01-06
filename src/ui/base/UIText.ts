@@ -5,8 +5,6 @@ import * as THREE from 'three'
 
 export class UIText extends UIObject {
     textMesh: TextMesh
-    bounds?: { min: { x: number, y: number }, max: { x: number, y: number } }
-    size?: { width: number, height: number }
     get worldBounds() {
         if (!this.bounds) return {min: {x: -50, y: -50}, max: {x: 50, y: 50}}
         return {min: {x: this.bounds.min.x - this.position.x, y: this.bounds.min.y - this.position.y}, max: {x: this.bounds.max.x - this.position.x, y: this.bounds.max.y - this.position.y}}
@@ -19,17 +17,25 @@ export class UIText extends UIObject {
             this.size = size
             onRender(bounds, size)
         })
-        super.add(this.textMesh)
+        this.add(this.textMesh)
+        this.textMesh.position.setX(-this.size.width / 2)
+        // this.textMesh.position.setY(this.size.height / 2)
     }
 
     setSize(size: { width: number, height: number }) {
         this.size = size
+        this.bounds = { min: { x: -size.width / 2, y: -size.height / 2 }, max: { x: size.width / 2, y: size.height / 2 } }
         this.textMesh.setSize(size)
+        this.textMesh.position.setX(-this.size.width / 2)
+        // this.textMesh.position.setY(this.size.height / 2)
     }
 
     setBounds(bounds: { min: { x: number, y: number }, max: { x: number, y: number } }) {
         this.bounds = bounds
-        // this.textMesh.setBounds(bounds)
+        this.size = { width: bounds.max.x - bounds.min.x, height: -(bounds.max.y - bounds.min.y) }
+        this.textMesh.setBounds(bounds)
+        this.textMesh.position.setX(-this.size.width / 2)
+        // this.textMesh.position.setY(this.size.height / 2)
     }
 
     update(dt: number): void {

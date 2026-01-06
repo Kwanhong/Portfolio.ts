@@ -9,6 +9,7 @@ import { MainScene } from './scenes/MainScene'
 import { ContentsScene } from './scenes/ContentsScene'
 import { EpilogueScene } from './scenes/EpilogueScene'
 import { PerlinNoise } from '../core/PerlinNoise'
+import { ContentScene } from './scenes/contents/ContentScene'
 
 export class SceneManager {
     mother = new THREE.Scene()
@@ -19,16 +20,18 @@ export class SceneManager {
         this.mother.background = Color.helper.get('background.primary')
         this.mother.add(this.camera.self)
         Lights.addToScene(this.mother)
-        
+
         Language.helper.set('en')
         PerlinNoise.setSeed(Math.random() * 65536)
 
         let mainScene = new MainScene(this.mother, () => { this.scenes[1]?.run() })
-        let contentsScene = new ContentsScene(this.mother, () => { this.scenes[0]?.run() }, () => { this.scenes[2]?.run() })
+        let contentScene = new ContentScene(this.mother, () => { this.scenes[1]?.run() })
+        let contentsScene = new ContentsScene(this.mother, () => { this.scenes[0]?.run() }, (info) => { contentScene.info = info; contentScene.run() }, () => { this.scenes[3]?.run() })
         let epilogueScene = new EpilogueScene(this.mother)
 
         this.scenes.push(mainScene)
         this.scenes.push(contentsScene)
+        this.scenes.push(contentScene)
         this.scenes.push(epilogueScene)
 
         this.scenes[0].run()

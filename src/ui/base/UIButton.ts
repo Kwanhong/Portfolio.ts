@@ -5,8 +5,7 @@ import { Color } from '@data/Color';
 import { EventManager } from '../../event/EventManager';
 import { Camera } from '../../scene/Camera';
 import { Helper } from '../../core/Helper';
-
-import { SVGLoader } from 'three/examples/jsm/Addons.js';
+import { Time } from '../../core/Time';
 
 interface UIButtonOptions {
     width?: number;
@@ -21,6 +20,10 @@ interface UIButtonOptions {
 export type buttonStatus = 'hover' | 'press' | 'blur'
 
 export class UIButton extends UIObject {
+
+    roundCornerRadius: number = 15;
+    private static doubleClickThreshold: number = 300; // milliseconds
+
     backgroundMesh: THREE.Mesh
     backgroundMeshMaxOpacity: number = 0.8
     text: UIText
@@ -36,7 +39,22 @@ export class UIButton extends UIObject {
     get eventEnabled(): boolean {
         return this._eventEnabled;
     }
-    onClick?: () => void
+
+    update(dt: number): void {
+        super.update(dt);
+    }
+
+    private onClick?: () => void
+
+    setSize(size: { width: number, height: number }): void {
+        this.size = size;
+        this.bounds = { max: { x: size.width / 2, y: size.height / 2 }, min: { x: -size.width / 2, y: -size.height / 2 } }
+        this.text.position.set(size.width / 2, 0, 1);
+        this.text.setSize(size);
+        this.backgroundMesh.geometry.dispose();
+        const geometry = this.roundedPlaneGeometry(size.width, size.height, this.roundCornerRadius);
+        this.backgroundMesh.geometry = geometry;
+    }
 
     onBlur(): void {
         const material = this.backgroundMesh.material as THREE.MeshBasicMaterial
@@ -62,9 +80,6 @@ export class UIButton extends UIObject {
         this.status = 'press'
     }
 
-    private width: number = 100
-    private height: number = 50
-
     constructor({
         width = 100,
         height = 50,
@@ -75,12 +90,11 @@ export class UIButton extends UIObject {
         onClick
     }: UIButtonOptions = {}) {
         super();
-        this.width = width;
-        this.height = height;
+        this.roundCornerRadius = cornerRadius;
         this.text = new UIText(text, style, () => {
             const size = { width: width, height: height };
             const bounds = { min: { x: 0, y: 0 }, max: { x: size.width, y: size.height } };
-            this.text.position.set(0, 0, 1);
+            this.text.position.set(width / 2, 0, 1);
             this.text.setSize(size);
             this.text.setBounds(bounds);
         });
@@ -92,11 +106,14 @@ export class UIButton extends UIObject {
         this.add(this.backgroundMesh);
         this.color = new THREE.Color().setHex(color);
 
+        this.bounds = { max: { x: width / 2, y: height / 2 }, min: { x: -width / 2, y: -height / 2 } }
+        this.size = { width: width, height: height }
+
         if (onClick) {
             this.onClick = onClick;
             EventManager.self.addPointerMoveListener((event) => {
                 if (EventManager.self.pointerPressed || !this.eventEnabled) return;
-                if (this.isInBounds(width, height, event)) {
+                if (this.isInBounds(this.size.width, this.size.height, event)) {
                     this.onHover();
                 } else {
                     this.onBlur();
@@ -105,24 +122,29 @@ export class UIButton extends UIObject {
 
             EventManager.self.addPointerDownListener((event) => {
                 if (!this.eventEnabled) return;
-                if (this.isInBounds(width, height, event))
+                if (!this.visibleGlobally) return;
+                if (this.isInBounds(this.size.width, this.size.height, event))
                     this.onPress();
             });
 
             EventManager.self.addPointerUpListener((event) => {
                 if (!this.eventEnabled) return;
-                if (this.isInBounds(width, height, event)) {
-                    this.onHover();
-                    this.onClick?.();
+                if (!this.visibleGlobally) return;
+                if (this.isInBounds(this.size.width, this.size.height, event)) {
+                    console.log('UIButton clicked', this.text.textMesh.textMesh.text);
+                    const clickedTime = performance.now();
+                    if (clickedTime - Time.lastClickedTime < UIButton.doubleClickThreshold) {
+                        Time.lastClickedTime = performance.now();
+                    } else {
+                        this.onHover();
+                        this.onClick?.();
+                        Time.lastClickedTime = performance.now();
+                    }
                 } else {
                     this.onBlur();
                 }
             });
         }
-    }
-
-    get size() {
-        return { width: this.width, height: this.height };
     }
 
     private isInBounds(width: number, height: number, event: PointerEvent): boolean {
@@ -175,5 +197,12 @@ export class UIOpaqueBlurButton extends UIButton {
         let opacityMapped = Helper.map(opacity, 0, 1, 0, this.opaqueBackgroundMaxOpacity);
         let material = this.opaqueBackground.material as THREE.MeshPhysicalMaterial;
         material.opacity = opacityMapped;
+    }
+
+    setSize(size: { width: number; height: number; }): void {
+        super.setSize(size);
+        this.opaqueBackground.geometry.dispose();
+        const geometry = this.roundedPlaneGeometry(size.width, size.height, this.roundCornerRadius);
+        this.opaqueBackground.geometry = geometry;
     }
 }

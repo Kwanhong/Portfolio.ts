@@ -3,6 +3,12 @@ import * as THREE from 'three'
 
 export class UIObject extends SceneObject {
     isHovered: boolean = false
+
+    bounds: { min: { x: number, y: number }, max: { x: number, y: number } } = { min: { x: -50, y: -50 }, max: { x: 50, y: 50 } }
+    size: { width: number, height: number } = { width: 100, height: 100 }
+
+    uiChildren: UIObject[] = []
+
     update(dt: number) {
         super.update(dt)
     }
@@ -15,6 +21,12 @@ export class UIObject extends SceneObject {
 
     add(object: THREE.Object3D): this {
         super.add(object)
+        return this
+    }
+
+    addUI(object: UIObject): this {
+        super.add(object)
+        this.uiChildren.push(object)
         return this
     }
 
@@ -32,6 +44,9 @@ export class UIObject extends SceneObject {
         shape.absarc(x + width - radius, y + radius, radius, 0, -Math.PI / 2, true);
         shape.lineTo(x + radius, y);
         shape.absarc(x + radius, y + radius, radius, -Math.PI / 2, -Math.PI, true);
+        
+        this.bounds = { min: { x: x, y: y }, max: { x: x + width, y: y + height } }
+        this.size = { width: width, height: height }
 
         return new THREE.ShapeGeometry(shape);
     }

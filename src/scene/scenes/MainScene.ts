@@ -64,21 +64,10 @@ export class MainScene implements Scene {
 
         this.autherText = new UIText(Language.helper.get('main.auther'), autherStyle)
         this.descriptionText = new UIText(Language.helper.get('main.description'), descriptionStyle)
-        this.headlineText = new UIText(Language.helper.get('main.headline'), headlineStyle, (_, size) => { this.offsetX = -size.width / 2 });
-
-        button.position.set(0, -150, 100)
-        button.setOpacity(0)
-        button.eventEnabled = false
-
-        this.autherText.setOpacity(0)
-        this.descriptionText.setOpacity(0)
-        this.headlineText.setOpacity(0)
-
-        Time.coroutine(() => { return this.headlineText.size !== undefined }, () => { }, () => {
-            this.offsetX = -this.headlineText.size!.width / 2
-            this.headlineText.position.set(this.offsetX, 0, 100)
-            this.descriptionText.position.set(this.offsetX + 5, -60, 100)
-            this.autherText.position.set(this.offsetX + 5, -87, 100)
+        this.headlineText = new UIText(Language.helper.get('main.headline'), headlineStyle, (_, size) => {
+            this.headlineText.setSize(size)
+            this.descriptionText.setSize(size)
+            this.autherText.setSize(size)
             let opacity = 0
             let fadeInDuration = 1
             button.visible = true
@@ -91,7 +80,19 @@ export class MainScene implements Scene {
             }, () => {
                 button.eventEnabled = true
             })
-        })
+        });
+
+        this.headlineText.position.set(0, 0, 100)
+        this.descriptionText.position.set(5, -60, 100)
+        this.autherText.position.set(5, -87, 100)
+
+        button.position.set(0, -150, 100)
+        button.setOpacity(0)
+        button.eventEnabled = false
+
+        this.autherText.setOpacity(0)
+        this.descriptionText.setOpacity(0)
+        this.headlineText.setOpacity(0)
 
         this.self.add(this.headlineText)
         this.self.add(this.descriptionText)
@@ -261,9 +262,6 @@ export class MainScene implements Scene {
         // Code to refresh or update the scene
         if (!this.enabled) return
 
-        this.headlineText.position.set(this.offsetX, 60, 0)
-        this.descriptionText.position.set(this.offsetX + 5, 0, 0)
-        this.autherText.position.set(this.offsetX + 5, -27, 0)
     }
 
     finish(): void {

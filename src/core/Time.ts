@@ -6,6 +6,7 @@ export class Time {
     private currentTime: number = 0
     static self?: Time
     private static startTime: number = performance.now()
+    static lastClickedTime: number = 0
     constructor() {
         this.currentTime = performance.now()
         Time.self = this
