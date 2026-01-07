@@ -175,6 +175,7 @@ export class ContentsScene implements Scene {
         });
 
         EventManager.self.addPointerMoveListener((event) => {
+            if (!this.enabled) return;
             if (!EventManager.self.pointerPressed) return;
             let star = this.currentStar
             const deltaX = this.lastPressedPointer.x - event.clientX
@@ -182,7 +183,7 @@ export class ContentsScene implements Scene {
             this.lastPressedPointer.x = event.clientX
             this.lastPressedPointer.y = event.clientY
             const depthFactor = (star.info.depth + 1)
-            star.applyForce(forceX * depthFactor);
+            star.applyForce(forceX * depthFactor * 0.5);
         });
 
         const imageUrl = this.currentStar.info.url
@@ -318,6 +319,8 @@ export class ContentsScene implements Scene {
         this.currentDepth = depth
         this.currentStar = star
 
+        this.currentStar.applyForce(50);
+
         if (star.info.url) {
             this.setBackgroundTexture(star.info.url);
         }
@@ -328,6 +331,8 @@ export class ContentsScene implements Scene {
     run() {
         this.enabled = true
         this.resize()
+
+        this.sun.applyForce(100);
     }
 
     refresh(): void {
@@ -349,8 +354,8 @@ export class ContentsScene implements Scene {
 
         const superstarScaleFactor = 3
         star.superstar?.position.lerp(star.baseAnchor.clone().multiplyScalar(-1), 0.1)
-        star.superstar?.button.scale.lerp(new THREE.Vector3(1, 1, 1).multiplyScalar(superstarScaleFactor), 0.1)
-        star.button.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1)
+        star.superstar?.button.scale.lerp(new THREE.Vector3(1, 1, 1).multiplyScalar(superstarScaleFactor), 0.2)
+        star.button.scale.lerp(new THREE.Vector3(1, 1, 1), 0.2)
 
         let subsubstars: ContentStar[] = []
         star.substars.forEach(s => {
@@ -358,11 +363,12 @@ export class ContentsScene implements Scene {
                 subsubstars.push(ss)
             })
         })
+
         star.substars.forEach(s => {
-            s.button.text.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1)
+            s.button.text.scale.lerp(new THREE.Vector3(1, 1, 1), 0.2)
         })
         subsubstars.forEach(ss => {
-            ss.button.text.scale.lerp(new THREE.Vector3(0, 0, 0), 0.1)
+            ss.button.text.scale.lerp(new THREE.Vector3(0, 0, 0), 0.2)
         })
 
         let selectedNone = true
@@ -373,21 +379,21 @@ export class ContentsScene implements Scene {
             }
         })
         if (EventManager.self.pointerPressed && selectedNone) {
-            let radius = (star.info.radius ?? 100) * 0.5
+            let radius = (star.info.radius ?? 100) * 0.75
             if (this.currentDepth === 1) {
                 radius = (star.info.radius ?? 100) * 2.2
             }
-            star.radius = Helper.lerp(star.radius, radius, 0.1)
-            star.scale.lerp(new THREE.Vector3(0.9, 0.9, 0.9).multiplyScalar(star.info.depth + 1), 0.1)
-            star.poleX = Helper.lerp(star.poleX, 40, 0.1)
+            star.radius = Helper.lerp(star.radius, radius, 0.2)
+            star.scale.lerp(new THREE.Vector3(0.9, 0.9, 0.9).multiplyScalar(star.info.depth + 1), 0.2)
+            star.poleX = Helper.lerp(star.poleX, 40, 0.2)
         } else {
             let radius = star.info.radius ?? 100
             if (this.currentDepth === 1) {
                 radius = (star.info.radius ?? 100) * 2.5
             }
-            star.radius = Helper.lerp(star.radius, radius, 0.1)
-            star.scale.lerp(new THREE.Vector3(1, 1, 1).multiplyScalar(star.info.depth + 1), 0.1)
-            star.poleX = Helper.lerp(star.poleX, 30, 0.1)
+            star.radius = Helper.lerp(star.radius, radius, 0.2)
+            star.scale.lerp(new THREE.Vector3(1, 1, 1).multiplyScalar(star.info.depth + 1), 0.2)
+            star.poleX = Helper.lerp(star.poleX, 30, 0.2)
         }
 
         star.update(dt)

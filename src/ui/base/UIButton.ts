@@ -22,7 +22,7 @@ export type buttonStatus = 'hover' | 'press' | 'blur'
 export class UIButton extends UIObject {
 
     roundCornerRadius: number = 15;
-    private static doubleClickThreshold: number = 300; // milliseconds
+    private static doubleClickThreshold: number = 100; // milliseconds
 
     backgroundMesh: THREE.Mesh
     backgroundMeshMaxOpacity: number = 0.8
@@ -109,6 +109,7 @@ export class UIButton extends UIObject {
         this.bounds = { max: { x: width / 2, y: height / 2 }, min: { x: -width / 2, y: -height / 2 } }
         this.size = { width: width, height: height }
 
+        this.onBlur();
         if (onClick) {
             this.onClick = onClick;
             EventManager.self.addPointerMoveListener((event) => {
@@ -190,6 +191,7 @@ export class UIOpaqueBlurButton extends UIButton {
         this.opaqueBackground = new THREE.Mesh(geometry, material);
         this.add(this.opaqueBackground);
         this.opaqueBackground.position.set(0, 0, -0.1);
+        this.onBlur();
     }
 
     setOpacity(opacity: number): void {

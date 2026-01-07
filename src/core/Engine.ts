@@ -16,8 +16,10 @@ export class Engine {
 
         this.renderer = new THREE.WebGLRenderer({
             antialias: false,
-            powerPreference: 'high-performance'
+            powerPreference: 'high-performance',
         })
+
+        this.renderer.autoClearStencil = false
 
         console.log('RENDERER OK')
 

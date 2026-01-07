@@ -30,8 +30,8 @@ export class ContentStar extends UIObject {
 
     private velocity: number = 0.0
     private acceleration: number = 0.0
-    private fraction: number = 0.03
-    private maxVelocity: number = 50
+    private fraction: number = 0.04
+    private maxVelocity: number = 10
 
     constructor(info: starInfo) {
         super()

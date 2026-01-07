@@ -7,6 +7,8 @@ import { Camera } from '../../Camera'
 import { UIText } from '@ui/base/UIText'
 import { defaultHeadlineStyle, defaultBaselineStyle, defaultDescriptionStyle } from '@styles/TextStyle'
 import { Time } from '../../../core/Time'
+import { UIImageView } from '@ui/base/UIImageView'
+import { FileManager } from '../../../core/FIleManager'
 
 export class ContentScene implements Scene {
 
@@ -43,7 +45,7 @@ export class ContentScene implements Scene {
         this.returnButton = returnButton
 
         const scrollView = new UIScrollView({ x: 0, y: 0, width: Camera.size.width - 20, height: Camera.size.height - 70 })
-        scrollView.position.set(0, 25, 0)
+        scrollView.position.set(0, 25, -200)
         this.self.add(scrollView)
         this.scrollView = scrollView
 
@@ -54,6 +56,25 @@ export class ContentScene implements Scene {
         const text = new UIText(message, { ...defaultDescriptionStyle, anchorX: 'left', anchorY: 'top' });
         text.position.set(-scrollView.size.width / 2 + 10, scrollView.size.height / 2 - 10, 0);
         text.setSize({ width: scrollView.size.width, height: scrollView.size.height });
+
+        FileManager.loadTexture('resources/background1.png').then((texture) => {
+
+            const height = Camera.size.height - 20
+            const image = texture.image as HTMLImageElement
+            if (image) {
+                const width = height * (image.width / image.height)
+                const imageView = new UIImageView({ x: 0, y: 20, width: width, height: height }, texture);
+                scrollView.addStack(tempBtn1);
+                scrollView.addStack(tempBtn2);
+                scrollView.addStack(headline);
+                scrollView.addStack(imageView);
+                scrollView.addStack(text);
+                scrollView.addStack(tempBtn3);
+                scrollView.addStack(tempBtn4);
+                this.resize()
+                this.scrollView?.scrollTo(0);
+            }
+        });
 
         const tempBtn1 = new UIOpaqueBlurButton({
             width: Camera.size.width - 20,
@@ -85,13 +106,6 @@ export class ContentScene implements Scene {
             }
         });
 
-        scrollView.addStack(tempBtn1);
-        scrollView.addStack(tempBtn2);
-        scrollView.addStack(headline);
-        scrollView.addStack(text);
-        scrollView.addStack(tempBtn3);
-        scrollView.addStack(tempBtn4);
-
     }
 
     run() {
@@ -117,12 +131,12 @@ export class ContentScene implements Scene {
             -Camera.size.height / 2 + this.returnButton.size.height / 2 + margin, 0
         );
 
-        Time.coroutineSec(0.2, () => { 
-            this.scrollView?.setSize({ width: Camera.size.width - 20, height: Camera.size.height - 70});
+        Time.coroutineSec(0.2, () => {
+            this.scrollView?.setSize({ width: Camera.size.width - 20, height: Camera.size.height - 70 });
         }, () => {
-            this.scrollView?.setSize({ width: Camera.size.width - 20, height: Camera.size.height - 70});
+            this.scrollView?.setSize({ width: Camera.size.width - 20, height: Camera.size.height - 70 });
         });
-        
+
     }
 
     return(): void {
@@ -135,10 +149,9 @@ export class ContentScene implements Scene {
         this.enabled = false
         this.onFinished?.()
     }
-}   
+}
 
-
-const title = 'Universal Declaration of Human Rights'
+const title = 'Universal Declaration of Human Rights '
 const message = `Preamble
 Whereas recognition of the inherent dignity and of the equal and inalienable rights of all members of the human family is the foundation of freedom, justice and peace in the world,
 

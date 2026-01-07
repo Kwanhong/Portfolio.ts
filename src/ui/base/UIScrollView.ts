@@ -10,7 +10,7 @@ export class UIScrollView extends UIObject {
         const view = new UIContentView(this, { x: 0, y: 0, width: bounds.width, height: bounds.height })
         this.add(view);
         this.contentView = view;
-        this.bounds = {min: {x: bounds.x, y: bounds.y}, max: {x: bounds.x + bounds.width, y: bounds.y + bounds.height} };
+        this.bounds = { min: { x: bounds.x, y: bounds.y }, max: { x: bounds.x + bounds.width, y: bounds.y + bounds.height } };
         this.size = { width: bounds.width, height: bounds.height };
     }
 
@@ -25,6 +25,8 @@ export class UIScrollView extends UIObject {
 
     scrollTo(y: number) {
         this.contentView.position.y = -(this.contentView.size.height - this.size.height) / 2 + y;
+        this.contentView.velocity.set(0, 0, 0);
+        this.contentView.acceleration.set(0, 0, 0);
     }
 
     addStack(object: UIObject): this {
@@ -39,11 +41,11 @@ export class UIContentView extends UIObject {
     private stack: UIStackView;
     private mesh: THREE.Mesh;
 
-    private velocity: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
-    private acceloration: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
+    velocity: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
+    acceleration: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
     private dragStartPosition: THREE.Vector2 | null = null;
     private fraction = 0.9;
-    private forceFactor = 500
+    private forceFactor = 100
 
     constructor(parent: UIScrollView, bounds: { x: number; y: number; width: number; height: number }) {
         super();
@@ -51,9 +53,9 @@ export class UIContentView extends UIObject {
         this.bounds = { min: { x: bounds.x, y: bounds.y }, max: { x: bounds.x + bounds.width, y: bounds.y + bounds.height } };
         const material = new THREE.MeshPhysicalMaterial({
             transmission: 1.0,
-            roughness: 0.3,
+            roughness: 0.5,
             thickness: 1.7,
-            ior: 1.5,
+            ior: 1.5
         })
 
         const stackGeometry = this.roundedPlaneGeometry(bounds.width, bounds.height, 10);
@@ -100,7 +102,7 @@ export class UIContentView extends UIObject {
     }
 
     applyForce(force: THREE.Vector3) {
-        this.acceloration.add(force);
+        this.acceleration.add(force);
     }
 
     update(dt: number): void {
@@ -108,21 +110,21 @@ export class UIContentView extends UIObject {
 
         if (EventManager.self.pointerPressed) return;
         if (this.position.x < 0) {
-            this.position.lerp(new THREE.Vector3(0, this.position.y, this.position.z), 0.1);
+            this.position.lerp(new THREE.Vector3(0, this.position.y, this.position.z), 0.25);
         }
         if (this.position.x > 0) {
-            this.position.lerp(new THREE.Vector3(0, this.position.y, this.position.z), 0.1);
+            this.position.lerp(new THREE.Vector3(0, this.position.y, this.position.z), 0.25);
         }
         if (this.position.y < -(this.size.height - this.scrollView.size.height) / 2) {
-            this.position.lerp(new THREE.Vector3(this.position.x, -(this.size.height - this.scrollView.size.height) / 2, this.position.z), 0.1);
+            this.position.lerp(new THREE.Vector3(this.position.x, -(this.size.height - this.scrollView.size.height) / 2, this.position.z), 0.25);
         }
         if (this.position.y > (this.size.height - this.scrollView.size.height) / 2) {
-            this.position.lerp(new THREE.Vector3(this.position.x, (this.size.height - this.scrollView.size.height) / 2, this.position.z), 0.1);
+            this.position.lerp(new THREE.Vector3(this.position.x, (this.size.height - this.scrollView.size.height) / 2, this.position.z), 0.25);
         }
 
-        this.velocity.add(this.acceloration.clone().multiplyScalar(dt));
+        this.velocity.add(this.acceleration.clone().multiplyScalar(dt));
         this.position.add(this.velocity.clone().multiplyScalar(dt));
-        this.acceloration.multiplyScalar(0);
+        this.acceleration.multiplyScalar(0);
         this.velocity.multiplyScalar(this.fraction);
     }
 }

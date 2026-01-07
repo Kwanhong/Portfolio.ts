@@ -1,4 +1,3 @@
-import { deltaTime } from "three/tsl"
 import { Helper } from "./Helper"
 
 export class Time {
