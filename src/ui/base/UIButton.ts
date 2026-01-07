@@ -6,6 +6,7 @@ import { EventManager } from '../../event/EventManager';
 import { Camera } from '../../scene/Camera';
 import { Helper } from '../../core/Helper';
 import { Time } from '../../core/Time';
+import { UIImageView } from './UIImageView';
 
 interface UIButtonOptions {
     width?: number;
@@ -206,5 +207,38 @@ export class UIOpaqueBlurButton extends UIButton {
         this.opaqueBackground.geometry.dispose();
         const geometry = this.roundedPlaneGeometry(size.width, size.height, this.roundCornerRadius);
         this.opaqueBackground.geometry = geometry;
+    }
+}
+
+export class UIImageButton extends UIButton {
+    imageView: UIImageView
+
+    setOpacity(opacity: number): void {
+        super.setOpacity(opacity);
+        const material = this.imageView.mesh.material as THREE.ShaderMaterial;
+        material.transparent = true;
+        material.opacity = opacity;
+    }
+    constructor(imageTexture: THREE.Texture, {
+        width = 100,
+        height = 100,
+        cornerRadius = 20,
+        onClick
+    }: {
+        width?: number;
+        height?: number;
+        cornerRadius?: number;
+        onClick?: () => void;
+    } = {}) {
+        super({ width, height, text: "", cornerRadius, onClick });
+        
+        this.imageView = new UIImageView({x: 0, y: 0, width: width, height: height}, imageTexture, height / 2);
+        this.add(this.imageView);
+        this.imageView.position.set(0, height / 2, 0.1);
+    }
+
+    setSize(size: { width: number; height: number; }): void {
+        super.setSize(size);
+        this.imageView.setSize(size);
     }
 }

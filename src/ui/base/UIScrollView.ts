@@ -25,8 +25,8 @@ export class UIScrollView extends UIObject {
 
     scrollTo(y: number) {
         this.contentView.position.y = -(this.contentView.size.height - this.size.height) / 2 + y;
-        this.contentView.velocity.set(0, 0, 0);
-        this.contentView.acceleration.set(0, 0, 0);
+        // this.contentView.velocity.set(0, 0, 0);
+        // this.contentView.acceleration.set(0, 0, 0);
     }
 
     addStack(object: UIObject): this {
@@ -67,10 +67,12 @@ export class UIContentView extends UIObject {
         this.mesh = stackMesh;
 
         EventManager.self.addPointerDownListener((event) => {
+            if (!this.visibleGlobally) return;
             this.dragStartPosition = new THREE.Vector2(event.clientX, event.clientY);
         });
 
         EventManager.self.addPointerMoveListener((event) => {
+            if (!this.visibleGlobally) return;
             if (this.dragStartPosition) {
                 const deltaY = event.clientY - this.dragStartPosition.y;
                 this.position.y -= deltaY;
@@ -80,6 +82,7 @@ export class UIContentView extends UIObject {
         });
 
         EventManager.self.addPointerUpListener(() => {
+            if (!this.visibleGlobally) return;
             this.dragStartPosition = null;
             this.setSize(this.size);
         });
@@ -99,6 +102,8 @@ export class UIContentView extends UIObject {
         this.mesh.geometry.dispose();
         const geometry = this.roundedPlaneGeometry(size.width, this.stack.size.height, 10);
         this.mesh.geometry = geometry;
+
+        this.dragStartPosition = null;
     }
 
     applyForce(force: THREE.Vector3) {
@@ -108,6 +113,11 @@ export class UIContentView extends UIObject {
     update(dt: number): void {
         super.update(dt);
 
+        this.velocity.add(this.acceleration.clone().multiplyScalar(dt));
+        this.position.add(this.velocity.clone().multiplyScalar(dt));
+        this.acceleration.multiplyScalar(0);
+        this.velocity.multiplyScalar(this.fraction);
+        
         if (EventManager.self.pointerPressed) return;
         if (this.position.x < 0) {
             this.position.lerp(new THREE.Vector3(0, this.position.y, this.position.z), 0.25);
@@ -121,10 +131,5 @@ export class UIContentView extends UIObject {
         if (this.position.y > (this.size.height - this.scrollView.size.height) / 2) {
             this.position.lerp(new THREE.Vector3(this.position.x, (this.size.height - this.scrollView.size.height) / 2, this.position.z), 0.25);
         }
-
-        this.velocity.add(this.acceleration.clone().multiplyScalar(dt));
-        this.position.add(this.velocity.clone().multiplyScalar(dt));
-        this.acceleration.multiplyScalar(0);
-        this.velocity.multiplyScalar(this.fraction);
     }
 }

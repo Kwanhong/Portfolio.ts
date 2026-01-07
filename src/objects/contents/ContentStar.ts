@@ -1,7 +1,8 @@
 import { UIObject } from "@ui/base/UIObject";
-import { UIButton, UIOpaqueBlurButton } from "@ui/base/UIButton";
+import { UIButton, UIImageButton, UIOpaqueBlurButton } from "@ui/base/UIButton";
 import * as THREE from "three";
 import { Color } from "@data/Color";
+import { FileManager } from "../../core/FIleManager";
 
 export type starInfo = {
     title: string,
@@ -9,17 +10,18 @@ export type starInfo = {
     depth: number
     index?: number,
     radius?: number,
-    url?: string,
+    buttonImageUrl?: string,
+    backgroundImageUrl?: string,
     urlUuid?: string,
     substars?: starInfo[]
-    onClick?: ()=>void
+    onClick?: () => void
 }
 
 export class ContentStar extends UIObject {
     substars: ContentStar[] = []
     superstar?: ContentStar
     info: starInfo
-    button: UIButton
+    button!: UIButton
     baseAnchor = new THREE.Vector3()
 
     radius: number = 150
@@ -37,28 +39,62 @@ export class ContentStar extends UIObject {
         super()
         this.info = info
 
-        const color = new THREE.Color(1.0, 1.0, 1.0).multiplyScalar( (1 / Math.pow(info.depth + 1, 2)))
+        const color = new THREE.Color(1.0, 1.0, 1.0).multiplyScalar((1 / Math.pow(info.depth + 1, 2)))
         const colorHex = Color.helper.getHexNumberFromColor(color)
-        this.button = new UIOpaqueBlurButton({
-            width: info.size,
-            height: info.size,
-            text: info.title,
-            color: colorHex,
-            cornerRadius: info.size / 2,
-            onClick: info.onClick
-        })
-        if (info.depth != 1) {
-            this.button.eventEnabled = false
+
+        if (info.buttonImageUrl) {
+            FileManager.loadTexture(info.buttonImageUrl).then((texture) => {
+                this.button = new UIImageButton(texture, {
+                    width: info.size,
+                    height: info.size,
+                    cornerRadius: info.size / 2,
+                    onClick: info.onClick
+                })
+                if (info.depth != 1) {
+                    this.button.eventEnabled = false
+                } else {
+                    this.button.eventEnabled = true
+                }
+                this.add(this.button)
+            }).catch((error) => {
+                console.error("Failed to load texture:", error);
+                this.button = new UIOpaqueBlurButton({
+                    width: info.size,
+                    height: info.size,
+                    text: info.title,
+                    color: colorHex,
+                    cornerRadius: info.size / 2,
+                    onClick: info.onClick
+                })
+                if (info.depth != 1) {
+                    this.button.eventEnabled = false
+                } else {
+                    this.button.eventEnabled = true
+                }
+                this.add(this.button)
+            });
         } else {
-            this.button.eventEnabled = true
+            this.button = new UIOpaqueBlurButton({
+                width: info.size,
+                height: info.size,
+                text: info.title,
+                color: colorHex,
+                cornerRadius: info.size / 2,
+                onClick: info.onClick
+            })
+            if (info.depth != 1) {
+                this.button.eventEnabled = false
+            } else {
+                this.button.eventEnabled = true
+            }
+            this.add(this.button)
         }
-        this.add(this.button)
 
         if (!info.radius || !info.substars) return
 
         this.radius = info.radius
         for (let substarInfo of info.substars) {
-            if (substarInfo.index === undefined) continue   
+            if (substarInfo.index === undefined) continue
             substarInfo.size = info.size * 0.5
 
             const substar = new ContentStar(substarInfo)
@@ -95,7 +131,7 @@ export class ContentStar extends UIObject {
             substar.position.lerp(new THREE.Vector3(v.x, v.y, v.z), 0.1)
             substar.update(dt)
             substar.applyForce(this.acceleration * 4)
-            substar.scale.lerp(new THREE.Vector3(1, 1, 1),0.1)
+            substar.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1)
         }
 
         const scale = 0.5

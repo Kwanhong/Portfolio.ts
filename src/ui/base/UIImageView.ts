@@ -1,14 +1,14 @@
 import { UIObject } from "./UIObject";
 import * as THREE from "three";
 export class UIImageView extends UIObject {
-    private mesh: THREE.Mesh;
+    mesh: THREE.Mesh;
     image?: HTMLImageElement | null = null;
 
-    constructor(bounds: { x: number; y: number; width: number; height: number }, texture: THREE.Texture) {
+    constructor(bounds: { x: number; y: number; width: number; height: number }, texture: THREE.Texture, roundCorner: number = 7) {
         super();
 
         const geometry = new THREE.PlaneGeometry(bounds.width, bounds.height);
-        const material = new MaskedMaterial(texture, { width: bounds.width, height: bounds.height }, 7);
+        const material = new MaskedMaterial(texture, { width: bounds.width, height: bounds.height }, roundCorner);
 
         this.mesh = new THREE.Mesh(geometry, material);
         this.add(this.mesh);

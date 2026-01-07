@@ -119,6 +119,7 @@ export class ContentScene implements Scene {
     }
 
     update(dt: number): void {
+        if (!this.enabled) return;
         this.scrollView?.update(dt);
         // Update logic for EpilogueScene if needed
     }

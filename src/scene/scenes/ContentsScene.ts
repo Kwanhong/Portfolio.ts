@@ -45,17 +45,17 @@ export class ContentsScene implements Scene {
         this.enabled = false;
 
         const info = {
-            title: '🌞',
+            title: 'PORTFOLiO',
             size: 100,
-            radius: 190,
+            radius: 150,
             depth: 0,
-            url: 'https://images.pexels.com/photos/4270292/pexels-photo-4270292.jpeg',
+            backgroundImageUrl: 'https://images.pexels.com/photos/4270292/pexels-photo-4270292.jpeg',
             substars: [
                 {
-                    title: '🌏',
+                    title: 'UNITY',
                     size: 70,
                     index: 0,
-                    radius: 35,
+                    radius: 28,
                     depth: 1,
                     url: 'https://images.pexels.com/photos/1722183/pexels-photo-1722183.jpeg',
                     onClick: () => {
@@ -63,7 +63,7 @@ export class ContentsScene implements Scene {
                     },
                     substars: [
                         {
-                            title: '🌑',
+                            title: 'SH',
                             size: 12,
                             index: 0,
                             depth: 2,
@@ -76,7 +76,7 @@ export class ContentsScene implements Scene {
                             },
                         },
                         {
-                            title: '🌒',
+                            title: 'CE',
                             size: 12,
                             index: 1,
                             depth: 2,
@@ -88,22 +88,51 @@ export class ContentsScene implements Scene {
                                 })
                                 // Go to Scene Moon 1-2
                             },
+                        },
+                        {
+                            title: 'SG',
+                            size: 12,
+                            index: 2,
+                            depth: 2,
+                            onClick: () => {
+                                this.proceed({
+                                    title: '🌓',
+                                    size: 12,
+                                    depth: 2
+                                })
+                                // Go to Scene Moon 1-3
+                            },
+                        },
+                        {
+                            title: 'MR',
+                            size: 12,
+                            index: 3,
+                            depth: 2,
+                            onClick: () => {
+                                this.proceed({
+                                    title: '🌔',
+                                    size: 12,
+                                    depth: 2
+                                })
+                                // Go to Scene Moon 1-4
+                            },
                         }
                     ]
                 },
                 {
-                    title: '🪐',
+                    title: 'iOS',
                     size: 70,
                     index: 1,
-                    radius: 35,
+                    radius: 28,
                     depth: 1,
-                    url: 'https://images.pexels.com/photos/1334605/pexels-photo-1334605.jpeg',
+                    buttonImageUrl: 'resources/appIcon_none.png',
+                    backgroundImageUrl: 'https://images.pexels.com/photos/1334605/pexels-photo-1334605.jpeg',
                     onClick: () => {
                         this.setDepth(1, this.sun.substars[1])
                     },
                     substars: [
                         {
-                            title: '🌓',
+                            title: 'BM',
                             size: 12,
                             index: 0,
                             depth: 2,
@@ -115,20 +144,110 @@ export class ContentsScene implements Scene {
                                 })
                             },
                         },
+                        {
+                            title: 'JP2',
+                            size: 12,
+                            index: 1,
+                            depth: 2,
+                            onClick: () => {
+                                this.proceed({
+                                    title: '🌔',
+                                    size: 12,
+                                    depth: 2,
+                                })
+                            },
+                        },
                     ]
                 },
                 {
-                    title: '🌕',
+                    title: 'Media',
                     size: 70,
                     index: 2,
                     depth: 1,
+                    radius: 28,
+                    backgroundImageUrl: 'https://images.pexels.com/photos/110854/pexels-photo-110854.jpeg',
                     onClick: () => {
-                        this.proceed({
-                            title: '🌕',
-                            size: 70,
-                            depth: 1
-                        })
+                        this.setDepth(1, this.sun.substars[2])
                     },
+                    substars: [
+                        {
+                            title: 'MR',
+                            size: 12,
+                            index: 0,
+                            depth: 2,
+                            onClick: () => {
+                                this.proceed({
+                                    title: '🌕',
+                                    size: 12,
+                                    depth: 2
+                                })
+                            },
+                        }, {
+                            title: 'JP',
+                            size: 12,
+                            index: 0,
+                            depth: 2,
+                            onClick: () => {
+                                this.proceed({
+                                    title: '🌕',
+                                    size: 12,
+                                    depth: 2
+                                })
+                            },
+                        },
+                    ]
+                },
+                {
+                    title: 'AR',
+                    size: 70,
+                    index: 3,
+                    depth: 1,
+                    radius: 28,
+                    backgroundImageUrl: 'https://images.pexels.com/photos/5077042/pexels-photo-5077042.jpeg',
+                    onClick: () => {
+                        this.setDepth(1, this.sun.substars[3])
+                    },
+                    substars: [
+                        {
+                            title: 'JP1',
+                            size: 12,
+                            index: 0,
+                            depth: 2,
+                            onClick: () => {
+                                this.proceed({
+                                    title: '🌖',
+                                    size: 12,
+                                    depth: 2
+                                })
+                            },
+                        },
+                        {
+                            title: 'JP2',
+                            size: 12,
+                            index: 0,
+                            depth: 2,
+                            onClick: () => {
+                                this.proceed({
+                                    title: '🌖',
+                                    size: 12,
+                                    depth: 2
+                                })
+                            },
+                        },
+                        {
+                            title: 'ARR',
+                            size: 12,
+                            index: 0,
+                            depth: 2,
+                            onClick: () => {
+                                this.proceed({
+                                    title: '🌖',
+                                    size: 12,
+                                    depth: 2
+                                })
+                            },
+                        },
+                    ]
                 }
             ]
         }
@@ -186,7 +305,7 @@ export class ContentsScene implements Scene {
             star.applyForce(forceX * depthFactor * 0.5);
         });
 
-        const imageUrl = this.currentStar.info.url
+        const imageUrl = this.currentStar.info.backgroundImageUrl
         const geometry = new THREE.PlaneGeometry(1, 1); // 임시 초기화
 
         for (let i = 0; i < this.backgroundMeshCount; i++) {
@@ -321,8 +440,8 @@ export class ContentsScene implements Scene {
 
         this.currentStar.applyForce(50);
 
-        if (star.info.url) {
-            this.setBackgroundTexture(star.info.url);
+        if (star.info.backgroundImageUrl) {
+            this.setBackgroundTexture(star.info.backgroundImageUrl);
         }
     }
 
@@ -349,7 +468,7 @@ export class ContentsScene implements Scene {
             -(this.lastPressedPointer.y - Camera.size.height / 2), 0
         )
 
-        let starPos = pointer.clone().normalize().multiplyScalar(radius).add(star.baseAnchor)
+        let starPos = pointer.clone().normalize().multiplyScalar(radius).add(star.baseAnchor).add(new THREE.Vector3(20, 0, 0))
         star.position.lerp(starPos, 0.1)
 
         const superstarScaleFactor = 3
