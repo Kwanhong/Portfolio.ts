@@ -37,12 +37,14 @@ export class UIObject extends SceneObject {
         this.size = size;
         this.bounds = { max: { x: size.width / 2, y: size.height / 2 }, min: { x: -size.width / 2, y: -size.height / 2 } }
     }
-
-    roundedPlaneGeometry(width: number, height: number, radius: number) {
+    
+    roundedPlaneGeometry(width: number, height: number, radius: number): THREE.ShapeGeometry {
         const shape = new THREE.Shape();
 
         const x = -width / 2;
         const y = -height / 2;
+
+        // 라운드된 사각형 경로 생성
         shape.moveTo(x, y + radius);
         shape.lineTo(x, y + height - radius);
         shape.absarc(x + radius, y + height - radius, radius, Math.PI, Math.PI / 2, true);
@@ -53,10 +55,26 @@ export class UIObject extends SceneObject {
         shape.lineTo(x + radius, y);
         shape.absarc(x + radius, y + radius, radius, -Math.PI / 2, -Math.PI, true);
 
-        this.bounds = { min: { x: x, y: y }, max: { x: x + width, y: y + height } }
-        this.size = { width: width, height: height }
+        // ShapeGeometry 생성
+        const geometry = new THREE.ShapeGeometry(shape);
+        console.log(shape.uuid);
 
-        return new THREE.ShapeGeometry(shape);
+        // UV 좌표 설정
+        geometry.computeBoundingBox();
+        const { min, max } = geometry.boundingBox!;
+        const range = new THREE.Vector2(max.x - min.x, max.y - min.y);
+
+        geometry.attributes.position.array.forEach((_, i) => {
+            if (i % 3 === 0) {
+                const x = geometry.attributes.position.array[i];
+                const y = geometry.attributes.position.array[i + 1];
+                const u = (x - min.x) / range.x;
+                const v = (y - min.y) / range.y;
+                geometry.attributes.uv.setXY(i / 3, u, v);
+            }
+        });
+
+        return geometry;
     }
 
     roundedDiamondGeometry(width: number, height: number, radius: number) {

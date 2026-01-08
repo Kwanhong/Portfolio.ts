@@ -5,6 +5,7 @@ import { UIStackView } from "./UIStackView";
 
 export class UIScrollView extends UIObject {
     contentView: UIContentView
+
     constructor(bounds: { x: number; y: number; width: number; height: number }) {
         super();
         const view = new UIContentView(this, { x: 0, y: 0, width: bounds.width, height: bounds.height })
@@ -25,8 +26,6 @@ export class UIScrollView extends UIObject {
 
     scrollTo(y: number) {
         this.contentView.position.y = -(this.contentView.size.height - this.size.height) / 2 + y;
-        // this.contentView.velocity.set(0, 0, 0);
-        // this.contentView.acceleration.set(0, 0, 0);
     }
 
     addStack(object: UIObject): this {
@@ -43,14 +42,17 @@ export class UIContentView extends UIObject {
 
     velocity: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
     acceleration: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
+
     private dragStartPosition: THREE.Vector2 | null = null;
     private fraction = 0.9;
     private forceFactor = 100
 
     constructor(parent: UIScrollView, bounds: { x: number; y: number; width: number; height: number }) {
+        
         super();
         this.scrollView = parent;
         this.bounds = { min: { x: bounds.x, y: bounds.y }, max: { x: bounds.x + bounds.width, y: bounds.y + bounds.height } };
+        this.size = { width: bounds.width, height: bounds.height };
         const material = new THREE.MeshPhysicalMaterial({
             transmission: 1.0,
             roughness: 0.5,
@@ -61,6 +63,7 @@ export class UIContentView extends UIObject {
         const stackGeometry = this.roundedPlaneGeometry(bounds.width, bounds.height, 10);
         const stackMesh = new THREE.Mesh(stackGeometry, material);
         const stack = new UIStackView({ axis: 'vertical', spacing: 0 });
+
         stack.add(stackMesh);
         this.add(stack);
         this.stack = stack;
@@ -84,7 +87,7 @@ export class UIContentView extends UIObject {
         EventManager.self.addPointerUpListener(() => {
             if (!this.visibleGlobally) return;
             this.dragStartPosition = null;
-            this.setSize(this.size);
+            // this.setSize(this.size);
         });
     }
 
@@ -115,9 +118,10 @@ export class UIContentView extends UIObject {
 
         this.velocity.add(this.acceleration.clone().multiplyScalar(dt));
         this.position.add(this.velocity.clone().multiplyScalar(dt));
+
         this.acceleration.multiplyScalar(0);
         this.velocity.multiplyScalar(this.fraction);
-        
+
         if (EventManager.self.pointerPressed) return;
         if (this.position.x < 0) {
             this.position.lerp(new THREE.Vector3(0, this.position.y, this.position.z), 0.25);

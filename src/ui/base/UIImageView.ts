@@ -7,8 +7,10 @@ export class UIImageView extends UIObject {
     constructor(bounds: { x: number; y: number; width: number; height: number }, texture: THREE.Texture, roundCorner: number = 7) {
         super();
 
-        const geometry = new THREE.PlaneGeometry(bounds.width, bounds.height);
-        const material = new MaskedMaterial(texture, { width: bounds.width, height: bounds.height }, roundCorner);
+        const geometry = this.roundedPlaneGeometry(bounds.width, bounds.height, roundCorner);
+        const material = new THREE.MeshBasicMaterial(
+            { map: texture, side: THREE.DoubleSide }
+        );// new MaskedMaterial(texture, { width: bounds.width, height: bounds.height }, roundCorner);
 
         this.mesh = new THREE.Mesh(geometry, material);
         this.add(this.mesh);
@@ -35,14 +37,17 @@ export class UIImageView extends UIObject {
         this.size = size;
         this.bounds = { max: { x: size.width / 2, y: size.height / 2 }, min: { x: -size.width / 2, y: -size.height / 2 } }
         this.mesh.geometry.dispose();
-        const geometry = new THREE.PlaneGeometry(size.width, size.height);
+        const geometry = this.roundedPlaneGeometry(size.width, size.height, 7);
         this.mesh.geometry = geometry;
         this.mesh.position.set(this.mesh.position.x, - size.height / 2, 0);
     }
 
     setOpacity(opacity: number): void {
-        const material = this.mesh.material as MaskedMaterial;
-        material.uniforms.uOpacity.value = opacity;
+        // const material = this.mesh.material as MaskedMaterial;
+        // material.uniforms.uOpacity.value = opacity;
+        const material = this.mesh.material as THREE.MeshBasicMaterial;
+        material.opacity = opacity;
+        material.transparent = opacity < 1.0;
         material.needsUpdate = true;
     }   
 

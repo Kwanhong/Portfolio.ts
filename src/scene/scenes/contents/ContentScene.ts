@@ -10,6 +10,7 @@ import { Time } from '../../../core/Time'
 import { UIImageView } from '@ui/base/UIImageView'
 import { FileManager } from '../../../core/FIleManager'
 import { UIView } from '@ui/base/UIView'
+import { UIVideoView } from '@ui/base/UIVideoView'
 
 export class ContentScene implements Scene {
 
@@ -65,19 +66,25 @@ export class ContentScene implements Scene {
             if (image) {
                 const width = height * (image.width / image.height)
                 const imageView = new UIImageView({ x: 0, y: 20, width: width, height: height }, texture);
-                
+
                 const view = new UIView({ x: 0, y: 40, width: 500, height: 250 }, 20)
-                
-                scrollView.addStack(imageView);
-                scrollView.addStack(text);
-                scrollView.addStack(view); // Placeholder to reserve space
-                scrollView.addStack(tempBtn1);
-                scrollView.addStack(tempBtn2);
-                scrollView.addStack(headline);
-                scrollView.addStack(tempBtn3);
-                scrollView.addStack(tempBtn4);
-                this.resize()
-                this.scrollView?.scrollTo(0);
+
+                const videoView = new UIVideoView({ x: 0, y: -10, width: 440, height: 230 }, 'resources/video.mov', 20);
+                view.add(videoView);
+                videoView.videoPlayer.play();
+
+                if (this.scrollView) {
+                    scrollView.addStack(tempBtn1);
+                    scrollView.addStack(headline);
+                    scrollView.addStack(imageView);
+                    scrollView.addStack(view);
+                    scrollView.addStack(tempBtn2);
+                    scrollView.addStack(text);
+                    scrollView.addStack(tempBtn3);
+                    scrollView.addStack(tempBtn4);
+                    this.resize()
+                    this.scrollView?.scrollTo(0);
+                }
             }
         });
 

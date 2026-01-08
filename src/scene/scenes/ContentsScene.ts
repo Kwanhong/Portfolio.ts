@@ -49,7 +49,7 @@ export class ContentsScene implements Scene {
             size: 100,
             radius: 150,
             depth: 0,
-            backgroundImageUrl: 'https:/images.pexels.com/photos/110854/pexels-photo-110854.jpeg',
+            backgroundImageUrl: 'https:/images.pexls.com/photos/110854/pexels-photo-110854.jpeg',
             substars: [
                 {
                     title: 'UNITY',
@@ -248,6 +248,32 @@ export class ContentsScene implements Scene {
                             },
                         },
                     ]
+                },
+                {
+                    title: 'Web',
+                    size: 70,
+                    index: 4,
+                    depth: 1,
+                    radius: 38,
+                    backgroundImageUrl: 'https://images.pexels.com/photos/110854/pexels-photo-110854.jpeg',
+                    onClick: () => {
+                        this.setDepth(1, this.sun.substars[4])
+                    },
+                    substars: [
+                        {
+                            title: 'WS',
+                            size: 12,
+                            index: 0,
+                            depth: 2,
+                            onClick: () => {
+                                this.proceed({
+                                    title: '🌗',
+                                    size: 12,
+                                    depth: 2
+                                })
+                            },
+                        },
+                    ]   
                 }
             ]
         }
