@@ -26,11 +26,9 @@ export class EpilogueScene implements Scene {
     }
 
     refresh(): void {
-        // Code to refresh or update the scene
     }
 
     update(_: number): void {
-        // Update logic for EpilogueScene if needed
     }
 
     resize(): void {
@@ -38,7 +36,6 @@ export class EpilogueScene implements Scene {
     }
 
     finish(): void {
-        // Code to execute when the scene is finished
         this.enabled = false
         this.onFinished?.()
     }

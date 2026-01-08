@@ -2,7 +2,6 @@ import { UIObject } from './UIObject';
 import * as THREE from 'three';
 import type { UIText } from './UIText';
 import type { UIButton } from './UIButton';
-import type { UIImageView } from './UIImageView';
 
 export interface UIStackViewOptions {
     axis?: 'horizontal' | 'vertical';
@@ -37,21 +36,21 @@ export class UIStackView extends UIObject {
         for (const child of this.uiChildren) {
             if (!fillScreen) break;
             const text = child as UIText
-            const button = child as UIButton
-            const image = child as UIImageView
             if (text.textMesh) {
                 const textHeight = text.textMesh.textMesh.geometry.boundingBox?.min.y ?? this.size.height;
                 text.setSize({ width: this.size.width - this.spacing * 2, height: -textHeight });
-            } else if (button) {
-                button.setSize({ width: this.size.width - this.spacing * 2, height: button.size.height });
-            } else if (image) {
-                image.setSize({ width: this.size.width - this.spacing * 2, height: image.size.height });
-            }   
+            } else {
+                child.setSize({ width: this.size.width - this.spacing * 2, height: child.size.height });
+            }
         }
 
         let offset = 0;
         if (this.axis === 'vertical') {
-            this.size.height = this.spacing;
+            if ((this.uiChildren[0] as UIButton).backgroundMesh) {
+                this.size.height = this.spacing 
+            } else {
+                this.size.height = -this.spacing;
+            }
         } else {
             this.size.width = 0;
         }
@@ -60,7 +59,7 @@ export class UIStackView extends UIObject {
             if (this.axis === 'vertical') {
                 child.position.set(0, - this.size.height - this.spacing * 1.5, 10);
                 this.size.height += child.size.height + this.spacing
-                if ((child as UIImageView).image || (child as UIText).textMesh) {
+                if (!(child as UIButton).backgroundMesh) {
                     this.size.height += this.spacing * 2
                 }
                 console.log('Stack Child Pos Y: ', child.position.y, 'Child: ', (child as UIText).textMesh == null ? 'UIButton' : 'UIText');

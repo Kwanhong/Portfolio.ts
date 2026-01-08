@@ -49,15 +49,15 @@ export class ContentsScene implements Scene {
             size: 100,
             radius: 150,
             depth: 0,
-            backgroundImageUrl: 'https://images.pexels.com/photos/4270292/pexels-photo-4270292.jpeg',
+            backgroundImageUrl: 'https:/images.pexels.com/photos/110854/pexels-photo-110854.jpeg',
             substars: [
                 {
                     title: 'UNITY',
                     size: 70,
                     index: 0,
-                    radius: 28,
+                    radius: 38,
                     depth: 1,
-                    url: 'https://images.pexels.com/photos/1722183/pexels-photo-1722183.jpeg',
+                    backgroundImageUrl: 'https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg',
                     onClick: () => {
                         this.setDepth(1, this.sun.substars[0])
                     },
@@ -123,10 +123,10 @@ export class ContentsScene implements Scene {
                     title: 'iOS',
                     size: 70,
                     index: 1,
-                    radius: 28,
+                    radius: 38,
                     depth: 1,
                     buttonImageUrl: 'resources/appIcon_none.png',
-                    backgroundImageUrl: 'https://images.pexels.com/photos/1334605/pexels-photo-1334605.jpeg',
+                    backgroundImageUrl: 'https://images.pexels.com/photos/110854/pexels-photo-110854.jpeg',
                     onClick: () => {
                         this.setDepth(1, this.sun.substars[1])
                     },
@@ -164,7 +164,7 @@ export class ContentsScene implements Scene {
                     size: 70,
                     index: 2,
                     depth: 1,
-                    radius: 28,
+                    radius: 38,
                     backgroundImageUrl: 'https://images.pexels.com/photos/110854/pexels-photo-110854.jpeg',
                     onClick: () => {
                         this.setDepth(1, this.sun.substars[2])
@@ -202,7 +202,7 @@ export class ContentsScene implements Scene {
                     size: 70,
                     index: 3,
                     depth: 1,
-                    radius: 28,
+                    radius: 38,
                     backgroundImageUrl: 'https://images.pexels.com/photos/5077042/pexels-photo-5077042.jpeg',
                     onClick: () => {
                         this.setDepth(1, this.sun.substars[3])
@@ -254,7 +254,7 @@ export class ContentsScene implements Scene {
 
         const sun = new ContentStar(info)
         const solarSystem = new SceneObject
-        solarSystem.position.set(-45, -20, 0)
+        solarSystem.position.set(0, 20, 0)
         this.self.add(solarSystem)
         solarSystem.add(sun)
         this.sun = sun
@@ -301,7 +301,7 @@ export class ContentsScene implements Scene {
             const forceX = deltaX
             this.lastPressedPointer.x = event.clientX
             this.lastPressedPointer.y = event.clientY
-            const depthFactor = (star.info.depth + 1)
+            const depthFactor = (star.info.depth * 0.7 + 1)
             star.applyForce(forceX * depthFactor * 0.5);
         });
 
@@ -468,7 +468,7 @@ export class ContentsScene implements Scene {
             -(this.lastPressedPointer.y - Camera.size.height / 2), 0
         )
 
-        let starPos = pointer.clone().normalize().multiplyScalar(radius).add(star.baseAnchor).add(new THREE.Vector3(20, 0, 0))
+        let starPos = pointer.clone().normalize().multiplyScalar(radius).add(star.baseAnchor)
         star.position.lerp(starPos, 0.1)
 
         const superstarScaleFactor = 3
@@ -503,16 +503,24 @@ export class ContentsScene implements Scene {
                 radius = (star.info.radius ?? 100) * 2.2
             }
             star.radius = Helper.lerp(star.radius, radius, 0.2)
-            star.scale.lerp(new THREE.Vector3(0.9, 0.9, 0.9).multiplyScalar(star.info.depth + 1), 0.2)
-            star.poleX = Helper.lerp(star.poleX, 40, 0.2)
+            star.scale.lerp(new THREE.Vector3(0.9, 0.9, 0.9).multiplyScalar(star.info.depth * 0.7 + 1), 0.2)
+            star.pole = Helper.lerp(star.pole, 90, 0.2)
+            for (let substar of star.substars) {
+                // substar.scale.lerp(new THREE.Vector3(1, 1, 1).multiplyScalar(substar.info.depth * 0.7 + 1), 0.2)
+                substar.pole = Helper.lerp(substar.pole, 90, 0.2)
+            }
         } else {
             let radius = star.info.radius ?? 100
             if (this.currentDepth === 1) {
                 radius = (star.info.radius ?? 100) * 2.5
             }
             star.radius = Helper.lerp(star.radius, radius, 0.2)
-            star.scale.lerp(new THREE.Vector3(1, 1, 1).multiplyScalar(star.info.depth + 1), 0.2)
-            star.poleX = Helper.lerp(star.poleX, 30, 0.2)
+            star.pole = Helper.lerp(star.pole, 45, 0.2)
+            star.scale.lerp(new THREE.Vector3(1, 1, 1).multiplyScalar(star.info.depth * 0.7 + 1), 0.2)
+            for (let substar of star.substars) {
+                // substar.scale.lerp(new THREE.Vector3(1, 1, 1).multiplyScalar(substar.info.depth * 0.7 + 1), 0.2)    
+                substar.pole = Helper.lerp(substar.pole, 45, 0.2)
+            }
         }
 
         star.update(dt)

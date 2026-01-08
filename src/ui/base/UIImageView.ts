@@ -40,6 +40,12 @@ export class UIImageView extends UIObject {
         this.mesh.position.set(this.mesh.position.x, - size.height / 2, 0);
     }
 
+    setOpacity(opacity: number): void {
+        const material = this.mesh.material as MaskedMaterial;
+        material.uniforms.uOpacity.value = opacity;
+        material.needsUpdate = true;
+    }   
+
 }
 
 export class MaskedMaterial extends THREE.ShaderMaterial {
@@ -55,6 +61,7 @@ export class MaskedMaterial extends THREE.ShaderMaterial {
                 uTexture: { value: texture }, // 텍스처
                 uCornerRadius: { value: cornerRadius }, // 코너 반경
                 uAspect: { value: aspect }, // 텍스처의 가로세로 비율
+                uOpacity: { value: 1.0 }
             },
             vertexShader: `
                 varying vec2 vUv;
@@ -67,6 +74,7 @@ export class MaskedMaterial extends THREE.ShaderMaterial {
                 uniform sampler2D uTexture;
                 uniform float uCornerRadius;
                 uniform float uAspect; // 텍스처의 가로세로 비율
+                uniform float uOpacity;
                 varying vec2 vUv;
 
                 void main() {
@@ -99,6 +107,9 @@ export class MaskedMaterial extends THREE.ShaderMaterial {
 
                     // 텍스처 색상 출력
                     vec4 texColor = texture2D(uTexture, uv);
+
+                    // 투명도 적용
+                    texColor.a *= uOpacity;
                     gl_FragColor = texColor;
                 }
             `,

@@ -12,6 +12,7 @@ interface UIButtonOptions {
     width?: number;
     height?: number;
     text?: string;
+    shape?: buttonShape;
     style?: TextStyle;
     color?: number;
     cornerRadius?: number;
@@ -19,6 +20,7 @@ interface UIButtonOptions {
 }
 
 export type buttonStatus = 'hover' | 'press' | 'blur'
+export type buttonShape = 'rectangle' | 'diamond'
 
 export class UIButton extends UIObject {
 
@@ -29,6 +31,8 @@ export class UIButton extends UIObject {
     backgroundMeshMaxOpacity: number = 0.8
     text: UIText
     status: buttonStatus = 'hover'
+    shape: buttonShape = 'rectangle'
+
     private color: THREE.Color = new THREE.Color(1, 1, 1);
     private _eventEnabled: boolean = true;
     set eventEnabled(value: boolean) {
@@ -53,8 +57,12 @@ export class UIButton extends UIObject {
         this.text.position.set(size.width / 2, 0, 1);
         this.text.setSize(size);
         this.backgroundMesh.geometry.dispose();
-        const geometry = this.roundedPlaneGeometry(size.width, size.height, this.roundCornerRadius);
-        this.backgroundMesh.geometry = geometry;
+
+        if (this.shape === 'diamond') {
+            this.backgroundMesh.geometry = this.roundedDiamondGeometry(size.width, size.height, this.roundCornerRadius);
+        } else {
+            this.backgroundMesh.geometry = this.roundedPlaneGeometry(size.width, size.height, this.roundCornerRadius);
+        }
     }
 
     onBlur(): void {
@@ -88,9 +96,11 @@ export class UIButton extends UIObject {
         style = uiBaselineStyle,
         color = new THREE.Color(1, 1, 1).getHex(),
         cornerRadius = 15,
+        shape = 'rectangle',    
         onClick
     }: UIButtonOptions = {}) {
         super();
+        this.shape = shape;
         this.roundCornerRadius = cornerRadius;
         this.text = new UIText(text, style, () => {
             const size = { width: width, height: height };
@@ -101,7 +111,12 @@ export class UIButton extends UIObject {
         });
         this.add(this.text);
 
-        const geometry = this.roundedPlaneGeometry(width, height, cornerRadius);
+        let geometry;
+        if (this.shape === 'diamond') {
+            geometry = this.roundedDiamondGeometry(width, height, cornerRadius);
+        } else {
+            geometry = this.roundedPlaneGeometry(width, height, cornerRadius);
+        }
         const material = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.8 });
         this.backgroundMesh = new THREE.Mesh(geometry, material);
         this.add(this.backgroundMesh);
@@ -110,7 +125,7 @@ export class UIButton extends UIObject {
         this.bounds = { max: { x: width / 2, y: height / 2 }, min: { x: -width / 2, y: -height / 2 } }
         this.size = { width: width, height: height }
 
-        this.onBlur();
+        // this.onBlur();
         if (onClick) {
             this.onClick = onClick;
             EventManager.self.addPointerMoveListener((event) => {
@@ -177,10 +192,17 @@ export class UIOpaqueBlurButton extends UIButton {
         style = uiBaselineStyle,
         color = new THREE.Color(1, 1, 1).getHex(),
         cornerRadius = 20,
+        shape = 'rectangle',    
         onClick
     }: UIButtonOptions = {}) {
-        super({ width, height, text, style, color, cornerRadius, onClick });
-        const geometry = this.roundedPlaneGeometry(width, height, cornerRadius);
+        super({ width, height, text, style, color, cornerRadius, onClick, shape: shape });
+        this.shape = shape;
+        let geometry;
+        if (this.shape === 'diamond') {
+            geometry = this.roundedDiamondGeometry(width, height, cornerRadius);
+        } else {
+            geometry = this.roundedPlaneGeometry(width, height, cornerRadius);
+        }
         const material = new THREE.MeshPhysicalMaterial({
             transmission: 1.0, // Fully transparent to the background capture
             roughness: 0.3,    // Controls the amount of blur (0 is clear, 1 is very blurred)
@@ -205,8 +227,11 @@ export class UIOpaqueBlurButton extends UIButton {
     setSize(size: { width: number; height: number; }): void {
         super.setSize(size);
         this.opaqueBackground.geometry.dispose();
-        const geometry = this.roundedPlaneGeometry(size.width, size.height, this.roundCornerRadius);
-        this.opaqueBackground.geometry = geometry;
+        if (this.shape === 'diamond') { 
+            this.opaqueBackground.geometry = this.roundedDiamondGeometry(size.width, size.height, this.roundCornerRadius);
+        } else {
+            this.opaqueBackground.geometry = this.roundedPlaneGeometry(size.width, size.height, this.roundCornerRadius);
+        }
     }
 }
 
@@ -218,23 +243,42 @@ export class UIImageButton extends UIButton {
         const material = this.imageView.mesh.material as THREE.ShaderMaterial;
         material.transparent = true;
         material.opacity = opacity;
+        this.imageView.setOpacity(opacity);
     }
+
     constructor(imageTexture: THREE.Texture, {
         width = 100,
         height = 100,
+        text = "",
         cornerRadius = 20,
         onClick
     }: {
         width?: number;
         height?: number;
+        text?: string;
         cornerRadius?: number;
         onClick?: () => void;
     } = {}) {
-        super({ width, height, text: "", cornerRadius, onClick });
-        
+        super({ width, height, text: text, cornerRadius, onClick, color: new THREE.Color(0, 0, 0).getHex() });
         this.imageView = new UIImageView({x: 0, y: 0, width: width, height: height}, imageTexture, height / 2);
         this.add(this.imageView);
         this.imageView.position.set(0, height / 2, 0.1);
+        (this.backgroundMesh.material as THREE.MeshBasicMaterial).opacity = 1
+    }
+
+    onHover(): void {
+        super.onHover();
+        this.setOpacity(1.0);
+    }
+    
+    onBlur(): void {    
+        super.onBlur();
+        this.setOpacity(0.5);
+    }
+    
+    onPress(): void {
+        super.onPress();
+        this.setOpacity(0.2);
     }
 
     setSize(size: { width: number; height: number; }): void {
