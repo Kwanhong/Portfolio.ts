@@ -16,7 +16,7 @@ export class TextMesh extends SceneObject {
         this.textMesh.fontSize = style.fontSize
         this.textMesh.color = new THREE.Color(style.color);
         (this.textMesh as any).textAlign = style.textAlign === 'right' ? 'right' : style.textAlign === 'left' ? 'left' : 'center';
-        console.log('clipRect:', (this.textMesh as any).clipRect);
+        // console.log('clipRect:', (this.textMesh as any).clipRect);
         this.textMesh.anchorX = style.anchorX ?? 'left'
         this.textMesh.anchorY = style.anchorY ?? 'middle'
         this.textMesh.font = style.font
@@ -32,7 +32,6 @@ export class TextMesh extends SceneObject {
             if (!bounds) return;
             const width = bounds.max.x - bounds.min.x;
             const height = bounds.max.y - bounds.min.y;
-            console.log(`TextMesh synccomplete: width=${width}, height=${height}`);
             onRender({ min: bounds.min, max: bounds.max }, { width, height });
             this.textMesh.removeEventListener("synccomplete" as any, listener);
         }

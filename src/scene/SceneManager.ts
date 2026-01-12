@@ -25,13 +25,15 @@ export class SceneManager {
         PerlinNoise.setSeed(Math.random() * 65536)
 
         let mainScene = new MainScene(this.mother, () => { this.scenes[1]?.run() })
-        let contentScene = new ContentScene(this.mother, () => { this.scenes[1]?.run() })
-        let contentsScene = new ContentsScene(this.mother, () => { this.scenes[0]?.run() }, (info) => { contentScene.info = info; contentScene.run() }, () => { this.scenes[3]?.run() })
+        // let contentScene = new ContentScene(this.mother, () => { this.scenes[1]?.run() })
+        let contentsScene = new ContentsScene(this.mother, () => { this.scenes[0]?.run() }, (info) => { 
+            // contentScene.info = info; contentScene.run() 
+        }, () => { this.scenes[3]?.run() })
         let epilogueScene = new EpilogueScene(this.mother)
 
         this.scenes.push(mainScene)
         this.scenes.push(contentsScene)
-        this.scenes.push(contentScene)
+        // this.scenes.push(contentScene)
         this.scenes.push(epilogueScene)
 
         this.scenes[0].run()

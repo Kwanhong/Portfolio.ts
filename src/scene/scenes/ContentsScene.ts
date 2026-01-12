@@ -6,9 +6,7 @@ import { ContentStar, type starInfo } from '@objects/contents/ContentStar'
 import { EventManager } from '../../event/EventManager'
 import { Helper } from '../../core/Helper'
 import { SceneObject } from '@objects/SceneObject'
-import { FileManager } from '../../core/FIleManager'
-import { Time } from '../../core/Time'
-import { Color } from '@data/Color'
+import { BackgroundField } from '@ui/contents/BackgroundField'
 
 export class ContentsScene implements Scene {
 
@@ -30,11 +28,7 @@ export class ContentsScene implements Scene {
     private sun: ContentStar
     private currentStar: ContentStar
     private currentDepth: number = 0
-
-    private backgroundMeshes: THREE.Mesh[] = [];
-    private backgroundMeshCount: number = 3; // 기본값을 2로 설정
-    private currentBackgroundIndex: number = 0;
-    private transitionDimmer: THREE.Mesh;
+    private backgroundField: BackgroundField
 
     constructor(scene: THREE.Scene, onReturned: () => void = () => { }, onProceeded: (info: starInfo) => void = () => { }, onFinished: () => void = () => { }) {
         this.mother = scene;
@@ -44,12 +38,14 @@ export class ContentsScene implements Scene {
         this.onProceeded = onProceeded;
         this.enabled = false;
 
+        this.backgroundField = new BackgroundField(Camera.size, 40)
+        this.self.add(this.backgroundField)
+
         const info = {
             title: 'PORTFOLiO',
             size: 100,
             radius: 150,
             depth: 0,
-            backgroundImageUrl: 'https:/images.pexls.com/photos/110854/pexels-photo-110854.jpeg',
             substars: [
                 {
                     title: 'UNITY',
@@ -57,7 +53,6 @@ export class ContentsScene implements Scene {
                     index: 0,
                     radius: 38,
                     depth: 1,
-                    backgroundImageUrl: 'https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg',
                     onClick: () => {
                         this.setDepth(1, this.sun.substars[0])
                     },
@@ -126,7 +121,6 @@ export class ContentsScene implements Scene {
                     radius: 38,
                     depth: 1,
                     buttonImageUrl: 'resources/appIcon_none.png',
-                    backgroundImageUrl: 'https://images.pexels.com/photos/110854/pexels-photo-110854.jpeg',
                     onClick: () => {
                         this.setDepth(1, this.sun.substars[1])
                     },
@@ -165,7 +159,6 @@ export class ContentsScene implements Scene {
                     index: 2,
                     depth: 1,
                     radius: 38,
-                    backgroundImageUrl: 'https://images.pexels.com/photos/110854/pexels-photo-110854.jpeg',
                     onClick: () => {
                         this.setDepth(1, this.sun.substars[2])
                     },
@@ -203,7 +196,6 @@ export class ContentsScene implements Scene {
                     index: 3,
                     depth: 1,
                     radius: 38,
-                    backgroundImageUrl: 'https://images.pexels.com/photos/5077042/pexels-photo-5077042.jpeg',
                     onClick: () => {
                         this.setDepth(1, this.sun.substars[3])
                     },
@@ -255,7 +247,6 @@ export class ContentsScene implements Scene {
                     index: 4,
                     depth: 1,
                     radius: 38,
-                    backgroundImageUrl: 'https://images.pexels.com/photos/110854/pexels-photo-110854.jpeg',
                     onClick: () => {
                         this.setDepth(1, this.sun.substars[4])
                     },
@@ -331,121 +322,6 @@ export class ContentsScene implements Scene {
             star.applyForce(forceX * depthFactor * 0.5);
         });
 
-        const imageUrl = this.currentStar.info.backgroundImageUrl
-        const geometry = new THREE.PlaneGeometry(1, 1); // 임시 초기화
-
-        for (let i = 0; i < this.backgroundMeshCount; i++) {
-            const material = new THREE.MeshBasicMaterial({ transparent: false });
-            const mesh = new THREE.Mesh(geometry.clone(), material);
-            mesh.position.set(0, 0, -200 - i); // Z축으로 쌓이도록 설정
-            mesh.visible = i === 0; // 첫 번째 메시만 보이도록 설정
-            this.backgroundMeshes.push(mesh);
-            this.self.add(mesh);
-        }
-
-        const colorHex = Color.helper.getHexNumber('background.primary');
-        const dimmerMaterial = new THREE.MeshBasicMaterial({ color: colorHex, transparent: true, opacity: 0 })
-        this.transitionDimmer = new THREE.Mesh(geometry.clone(), dimmerMaterial);
-        this.transitionDimmer.position.set(0, 0, -200);
-        this.self.add(this.transitionDimmer);
-
-        if (imageUrl) {
-            this.setBackgroundTexture(imageUrl);
-        }
-    }
-    private setBackgroundTexture(url: string): void {
-        const download = FileManager.loadTexture(url);
-        const duration = 0.5;
-
-        this.dim(duration, 1, () => {
-            // Find the next available background mesh
-            let nextIndex = (this.currentBackgroundIndex + 1) % this.backgroundMeshCount;
-            let found = false;
-
-            for (let i = 0; i < this.backgroundMeshCount; i++) {
-                const texture = (this.backgroundMeshes[i].material as THREE.MeshBasicMaterial).map as THREE.Texture<HTMLImageElement>;
-                const uuid = texture?.uuid;
-
-                if (uuid != null && uuid === this.currentStar.info.urlUuid) {
-                    nextIndex = i;
-                    found = true;
-                    break;
-                }
-            }
-            let currentIndex = this.currentBackgroundIndex;
-            for (let i = 0; i < this.backgroundMeshCount; i++) {
-                if (this.backgroundMeshes[i].visible) {
-                    currentIndex = i;
-                    break;
-                }
-            }
-
-            const currentMesh = this.backgroundMeshes[currentIndex];
-            const nextMesh = this.backgroundMeshes[nextIndex];
-            const bgMaterial = nextMesh.material as THREE.MeshBasicMaterial;
-
-            // If the texture is not found or needs to be updated
-            if (!found || !bgMaterial.map || bgMaterial.map.uuid !== this.currentStar.info.urlUuid) {
-                download.then((texture) => {
-                    bgMaterial.map?.dispose();
-                    bgMaterial.map = texture;
-                    this.currentStar.info.urlUuid = texture.uuid;
-                    this.fitImageToWindow(texture);
-
-                    // Update visibility
-                    currentMesh.visible = false;
-                    nextMesh.visible = true;
-                    this.currentBackgroundIndex = nextIndex;
-
-                    this.dim(duration, -1);
-                });
-            } else {
-                // No need to update texture, just switch visibility
-                currentMesh.visible = false;
-                nextMesh.visible = true;
-                // this.currentBackgroundIndex = nextIndex;
-
-                this.dim(duration, -1);
-            }
-        });
-    }
-
-    private dim(duration = 0.5, inOut = 1, complete: () => void = (): void => { }): void {
-
-        const material = this.transitionDimmer.material as THREE.MeshBasicMaterial
-        Time.coroutineSec(duration, (dt) => {
-            material.opacity += (dt / duration) * inOut
-        }, () => {
-            material.opacity = inOut > 0 ? 1 : 0
-            complete()
-        })
-    }
-
-    private fitImageToWindow(texture: THREE.Texture<HTMLImageElement>): void {
-        if (texture && texture.image && texture.image.width && texture.image.height) {
-            const imageAspect = texture.image.width / texture.image.height;
-            const cameraAspect = Camera.size.width / Camera.size.height;
-
-            let planeWidth, planeHeight;
-
-            if (imageAspect > cameraAspect) {
-                planeHeight = Camera.size.height;
-                planeWidth = planeHeight * imageAspect;
-            } else {
-                planeWidth = Camera.size.width;
-                planeHeight = planeWidth / imageAspect;
-            }
-
-            this.backgroundMeshes.forEach(mesh => {
-                mesh.geometry.dispose(); // Dispose old geometry
-                mesh.geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
-            });
-
-            this.transitionDimmer.geometry.dispose(); // Dispose old geometry
-            this.transitionDimmer.geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
-        } else {
-            console.warn("Texture image is not available or invalid.");
-        }
     }
 
     setDepth(depth: number, star: ContentStar) {
@@ -465,10 +341,6 @@ export class ContentsScene implements Scene {
         this.currentStar = star
 
         this.currentStar.applyForce(50);
-
-        if (star.info.backgroundImageUrl) {
-            this.setBackgroundTexture(star.info.backgroundImageUrl);
-        }
     }
 
     private lastPressedPointer = new THREE.Vector3(0, 0, 0)
@@ -485,6 +357,9 @@ export class ContentsScene implements Scene {
     }
 
     update(dt: number): void {
+
+        this.backgroundField.update(dt);
+
         if (!this.enabled) return
         let star = this.currentStar
 
@@ -564,11 +439,6 @@ export class ContentsScene implements Scene {
             -Camera.size.height / 2 + this.returnButton.size.height / 2 + margin,
             0
         );
-
-        for (let mesh of this.backgroundMeshes) {
-            const texture = (mesh.material as THREE.MeshBasicMaterial).map as THREE.Texture<HTMLImageElement>;
-            this.fitImageToWindow(texture);
-        }
     }
 
     return(): void {

@@ -37,7 +37,7 @@ export class UIObject extends SceneObject {
         this.size = size;
         this.bounds = { max: { x: size.width / 2, y: size.height / 2 }, min: { x: -size.width / 2, y: -size.height / 2 } }
     }
-    
+
     roundedPlaneGeometry(width: number, height: number, radius: number): THREE.ShapeGeometry {
         const shape = new THREE.Shape();
 
@@ -57,7 +57,6 @@ export class UIObject extends SceneObject {
 
         // ShapeGeometry 생성
         const geometry = new THREE.ShapeGeometry(shape);
-        console.log(shape.uuid);
 
         // UV 좌표 설정
         geometry.computeBoundingBox();
@@ -77,86 +76,147 @@ export class UIObject extends SceneObject {
         return geometry;
     }
 
-    roundedDiamondGeometry(width: number, height: number, radius: number) {
+
+    roundedLineGeometry(
+        paths: { x: number; y: number }[],
+        weight: number, radius: number = 0
+    ): THREE.ShapeGeometry {
+        if (paths.length < 2) {
+            throw new Error("paths must have at least 2 points");
+        }
+
+        const halfWeight = weight / 2;
         const shape = new THREE.Shape();
 
-        const halfWidth = width / 2;
-        const halfHeight = height / 2;
+        // 방향 벡터 계산 (정규화)
+        const getDir = (from: { x: number; y: number }, to: { x: number; y: number }) => {
+            const dx = to.x - from.x;
+            const dy = to.y - from.y;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            return { x: dx / len, y: dy / len };
+        };
 
-        const top = new THREE.Vector2(0, halfHeight); // 위쪽
-        const right = new THREE.Vector2(halfWidth, 0); // 오른쪽
-        const bottom = new THREE.Vector2(0, -halfHeight); // 아래쪽
-        const left = new THREE.Vector2(-halfWidth, 0); // 왼쪽
+        // 각 세그먼트의 방향 벡터
+        const dirs: { x: number; y: number }[] = [];
+        for (let i = 0; i < paths.length - 1; i++) {
+            dirs.push(getDir(paths[i], paths[i + 1]));
+        }
 
-        shape.moveTo(top.x, top.y - radius);
+        // perpendicular
+        const perpLeft = (dir: { x: number; y: number }) => ({ x: -dir.y, y: dir.x });
+        const perpRight = (dir: { x: number; y: number }) => ({ x: dir.y, y: -dir.x });
 
-        shape.absarc(top.x + radius, top.y - radius, radius, Math.PI, Math.PI / 2, true);
+        // 왼쪽 점들과 오른쪽 점들 계산
+        const leftPoints: { x: number; y: number }[] = [];
+        const rightPoints: { x: number; y: number }[] = [];
 
-        shape.lineTo(right.x - radius, right.y);
-        shape.absarc(right.x - radius, right.y - radius, radius, Math.PI / 2, 0, true);
+        for (let i = 0; i < paths.length; i++) {
+            if (i === 0) {
+                // 시작점
+                const pL = perpLeft(dirs[0]);
+                const pR = perpRight(dirs[0]);
+                leftPoints.push({ x: paths[i].x + pL.x * halfWeight, y: paths[i].y + pL.y * halfWeight });
+                rightPoints.push({ x: paths[i].x + pR.x * halfWeight, y: paths[i].y + pR.y * halfWeight });
+            } else if (i === paths.length - 1) {
+                // 끝점
+                const pL = perpLeft(dirs[i - 1]);
+                const pR = perpRight(dirs[i - 1]);
+                leftPoints.push({ x: paths[i].x + pL.x * halfWeight, y: paths[i].y + pL.y * halfWeight });
+                rightPoints.push({ x: paths[i].x + pR.x * halfWeight, y: paths[i].y + pR.y * halfWeight });
+            } else {
+                // 중간점 - 두 세그먼트의 교차점 계산
+                const pL1 = perpLeft(dirs[i - 1]);
+                const pL2 = perpLeft(dirs[i]);
+                const pR1 = perpRight(dirs[i - 1]);
+                const pR2 = perpRight(dirs[i]);
 
-        shape.lineTo(bottom.x, bottom.y + radius);
-        shape.absarc(bottom.x - radius, bottom.y + radius, radius, 0, -Math.PI / 2, true);
+                // 간단히 평균 사용 (miter 방식)
+                const avgL = { x: (pL1.x + pL2.x) / 2, y: (pL1.y + pL2.y) / 2 };
+                const avgR = { x: (pR1.x + pR2.x) / 2, y: (pR1.y + pR2.y) / 2 };
+                const lenL = Math.sqrt(avgL.x * avgL.x + avgL.y * avgL.y) || 1;
+                const lenR = Math.sqrt(avgR.x * avgR.x + avgR.y * avgR.y) || 1;
 
-        shape.lineTo(left.x + radius, left.y);
-        shape.absarc(left.x + radius, left.y + radius, radius, -Math.PI / 2, -Math.PI, true);
+                const dot = dirs[i - 1].x * dirs[i].x + dirs[i - 1].y * dirs[i].y;
+                const angle = Math.acos(Math.max(-1, Math.min(1, dot)));
+                let miterLen = halfWeight / Math.cos(angle / 2);
+                miterLen = Math.min(miterLen, halfWeight * 3);
 
-        shape.lineTo(top.x, top.y - radius);
+                leftPoints.push({
+                    x: paths[i].x + (avgL.x / lenL) * miterLen,
+                    y: paths[i].y + (avgL.y / lenL) * miterLen
+                });
+                rightPoints.push({
+                    x: paths[i].x + (avgR.x / lenR) * miterLen,
+                    y: paths[i].y + (avgR.y / lenR) * miterLen
+                });
+            }
+        }
 
-        this.bounds = { min: { x: -halfWidth, y: -halfHeight }, max: { x: halfWidth, y: halfHeight } };
-        this.size = { width: width, height: height };
+        // Shape 그리기: 오른쪽 시작 -> 반원 -> 왼쪽으로 -> 끝점 -> 오른쪽으로 돌아오기
+        shape.moveTo(rightPoints[0].x, rightPoints[0].y);
+
+        // 시작점 반원 (오른쪽 → 왼쪽)
+        const pR0 = perpRight(dirs[0]);
+        const startAngle = Math.atan2(pR0.y, pR0.x);
+        shape.absarc(paths[0].x, paths[0].y, halfWeight, startAngle, startAngle + Math.PI, true);
+
+        // 왼쪽 라인 (시작 -> 끝) - 첫 점은 arc에서 이미 그렸으므로 1부터
+        for (let i = 1; i < leftPoints.length; i++) {
+            // shape.lineTo(leftPoints[i].x, leftPoints[i].y);
+            // continue;
+            // 중간 점에서 모서리 라운딩 체크 (마지막 점 제외)
+            if (i < leftPoints.length - 1) {
+                const cross = dirs[i - 1].x * dirs[i].y - dirs[i - 1].y * dirs[i].x;
+                if (cross < 0) {
+                    // 왼쪽 턴: 왼쪽 라인이 바깥쪽 → arc 추가
+                    const pL1 = perpLeft(dirs[i - 1]);
+                    const pL2 = perpLeft(dirs[i]);
+                    const a1 = Math.atan2(pL1.y, pL1.x);
+                    const a2 = Math.atan2(pL2.y, pL2.x);
+                    shape.absarc(paths[i].x, paths[i].y, halfWeight, a1, a2, true);
+                } else {
+                    // 오른쪽 턴: 왼쪽 라인이 안쪽 → lineTo
+                    shape.lineTo(leftPoints[i].x, leftPoints[i].y);
+                }
+            } else {
+                shape.lineTo(leftPoints[i].x, leftPoints[i].y);
+            }
+        }
+
+        // 끝점 반원 (왼쪽 → 오른쪽)
+        const pLEnd = perpLeft(dirs[dirs.length - 1]);
+        const endAngle = Math.atan2(pLEnd.y, pLEnd.x);
+        shape.absarc(paths[paths.length - 1].x, paths[paths.length - 1].y, halfWeight, endAngle, endAngle + Math.PI, true);
+
+        // 오른쪽 라인 (끝 -> 시작, 역순) - 끝점은 arc에서 이미 그렸으므로 length-2부터, 시작점은 closePath로 처리되므로 1까지
+        for (let i = rightPoints.length - 2; i >= 1; i--) {
+            // shape.lineTo(rightPoints[i].x, rightPoints[i].y);
+            // continue;
+            // 중간 점에서 모서리 라운딩 체크 (시작점 제외)
+            if (i > 0) {
+                const cross = dirs[i - 1].x * dirs[i].y - dirs[i - 1].y * dirs[i].x;
+                if (cross > 0) {
+                    // 오른쪽 턴: 오른쪽 라인이 바깥쪽 → arc 추가
+                    const pR2 = perpRight(dirs[i]);
+                    const pR1 = perpRight(dirs[i - 1]);
+                    const a1 = Math.atan2(pR2.y, pR2.x);
+                    const a2 = Math.atan2(pR1.y, pR1.x);
+                    shape.absarc(paths[i].x, paths[i].y, halfWeight, a1, a2, true);
+                } else {
+                    // 왼쪽 턴: 오른쪽 라인이 안쪽 → lineTo
+                    shape.lineTo(rightPoints[i].x, rightPoints[i].y);
+                }
+            } else {
+                shape.lineTo(rightPoints[i].x, rightPoints[i].y);
+            }
+        }
+
+        shape.closePath();
 
         return new THREE.ShapeGeometry(shape);
     }
 
-    roundedLineGeometry(paths: { x: number; y: number }[], weight: number, radius: number): THREE.ExtrudeGeometry {
-        if (paths.length < 2) {
-            throw new Error("Paths must contain at least two points.");
-        }
 
-        const shape = new THREE.Shape();
-        const halfWeight = weight / 2;
-
-        const start = paths[0];
-        shape.moveTo(start.x, start.y);
-
-        for (let i = 1; i < paths.length; i++) {
-            const current = paths[i];
-            const previous = paths[i - 1];
-
-            if (i < paths.length - 1) {
-                const next = paths[i + 1];
-
-                const prevDir = new THREE.Vector2(previous.x - current.x, previous.y - current.y).normalize();
-                const nextDir = new THREE.Vector2(next.x - current.x, next.y - current.y).normalize();
-
-                const cornerCenter = new THREE.Vector2(
-                    current.x + prevDir.x * radius,
-                    current.y + prevDir.y * radius
-                );
-
-                const cornerStart = new THREE.Vector2(
-                    current.x + prevDir.x * radius,
-                    current.y + prevDir.y * radius
-                );
-                const cornerEnd = new THREE.Vector2(
-                    current.x + nextDir.x * radius,
-                    current.y + nextDir.y * radius
-                );
-
-                shape.lineTo(cornerStart.x, cornerStart.y);
-                shape.absarc(cornerCenter.x, cornerCenter.y, radius, prevDir.angle(), nextDir.angle(), false);
-                shape.lineTo(cornerEnd.x, cornerEnd.y);
-            } else {
-                shape.lineTo(current.x, current.y);
-            }
-        }
-
-        return new THREE.ExtrudeGeometry(shape, {
-            depth: halfWeight,
-            bevelEnabled: false,
-        });
-    }
 
     roundedTriangleGeometry(width: number, height: number, radius: number, direction: direction): THREE.ShapeGeometry {
         const shape = new THREE.Shape();
@@ -226,7 +286,7 @@ export class UIObject extends SceneObject {
         const group = new THREE.Group();
 
         // 1. 라운드 라인 생성
-        const lineGeometry = this.roundedLineGeometry(paths, weight, radius);
+        const lineGeometry = this.roundedLineGeometry(paths, weight);
         const lineMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // 기본 검정색
         const lineMesh = new THREE.Mesh(lineGeometry, lineMaterial);
         group.add(lineMesh);

@@ -67,9 +67,9 @@ export class ContentScene implements Scene {
                 const width = height * (image.width / image.height)
                 const imageView = new UIImageView({ x: 0, y: 20, width: width, height: height }, texture);
 
-                const view = new UIView({ x: 0, y: 40, width: 500, height: 250 }, 20)
+                const view = new UIView({ x: 0, y: 40, width: 500, height: 330 }, 20)
 
-                const videoView = new UIVideoView({ x: 0, y: -10, width: 440, height: 230 }, 'resources/video.mov', 20);
+                const videoView = new UIVideoView({ x: 0, y: -10, width: 440, height: 310 }, 'resources/video.mov', 20);
                 view.add(videoView);
                 videoView.videoPlayer.play();
 
