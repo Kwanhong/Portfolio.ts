@@ -33,62 +33,24 @@ export class ContentStar extends UIObject {
     private velocity: number = 0.0
     private acceleration: number = 0.0
     private fraction: number = 0.04
-    private maxVelocity: number = 10
+    private maxVelocity: number = 7
 
     constructor(info: starInfo) {
         super()
         this.info = info
 
-        const color = new THREE.Color(1.0, 1.0, 1.0).multiplyScalar((1 / Math.pow(info.depth + 1, 2)))
+        const color = new THREE.Color(1.0, 1.0, 1.0).multiplyScalar((1 / Math.pow(info.depth + 2, 2)))
         const colorHex = Color.helper.getHexNumberFromColor(color)
 
         if (info.buttonImageUrl != undefined) {
             FileManager.loadTexture(info.buttonImageUrl).then((texture) => {
-                this.button = new UIImageButton(texture, {
-                    width: info.size,
-                    height: info.size,
-                    text: info.title,
-                    cornerRadius: info.size / 2,
-                    onClick: info.onClick
-                })
-                if (info.depth != 1) {
-                    this.button.eventEnabled = false
-                } else {
-                    this.button.eventEnabled = true
-                }
-                this.add(this.button)
+                this.constructImageButton(info, texture);
             }).catch((error) => {
                 console.error("Failed to load texture:", error);
-                this.button = new UIOpaqueBlurButton({
-                    width: info.size,
-                    height: info.size,
-                    text: info.title,
-                    color: colorHex,
-                    cornerRadius: info.size / 2,
-                    onClick: info.onClick
-                })
-                if (info.depth != 1) {
-                    this.button.eventEnabled = false
-                } else {
-                    this.button.eventEnabled = true
-                }
-                this.add(this.button)
+                this.constructBlurButton(info, colorHex);
             });
         } else {
-            this.button = new UIOpaqueBlurButton({
-                width: info.size,
-                height: info.size,
-                text: info.title,
-                color: colorHex,
-                cornerRadius: info.size / 2,
-                onClick: info.onClick
-            })
-            if (info.depth != 1) {
-                this.button.eventEnabled = false
-            } else {
-                this.button.eventEnabled = true
-            }
-            this.add(this.button)
+            this.constructBlurButton(info, colorHex);
         }
 
         if (!info.radius || !info.substars) return
@@ -116,6 +78,39 @@ export class ContentStar extends UIObject {
         }
     }
 
+    constructBlurButton(info: starInfo, colorHex: number): void {
+        this.button = new UIOpaqueBlurButton({
+            width: info.size,
+            height: info.size,
+            text: info.title,
+            color: colorHex,
+            cornerRadius: info.size / 2,
+            onClick: info.onClick
+        })
+        if (info.depth != 1) {
+            this.button.eventEnabled = false
+        } else {
+            this.button.eventEnabled = true
+        }
+        this.add(this.button)
+    }
+
+    constructImageButton(info: starInfo, texture: THREE.Texture): void {
+        this.button = new UIImageButton(texture, {
+            width: info.size,
+            height: info.size,
+            text: info.title,
+            cornerRadius: info.size / 2,
+            onClick: info.onClick
+        })
+        if (info.depth != 1) {
+            this.button.eventEnabled = false
+        } else {
+            this.button.eventEnabled = true
+        }
+        this.add(this.button)
+    }
+
     update(dt: number): void {
 
         for (let substar of this.substars) {
@@ -125,7 +120,7 @@ export class ContentStar extends UIObject {
             let v = new THREE.Vector3(Math.cos(angle) * this.radius, 0, Math.sin(angle) * this.radius)
             // let angleOffset = this.poleX * (Math.PI / 180)
             v.applyAxisAngle(new THREE.Vector3(1, 0, 0), this.pole * (Math.PI / 180))
-            substar.position.lerp(new THREE.Vector3(v.x, v.y, v.z), 0.1)
+            substar.position.lerp(new THREE.Vector3(v.x, v.y, v.z), 0.2)
             substar.update(dt)
             substar.applyForce(this.acceleration * 4)
             substar.scale.lerp(new THREE.Vector3(1, 1, 1), 0.1)

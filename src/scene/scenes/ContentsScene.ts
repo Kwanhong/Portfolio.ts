@@ -38,7 +38,8 @@ export class ContentsScene implements Scene {
         this.onProceeded = onProceeded;
         this.enabled = false;
 
-        this.backgroundField = new BackgroundField(Camera.size, 40)
+        this.backgroundField = new BackgroundField(Camera.size, 37)
+        this.backgroundField.position.set(-12, 24, -250)
         this.self.add(this.backgroundField)
 
         const info = {
@@ -120,7 +121,7 @@ export class ContentsScene implements Scene {
                     index: 1,
                     radius: 38,
                     depth: 1,
-                    buttonImageUrl: 'resources/appIcon_none.png',
+                    // buttonImageUrl: 'resources/appIcon_none.png',
                     onClick: () => {
                         this.setDepth(1, this.sun.substars[1])
                     },
@@ -314,14 +315,28 @@ export class ContentsScene implements Scene {
             if (!this.enabled) return;
             if (!EventManager.self.pointerPressed) return;
             let star = this.currentStar
-            const deltaX = this.lastPressedPointer.x - event.clientX
-            const forceX = deltaX
+            let deltaX = this.lastPressedPointer.x - event.clientX
+            let deltaY = event.clientY - this.lastPressedPointer.y
+            
+            if (event.clientY < Camera.size.height / 2) {
+                deltaX *= -1
+            }
+            if (event.clientX < Camera.size.width / 2) {
+                deltaY *= -1
+            }
+            const forceX = deltaX + deltaY
             this.lastPressedPointer.x = event.clientX
             this.lastPressedPointer.y = event.clientY
             const depthFactor = (star.info.depth * 0.7 + 1)
-            star.applyForce(forceX * depthFactor * 0.5);
+            let force = forceX * depthFactor * 0.25
+            force = Math.min(Math.max(force, -10), 10);
+            star.applyForce(force);
         });
 
+        EventManager.self.addPointerUpListener((event) => {
+            if (!this.enabled) return;
+            
+        });
     }
 
     setDepth(depth: number, star: ContentStar) {
@@ -341,6 +356,7 @@ export class ContentsScene implements Scene {
         this.currentStar = star
 
         this.currentStar.applyForce(50);
+        this.backgroundField.setDepth(depth);
     }
 
     private lastPressedPointer = new THREE.Vector3(0, 0, 0)
@@ -348,7 +364,9 @@ export class ContentsScene implements Scene {
     run() {
         this.enabled = true
         this.resize()
-
+        if (this.currentDepth === 0) {
+        this.backgroundField.run();
+        }
         this.sun.applyForce(100);
     }
 

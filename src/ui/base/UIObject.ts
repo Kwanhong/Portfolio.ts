@@ -76,17 +76,25 @@ export class UIObject extends SceneObject {
         return geometry;
     }
 
-
     roundedLineGeometry(
         paths: { x: number; y: number }[],
-        weight: number, radius: number = 0
+        weight: number
     ): THREE.ShapeGeometry {
+        return new THREE.ShapeGeometry(this.roundedLineShape(paths, weight));
+    }
+
+    roundedLineShape(
+        paths: { x: number; y: number }[],
+        weight: number,
+        original: THREE.Shape | undefined = undefined
+    ): THREE.Shape {
+        
         if (paths.length < 2) {
             throw new Error("paths must have at least 2 points");
         }
 
         const halfWeight = weight / 2;
-        const shape = new THREE.Shape();
+        const shape = original || new THREE.Shape();
 
         // 방향 벡터 계산 (정규화)
         const getDir = (from: { x: number; y: number }, to: { x: number; y: number }) => {
@@ -212,11 +220,33 @@ export class UIObject extends SceneObject {
         }
 
         shape.closePath();
-
-        return new THREE.ShapeGeometry(shape);
+        return shape;
     }
 
+    singleLineGreometry(start: {x: number, y: number}, end: {x: number, y: number}, weight: number) {
+        const shape = new THREE.Shape()
+        const dir = { x: end.x - start.x, y: end.y - start.y }
+        const len = Math.sqrt(dir.x * dir.x + dir.y * dir.y)
+        dir.x /= len
+        dir.y /= len
 
+        const perp = (dir: { x: number; y: number }) => ({ x: -dir.y, y: dir.x });
+        const p = perp(dir)
+        const halfWeight = weight / 2
+
+        const leftStart = { x: start.x + p.x * halfWeight, y: start.y + p.y * halfWeight }
+        const rightStart = { x: start.x - p.x * halfWeight, y: start.y - p.y * halfWeight }
+        const leftEnd = { x: end.x + p.x * halfWeight, y: end.y + p.y * halfWeight }
+        const rightEnd = { x: end.x - p.x * halfWeight, y: end.y - p.y * halfWeight }
+
+        shape.moveTo(leftStart.x, leftStart.y)
+        shape.lineTo(leftEnd.x, leftEnd.y)
+        shape.lineTo(rightEnd.x, rightEnd.y)
+        shape.lineTo(rightStart.x, rightStart.y)
+        shape.closePath()
+
+        return new THREE.ShapeGeometry(shape)
+    }
 
     roundedTriangleGeometry(width: number, height: number, radius: number, direction: direction): THREE.ShapeGeometry {
         const shape = new THREE.Shape();

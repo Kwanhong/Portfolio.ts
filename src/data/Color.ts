@@ -51,4 +51,7 @@ export class Color {
     getHexNumberFromColor(color: THREEColor): number {
         return parseInt(this.getHexStringFromColor(color).replace('#', '0x'));
     }
+    getHexNumberFromHexString(hexString: string): number {
+        return parseInt(hexString.replace('#', '0x'));
+    }
 }

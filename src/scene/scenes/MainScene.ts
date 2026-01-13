@@ -152,7 +152,7 @@ export class MainScene implements Scene {
         donwload.then((data) => {
             let object = data.scene
             object.scale.set(0.1, 0.1, 0.1)
-            object.position.set(0, 90, -90)
+            object.position.set(0, 90, -100)
             this.self.add(object)
             this.head = object
             this.clips = data.animations
@@ -222,7 +222,7 @@ export class MainScene implements Scene {
         if (!this.enabled) return
 
         let radius = 17
-        let headPos = this.lastMousePosition.clone().normalize().multiplyScalar(radius).add(new THREE.Vector3(0, 90, -50))
+        let headPos = this.lastMousePosition.clone().normalize().multiplyScalar(radius).add(new THREE.Vector3(0, 90, -100))
         this.head?.position.lerp(headPos, 0.1)
         let originalZ = this.head?.rotation.z ?? 0
         let target = new THREE.Vector3(this.lastMousePosition.x, this.lastMousePosition.y, 500)
