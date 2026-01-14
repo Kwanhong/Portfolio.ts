@@ -21,13 +21,14 @@ export class SceneManager {
         this.mother.add(this.camera.self)
         Lights.addToScene(this.mother)
 
-        Language.helper.set('en')
+        Language.helper.set('kr')
         PerlinNoise.setSeed(Math.random() * 65536)
 
         let mainScene = new MainScene(this.mother, () => { this.scenes[1]?.run() })
         let contentScene = new ContentScene(this.mother, () => { this.scenes[1]?.run() })
         let contentsScene = new ContentsScene(this.mother, () => { this.scenes[0]?.run() }, (info) => { 
-            contentScene.info = info; contentScene.run() 
+            contentScene.infos = info
+            contentScene.run() 
         }, () => { this.scenes[3]?.run() })
         let epilogueScene = new EpilogueScene(this.mother)
 

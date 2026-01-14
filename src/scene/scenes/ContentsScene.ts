@@ -7,6 +7,14 @@ import { EventManager } from '../../event/EventManager'
 import { Helper } from '../../core/Helper'
 import { SceneObject } from '@objects/SceneObject'
 import { BackgroundField } from '@ui/contents/BackgroundField'
+import { Language } from '@data/Language'
+import type { contentsInfo } from './contents/ContentScene'
+import { defaultBaselineStyle, defaultDescriptionStyle, type TextStyle } from '@ui/styles/TextStyle'
+import { UIImageView } from '@ui/base/UIImageView'
+import { UIView } from '@ui/base/UIView'
+import { FileManager } from '../../core/FIleManager'
+import { UIText } from '@ui/base/UIText'
+import { UIObject } from '@ui/base/UIObject'
 
 export class ContentsScene implements Scene {
 
@@ -14,7 +22,7 @@ export class ContentsScene implements Scene {
     self: THREE.Object3D = new THREE.Object3D()
     onFinished?: (() => void) | undefined
     onReturned?: (() => void) | undefined
-    onProceeded?: ((info: starInfo) => void) | undefined
+    onProceeded?: ((info?: contentsInfo) => void) | undefined
 
     private _enabled: boolean = false;
     get enabled(): boolean { return this._enabled; }
@@ -30,7 +38,8 @@ export class ContentsScene implements Scene {
     private currentDepth: number = 0
     private backgroundField: BackgroundField
 
-    constructor(scene: THREE.Scene, onReturned: () => void = () => { }, onProceeded: (info: starInfo) => void = () => { }, onFinished: () => void = () => { }) {
+    constructor(scene: THREE.Scene, onReturned: () => void = () => { }, onProceeded: (infos?: contentsInfo) => void = () => { }, onFinished: () => void = () => { }) {
+        
         this.mother = scene;
         this.mother.add(this.self);
         this.onFinished = onFinished;
@@ -42,232 +51,310 @@ export class ContentsScene implements Scene {
         this.backgroundField.position.set(-12, 24, -250)
         this.self.add(this.backgroundField)
 
+        const hangulContents: contentsInfo = {
+            title: 'content.unity.smarthangul.title',
+            contents: [
+                {
+                    customView: (scrollView) => {
+                        const view = new UIView({x:0, y:0, width:300, height:150}, 47)
+                        
+                        const leftAnchor = new UIObject()
+                        leftAnchor.position.set(0, 0, 0)
+                        view.add(leftAnchor)
+
+                        FileManager.loadTexture('resources/appIcon_smart.png').then((texture) => {
+                            const imageView = new UIImageView(
+                                {x:65, y:-10, width:130, height:130},
+                                texture, 37
+                            )
+                            imageView.position.set(0, 0, 100)
+                            leftAnchor.add(imageView)
+                        })
+
+                        const author = new UIText(Language.helper.get('content.unity.smarthangul.author'), {
+                            ...defaultDescriptionStyle,
+                            fontSize: 12,
+                        }, (_, size) => {
+                            const role = new UIText(Language.helper.get('content.unity.smarthangul.role'), {
+                                ...defaultDescriptionStyle,
+                                fontSize: 12,
+                            })
+                            role.position.set(265, -size.height - 50, 0)
+                            role.setSize({width: 230, height: 50})
+                            leftAnchor.add(role)
+                        })
+
+                        author.setSize({width: 230, height: 130})
+                        author.position.set(265, -20, 100)
+                        leftAnchor.add(author)
+                        
+                        const style: TextStyle = { ...defaultBaselineStyle, fontSize: 10, anchorX: 'center', anchorY: 'middle', textAlign: 'center' }
+                        const btnAppstore = new UIOpaqueBlurButton({
+                            width: 30,
+                            height: 30,
+                            cornerRadius: 8,
+                            text: 'APP',
+                            style: style,
+                            onClick: () => {
+                                window.open('https://apps.apple.com/kr/app/%EC%8A%A4%EB%A7%88%ED%8A%B8-%ED%95%9C%EA%B8%80%EC%9D%B4-%ED%81%AC%EB%8A%94-%EB%82%98%EB%AC%B4/id1478712894', '_blank')
+                            }
+                        })
+
+                        const btnGithub = new UIOpaqueBlurButton({
+                            width: 30,
+                            height: 30,
+                            cornerRadius: 8,
+                            text: 'GIT',
+                            style: style,
+                            onClick: () => {
+                                window.open('https://github.com/Kwanhong', '_blank')   
+                            }
+                        })
+
+                        btnGithub.position.set(203, -111, 0)
+                        leftAnchor.add(btnGithub)
+                        btnAppstore.position.set(163, -111, 0)
+                        leftAnchor.add(btnAppstore)
+
+
+                        scrollView.addStack(view)
+
+                        return leftAnchor
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.unity.smarthangul.description',
+                        textStyle: defaultDescriptionStyle,
+                    },
+                    height: 300,
+                }, 
+                {
+                    text: {
+                        text: 'content.unity.smarthangul.description.sub',
+                        textStyle: defaultDescriptionStyle,
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.unity.smarthangul.role.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14, fontWeight: 'bold' },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.unity.smarthangul.role.detail',
+                        textStyle: defaultDescriptionStyle,
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.unity.smarthangul.role.detail.subtitle',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14, fontWeight: 'bold' },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.unity.smarthangul.role.detail.sub',
+                        textStyle: defaultDescriptionStyle,
+                    },
+                    height: 150,
+                },
+                {
+                    text: {
+                        text: 'content.unity.smarthangul.description.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14, fontWeight: 'bold' },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.unity.smarthangul.description.detail',
+                        textStyle: defaultDescriptionStyle,
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.unity.smarthangul.description.detail.subtitle.animation',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14, fontWeight: 'bold' },
+                    },
+                    height: 40,
+                },
+                {
+                    videoUrl: 'resources/video.mov',
+                    height: 340,
+                },
+                {
+                    text: {
+                        text: 'content.unity.smarthangul.description.detail.subtitle.video',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14, fontWeight: 'bold' },
+                    },
+                    height: 40,
+                },
+                {
+                    videoUrl: 'resources/video.mov',
+                    height: 340,
+                },
+            ]
+        }
+
+        const unitySubstars: starInfo[] = [
+            {
+                title: 'contents.unity.substar.smarthangul',
+                fontSize: 5,
+                size: 25,
+                index: 0,
+                depth: 2,
+                contents: hangulContents,
+            },
+            {
+                title: 'contents.unity.substar.cheonjaeedu',
+                fontSize: 5,
+                size: 25,
+                index: 1,
+                depth: 2,
+            },
+            {
+                title: 'contents.unity.substar.soomgo',
+                fontSize: 5,
+                size: 25,
+                index: 2,
+                depth: 2,
+            },
+        ]
+
+        const iosSubstars: starInfo[] = [
+            {
+                title: 'contents.ios.substar.minirecord',
+                fontSize: 5,
+                size: 25,
+                index: 0,
+                depth: 2,
+            },
+            {
+                title: 'contents.ios.substar.jump',
+                fontSize: 5,
+                size: 25,
+                index: 1,
+                depth: 2,
+            },
+        ]
+
+        const mediaSubstars: starInfo[] = [
+            {
+                title: 'contents.media.substar.minirecord',
+                fontSize: 5,
+                size: 25,
+                index: 0,
+                depth: 2,
+            }, {
+                title: 'contents.media.substar.jump',
+                fontSize: 5,
+                size: 25,
+                index: 0,
+                depth: 2,
+            },
+        ]
+
+        const arSubstars: starInfo[] = [
+            {
+                title: 'contents.ar.substar.jump',
+                fontSize: 5,
+                size: 25,
+                index: 0,
+                depth: 2,
+            },
+            {
+                title: 'contents.ar.substar.minirecord',
+                fontSize: 5,
+                size: 25,
+                index: 0,
+                depth: 2,
+            },
+        ]
+
+        const graphicsSubstars: starInfo[] = [
+            {
+                title: 'contents.graphics.substar.metal',
+                fontSize: 5,
+                size: 25,
+                index: 0,
+                depth: 2,
+            },
+        ]
+
+        const substars: starInfo[] = [
+            {
+                title: 'contents.substar.unity',
+                fontSize: 10,
+                size: 70,
+                index: 0,
+                radius: 38,
+                depth: 1,
+                substars: unitySubstars
+            },
+            {
+                title: 'contents.substar.ios',
+                fontSize: 10,
+                size: 70,
+                index: 1,
+                radius: 38,
+                depth: 1,
+                substars: iosSubstars
+            },
+            {
+                title: 'contents.substar.media',
+                fontSize: 10,
+                size: 70,
+                index: 2,
+                depth: 1,
+                radius: 38,
+                substars: mediaSubstars
+            },
+            {
+                title: 'contents.substar.ar',
+                fontSize: 10,
+                size: 70,
+                index: 3,
+                depth: 1,
+                radius: 38,
+                substars: arSubstars
+            },
+            {
+                title: 'contents.substar.graphics',
+                fontSize: 10,
+                size: 70,
+                index: 4,
+                depth: 1,
+                radius: 38,
+                substars: graphicsSubstars
+            }
+        ]
+
         const info = {
-            title: 'PORTFOLiO',
+            title: 'contents.title',
+            fontSize: 14,
             size: 100,
             radius: 150,
             depth: 0,
-            substars: [
-                {
-                    title: 'UNITY',
-                    size: 70,
-                    index: 0,
-                    radius: 38,
-                    depth: 1,
-                    onClick: () => {
-                        this.setDepth(1, this.sun.substars[0])
-                    },
-                    substars: [
-                        {
-                            title: 'SH',
-                            size: 12,
-                            index: 0,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌑',
-                                    size: 12,
-                                    depth: 2
-                                })
-                            },
-                        },
-                        {
-                            title: 'CE',
-                            size: 12,
-                            index: 1,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌒',
-                                    size: 12,
-                                    depth: 2
-                                })
-                                // Go to Scene Moon 1-2
-                            },
-                        },
-                        {
-                            title: 'SG',
-                            size: 12,
-                            index: 2,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌓',
-                                    size: 12,
-                                    depth: 2
-                                })
-                                // Go to Scene Moon 1-3
-                            },
-                        },
-                        {
-                            title: 'MR',
-                            size: 12,
-                            index: 3,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌔',
-                                    size: 12,
-                                    depth: 2
-                                })
-                                // Go to Scene Moon 1-4
-                            },
-                        }
-                    ]
-                },
-                {
-                    title: 'iOS',
-                    size: 70,
-                    index: 1,
-                    radius: 38,
-                    depth: 1,
-                    // buttonImageUrl: 'resources/appIcon_none.png',
-                    onClick: () => {
-                        this.setDepth(1, this.sun.substars[1])
-                    },
-                    substars: [
-                        {
-                            title: 'BM',
-                            size: 12,
-                            index: 0,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌓',
-                                    size: 12,
-                                    depth: 2,
-                                })
-                            },
-                        },
-                        {
-                            title: 'JP2',
-                            size: 12,
-                            index: 1,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌔',
-                                    size: 12,
-                                    depth: 2,
-                                })
-                            },
-                        },
-                    ]
-                },
-                {
-                    title: 'Media',
-                    size: 70,
-                    index: 2,
-                    depth: 1,
-                    radius: 38,
-                    onClick: () => {
-                        this.setDepth(1, this.sun.substars[2])
-                    },
-                    substars: [
-                        {
-                            title: 'MR',
-                            size: 12,
-                            index: 0,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌕',
-                                    size: 12,
-                                    depth: 2
-                                })
-                            },
-                        }, {
-                            title: 'JP',
-                            size: 12,
-                            index: 0,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌕',
-                                    size: 12,
-                                    depth: 2
-                                })
-                            },
-                        },
-                    ]
-                },
-                {
-                    title: 'AR',
-                    size: 70,
-                    index: 3,
-                    depth: 1,
-                    radius: 38,
-                    onClick: () => {
-                        this.setDepth(1, this.sun.substars[3])
-                    },
-                    substars: [
-                        {
-                            title: 'JP1',
-                            size: 12,
-                            index: 0,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌖',
-                                    size: 12,
-                                    depth: 2
-                                })
-                            },
-                        },
-                        {
-                            title: 'JP2',
-                            size: 12,
-                            index: 0,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌖',
-                                    size: 12,
-                                    depth: 2
-                                })
-                            },
-                        },
-                        {
-                            title: 'ARR',
-                            size: 12,
-                            index: 0,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌖',
-                                    size: 12,
-                                    depth: 2
-                                })
-                            },
-                        },
-                    ]
-                },
-                {
-                    title: 'Web',
-                    size: 70,
-                    index: 4,
-                    depth: 1,
-                    radius: 38,
-                    onClick: () => {
-                        this.setDepth(1, this.sun.substars[4])
-                    },
-                    substars: [
-                        {
-                            title: 'WS',
-                            size: 12,
-                            index: 0,
-                            depth: 2,
-                            onClick: () => {
-                                this.proceed({
-                                    title: '🌗',
-                                    size: 12,
-                                    depth: 2
-                                })
-                            },
-                        },
-                    ]   
+            substars: substars
+        }
+
+        for (let substar of substars) {
+            substar.onClick = () => {
+                this.setDepth(1, this.sun.substars[substar.index!])
+            }
+            for (let subsubstar of substar.substars!) {
+                subsubstar.onClick = () => {
+                    this.proceed(subsubstar)
                 }
-            ]
+            }
         }
 
         const sun = new ContentStar(info)
@@ -281,7 +368,7 @@ export class ContentsScene implements Scene {
         const returnButton = new UIOpaqueBlurButton({
             width: 100,
             height: 40,
-            text: 'Return',
+            text: Language.helper.get('contents.button.back'),
             onClick: () => {
                 if (this.currentDepth > 0) {
                     this.setDepth(this.currentDepth - 1, this.currentStar.superstar!)
@@ -296,7 +383,7 @@ export class ContentsScene implements Scene {
         const finishButton = new UIOpaqueBlurButton({
             width: 100,
             height: 40,
-            text: 'Finish',
+            text: Language.helper.get('contents.button.finish'),
             onClick: () => {
                 this.finish()
             }
@@ -317,7 +404,7 @@ export class ContentsScene implements Scene {
             let star = this.currentStar
             let deltaX = this.lastPressedPointer.x - event.clientX
             let deltaY = event.clientY - this.lastPressedPointer.y
-            
+
             if (event.clientY < Camera.size.height / 2) {
                 deltaX *= -1
             }
@@ -335,7 +422,7 @@ export class ContentsScene implements Scene {
 
         EventManager.self.addPointerUpListener((event) => {
             if (!this.enabled) return;
-            
+
         });
     }
 
@@ -365,7 +452,7 @@ export class ContentsScene implements Scene {
         this.enabled = true
         this.resize()
         if (this.currentDepth === 0) {
-        this.backgroundField.run();
+            this.backgroundField.run();
         }
         this.sun.applyForce(100);
     }
@@ -466,7 +553,7 @@ export class ContentsScene implements Scene {
 
     proceed(info: starInfo): void {
         this.enabled = false
-        this.onProceeded?.(info)
+        this.onProceeded?.(info.contents)
     }
 
     finish(): void {

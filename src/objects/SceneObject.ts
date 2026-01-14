@@ -11,7 +11,10 @@ export class SceneObject extends THREE.Object3D {
             this.parent?.parent?.parent?.visible === false || 
             this.parent?.parent?.parent?.parent?.visible === false || 
             this.parent?.parent?.parent?.parent?.parent?.visible === false || 
-            this.parent?.parent?.parent?.parent?.parent?.parent?.visible === false
+            this.parent?.parent?.parent?.parent?.parent?.parent?.visible === false ||
+            this.parent?.parent?.parent?.parent?.parent?.parent?.parent?.visible === false ||
+            this.parent?.parent?.parent?.parent?.parent?.parent?.parent?.parent?.visible === false || 
+            this.parent?.parent?.parent?.parent?.parent?.parent?.parent?.parent?.parent?.visible === false
         ) { 
             return false 
         } else {

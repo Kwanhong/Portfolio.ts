@@ -4,9 +4,13 @@ import * as THREE from "three";
 import { Color } from "@data/Color";
 import { FileManager } from "../../core/FIleManager";
 import { Helper } from "../../core/Helper";
+import { Language } from "@data/Language";
+import { defaultHeadlineStyle } from "@ui/styles/TextStyle";
+import type { contentsInfo } from "../../scene/scenes/contents/ContentScene";
 
 export type starInfo = {
     title: string,
+    fontSize?: number,
     size: number,
     depth: number
     index?: number,
@@ -14,6 +18,7 @@ export type starInfo = {
     buttonImageUrl?: string,
     backgroundImageUrl?: string,
     urlUuid?: string,
+    contents?: contentsInfo,
     substars?: starInfo[]
     onClick?: () => void
 }
@@ -82,7 +87,14 @@ export class ContentStar extends UIObject {
         this.button = new UIOpaqueBlurButton({
             width: info.size,
             height: info.size,
-            text: info.title,
+            text: Language.helper.get(info.title as any),
+            style: {...defaultHeadlineStyle, 
+                letterSpacing: 0, 
+                fontSize: info.fontSize ?? 12,
+                textAlign: 'center', 
+                anchorX: 'center',
+                anchorY: 'middle'
+            },
             color: colorHex,
             cornerRadius: info.size / 2,
             onClick: info.onClick
@@ -99,7 +111,14 @@ export class ContentStar extends UIObject {
         this.button = new UIImageButton(texture, {
             width: info.size,
             height: info.size,
-            text: info.title,
+            text: Language.helper.get(info.title as any),
+            style: {...defaultHeadlineStyle, 
+                letterSpacing: 0, 
+                fontSize: info.fontSize ?? 12,
+                textAlign: 'center', 
+                anchorX: 'center',
+                anchorY: 'middle'
+            },
             cornerRadius: info.size / 2,
             onClick: info.onClick
         })

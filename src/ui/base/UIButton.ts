@@ -250,16 +250,18 @@ export class UIImageButton extends UIButton {
         width = 100,
         height = 100,
         text = "",
+        style = uiBaselineStyle,
         cornerRadius = 20,
         onClick
     }: {
         width?: number;
         height?: number;
         text?: string;
+        style?: TextStyle;
         cornerRadius?: number;
         onClick?: () => void;
     } = {}) {
-        super({ width, height, text: text, cornerRadius, onClick, color: new THREE.Color(0, 0, 0).getHex() });
+        super({ width, height, text: text, style, cornerRadius, onClick, color: new THREE.Color(0, 0, 0).getHex() });
         this.imageView = new UIImageView({x: 0, y: 0, width: width, height: height}, imageTexture, height / 2);
         this.add(this.imageView);
         this.imageView.position.set(0, height / 2, 0.1);

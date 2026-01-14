@@ -18,11 +18,6 @@ export class UIStackView extends UIObject {
         this.spacing = options.spacing || 10;
     }
 
-    add(object: THREE.Object3D): this {
-        super.add(object);
-        return this;
-    }
-
     addStack(object: UIObject): this {
         super.addUI(object);
         this.size = { width: Math.max(this.size.width, object.size.width), height: Math.max(this.size.height, object.size.height) };
@@ -30,6 +25,16 @@ export class UIStackView extends UIObject {
         this.updateLayout();
         return this;
     }
+
+    clearStack(): this {
+        for (const child of this.uiChildren) {
+            this.remove(child);
+        }
+        this.uiChildren = []
+        this.size = { width: 500, height: 100 };
+        this.bounds = { min: { x: this.bounds.min.x, y: this.bounds.min.y }, max: { x: this.bounds.min.x + this.size.width, y: this.bounds.min.y + this.size.height } };
+        return this;
+    }   
 
     updateLayout(fillScreen: boolean = true): void {
 

@@ -38,6 +38,38 @@ export class UIObject extends SceneObject {
         this.bounds = { max: { x: size.width / 2, y: size.height / 2 }, min: { x: -size.width / 2, y: -size.height / 2 } }
     }
 
+    roundedDiamondGeometry(width: number, height: number, radius: number) {
+        const shape = new THREE.Shape();
+
+        const halfWidth = width / 2;
+        const halfHeight = height / 2;
+
+        const top = new THREE.Vector2(0, halfHeight); // 위쪽
+        const right = new THREE.Vector2(halfWidth, 0); // 오른쪽
+        const bottom = new THREE.Vector2(0, -halfHeight); // 아래쪽
+        const left = new THREE.Vector2(-halfWidth, 0); // 왼쪽
+
+        shape.moveTo(top.x, top.y - radius);
+
+        shape.absarc(top.x + radius, top.y - radius, radius, Math.PI, Math.PI / 2, true);
+
+        shape.lineTo(right.x - radius, right.y);
+        shape.absarc(right.x - radius, right.y - radius, radius, Math.PI / 2, 0, true);
+
+        shape.lineTo(bottom.x, bottom.y + radius);
+        shape.absarc(bottom.x - radius, bottom.y + radius, radius, 0, -Math.PI / 2, true);
+
+        shape.lineTo(left.x + radius, left.y);
+        shape.absarc(left.x + radius, left.y + radius, radius, -Math.PI / 2, -Math.PI, true);
+
+        shape.lineTo(top.x, top.y - radius);
+
+        this.bounds = { min: { x: -halfWidth, y: -halfHeight }, max: { x: halfWidth, y: halfHeight } };
+        this.size = { width: width, height: height };
+
+        return new THREE.ShapeGeometry(shape);
+    }
+
     roundedPlaneGeometry(width: number, height: number, radius: number): THREE.ShapeGeometry {
         const shape = new THREE.Shape();
 

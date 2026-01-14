@@ -32,6 +32,11 @@ export class UIScrollView extends UIObject {
         this.contentView.addStack(object);
         return this;
     }
+
+    clearStack(): this {
+        this.contentView.clearStack();
+        return this;
+    }
 }
 
 export class UIContentView extends UIObject {
@@ -93,6 +98,11 @@ export class UIContentView extends UIObject {
 
     addStack(object: UIObject): this {
         this.stack.addStack(object);
+        return this;
+    }
+
+    clearStack(): this {
+        this.stack.clearStack();
         return this;
     }
 
