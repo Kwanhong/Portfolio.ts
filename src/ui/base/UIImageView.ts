@@ -7,9 +7,12 @@ export class UIImageView extends UIObject {
     constructor(bounds: { x: number; y: number; width: number; height: number }, texture: THREE.Texture, roundCorner: number = 7) {
         super();
 
+        // 텍스처 색상 공간을 sRGB로 설정하여 올바른 밝기로 표시
+        texture.colorSpace = THREE.SRGBColorSpace;
+
         const geometry = this.roundedPlaneGeometry(bounds.width, bounds.height, roundCorner);
         const material = new THREE.MeshBasicMaterial(
-            { map: texture, side: THREE.DoubleSide }
+            { map: texture }
         );// new MaskedMaterial(texture, { width: bounds.width, height: bounds.height }, roundCorner);
 
         this.mesh = new THREE.Mesh(geometry, material);

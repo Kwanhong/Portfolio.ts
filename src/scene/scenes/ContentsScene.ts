@@ -9,12 +9,7 @@ import { SceneObject } from '@objects/SceneObject'
 import { BackgroundField } from '@ui/contents/BackgroundField'
 import { Language } from '@data/Language'
 import type { contentsInfo } from './contents/ContentScene'
-import { defaultBaselineStyle, defaultDescriptionStyle, type TextStyle } from '@ui/styles/TextStyle'
-import { UIImageView } from '@ui/base/UIImageView'
-import { UIView } from '@ui/base/UIView'
-import { FileManager } from '../../core/FIleManager'
-import { UIText } from '@ui/base/UIText'
-import { UIObject } from '@ui/base/UIObject'
+import { defaultBaselineStyle, defaultDescriptionStyle, defaultSourceCodeStyle, type TextStyle } from '@ui/styles/TextStyle'
 
 export class ContentsScene implements Scene {
 
@@ -39,7 +34,7 @@ export class ContentsScene implements Scene {
     private backgroundField: BackgroundField
 
     constructor(scene: THREE.Scene, onReturned: () => void = () => { }, onProceeded: (infos?: contentsInfo) => void = () => { }, onFinished: () => void = () => { }) {
-        
+
         this.mother = scene;
         this.mother.add(this.self);
         this.onFinished = onFinished;
@@ -55,155 +50,396 @@ export class ContentsScene implements Scene {
             title: 'content.unity.smarthangul.title',
             contents: [
                 {
-                    customView: (scrollView) => {
-                        const view = new UIView({x:0, y:0, width:300, height:150}, 47)
-                        
-                        const leftAnchor = new UIObject()
-                        leftAnchor.position.set(0, 0, 0)
-                        view.add(leftAnchor)
-
-                        FileManager.loadTexture('resources/appIcon_smart.png').then((texture) => {
-                            const imageView = new UIImageView(
-                                {x:65, y:-10, width:130, height:130},
-                                texture, 37
-                            )
-                            imageView.position.set(0, 0, 100)
-                            leftAnchor.add(imageView)
-                        })
-
-                        const author = new UIText(Language.helper.get('content.unity.smarthangul.author'), {
-                            ...defaultDescriptionStyle,
-                            fontSize: 12,
-                        }, (_, size) => {
-                            const role = new UIText(Language.helper.get('content.unity.smarthangul.role'), {
-                                ...defaultDescriptionStyle,
-                                fontSize: 12,
-                            })
-                            role.position.set(265, -size.height - 50, 0)
-                            role.setSize({width: 230, height: 50})
-                            leftAnchor.add(role)
-                        })
-
-                        author.setSize({width: 230, height: 130})
-                        author.position.set(265, -20, 100)
-                        leftAnchor.add(author)
-                        
-                        const style: TextStyle = { ...defaultBaselineStyle, fontSize: 10, anchorX: 'center', anchorY: 'middle', textAlign: 'center' }
-                        const btnAppstore = new UIOpaqueBlurButton({
-                            width: 30,
-                            height: 30,
-                            cornerRadius: 8,
-                            text: 'APP',
-                            style: style,
-                            onClick: () => {
-                                window.open('https://apps.apple.com/kr/app/%EC%8A%A4%EB%A7%88%ED%8A%B8-%ED%95%9C%EA%B8%80%EC%9D%B4-%ED%81%AC%EB%8A%94-%EB%82%98%EB%AC%B4/id1478712894', '_blank')
-                            }
-                        })
-
-                        const btnGithub = new UIOpaqueBlurButton({
-                            width: 30,
-                            height: 30,
-                            cornerRadius: 8,
-                            text: 'GIT',
-                            style: style,
-                            onClick: () => {
-                                window.open('https://github.com/Kwanhong', '_blank')   
-                            }
-                        })
-
-                        btnGithub.position.set(203, -111, 0)
-                        leftAnchor.add(btnGithub)
-                        btnAppstore.position.set(163, -111, 0)
-                        leftAnchor.add(btnAppstore)
-
-
-                        scrollView.addStack(view)
-
-                        return leftAnchor
+                    application: {
+                        appIconUrl: 'resources/appIcon_smart.png',
+                        appRole: 'content.unity.smarthangul.role',
+                        appAuthor: 'content.unity.smarthangul.author',
+                        appStoreUrl: 'https://apps.apple.com/kr/app/%EC%8A%A4%EB%A7%88%ED%8A%B8-%ED%95%9C%EA%B8%80%EC%9D%B4-%ED%81%AC%EB%8A%94-%EB%82%98%EB%AC%B4/id1478712894',
+                        gitHubUrl: 'https://github.com/Kwanhong',
                     },
                     height: 50,
                 },
                 {
                     text: {
                         text: 'content.unity.smarthangul.description',
-                        textStyle: defaultDescriptionStyle,
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
                     },
                     height: 300,
-                }, 
+                },
                 {
                     text: {
                         text: 'content.unity.smarthangul.description.sub',
-                        textStyle: defaultDescriptionStyle,
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
                     },
                     height: 200,
                 },
                 {
                     text: {
                         text: 'content.unity.smarthangul.role.detail.title',
-                        textStyle: { ...defaultBaselineStyle, fontSize: 14, fontWeight: 'bold' },
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
                     },
                     height: 50,
                 },
                 {
                     text: {
                         text: 'content.unity.smarthangul.role.detail',
-                        textStyle: defaultDescriptionStyle,
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
                     },
                     height: 200,
                 },
                 {
                     text: {
                         text: 'content.unity.smarthangul.role.detail.subtitle',
-                        textStyle: { ...defaultBaselineStyle, fontSize: 14, fontWeight: 'bold' },
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
                     },
                     height: 40,
                 },
                 {
                     text: {
                         text: 'content.unity.smarthangul.role.detail.sub',
-                        textStyle: defaultDescriptionStyle,
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
                     },
-                    height: 150,
+                    height: 190,
                 },
                 {
                     text: {
                         text: 'content.unity.smarthangul.description.detail.title',
-                        textStyle: { ...defaultBaselineStyle, fontSize: 14, fontWeight: 'bold' },
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
                     },
                     height: 50,
                 },
                 {
                     text: {
                         text: 'content.unity.smarthangul.description.detail',
-                        textStyle: defaultDescriptionStyle,
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
                     },
                     height: 200,
                 },
                 {
                     text: {
                         text: 'content.unity.smarthangul.description.detail.subtitle.animation',
-                        textStyle: { ...defaultBaselineStyle, fontSize: 14, fontWeight: 'bold' },
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
                     },
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video.mov',
-                    height: 340,
+                    videoUrl: 'resources/video_sh_animation.mov',
+                    height: 230,
+                },
+                {
+                    videoUrl: 'resources/video_sh_particle.mov',
+                    height: 180,
                 },
                 {
                     text: {
                         text: 'content.unity.smarthangul.description.detail.subtitle.video',
-                        textStyle: { ...defaultBaselineStyle, fontSize: 14, fontWeight: 'bold' },
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
                     },
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video.mov',
-                    height: 340,
+                    videoUrl: 'resources/video_sh_puzzle.mov',
+                    height: 230,
+                },
+                {
+                    videoUrl: 'resources/video_sh_cards.mov',
+                    height: 230,
+                },
+                {
+                    videoUrl: 'resources/video_sh_all.mov',
+                    height: 230,
                 },
             ]
         }
-
+        const cjeduContents: contentsInfo = {
+            title: 'content.unity.cjedu.title',
+            contents: [
+                {
+                    application: {
+                        appIconUrl: 'resources/appIcon_none.png',
+                        appRole: 'content.unity.cjedu.role',
+                        appAuthor: 'content.unity.cjedu.author',
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.role.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.role.detail.subtitle',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.role.detail.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.subtitle.prototype',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_cj_prototype.png',
+                    height: 150,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.prototype1',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    videoUrl: 'resources/video_cj_prototype.mov',
+                    height: 260,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.prototype2',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.subtitle.addressable',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 200,
+                },
+                {
+                    videoUrl: 'resources/video_cj_addressable.mov',
+                    height: 200,    
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.addressable',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.subtitle.sqlite',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.sqlite1',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_cj_sqlite.png',
+                    height: 283,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.sqlite2',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.subtitle.contents',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 200,
+                },
+                {
+                    videoUrl: 'resources/video_cj_content.mov',
+                    height: 130,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.contents',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.unity.cjedu.description.detail.disclaimer',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+            ]
+        }
+        const soomgoContents: contentsInfo = {
+            title: 'content.unity.soomgo.title',
+            contents: [
+                {
+                    application: {
+                        appIconUrl: 'resources/appIcon_soomgo.png',
+                        appRole: 'content.unity.soomgo.role',
+                        appAuthor: 'content.unity.soomgo.author',
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.unity.soomgo.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    }, 
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.unity.soomgo.description.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200
+                },
+                {
+                    text: {
+                        text:  'content.unity.soomgo.description.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    }, 
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.unity.soomgo.description.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200
+                },
+                {
+                    text: {
+                        text: 'content.unity.soomgo.description.detail.subtitle.animation',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    videoUrl: 'resources/video_sg_all.mov',
+                    height: 270,
+                },
+                {
+                    text: {
+                        text: 'content.unity.soomgo.description.detail.subtitle.navmesh',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    imageUrl: 'resources/image_sg_navmesh1.png',
+                    height: 170,
+                },
+                {
+                    text: {
+                        text: 'content.unity.soomgo.description.detail.navmesh',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_sg_navmesh2.png',
+                    height: 203,
+                },
+                {
+                    text: {
+                        text: 'content.unity.soomgo.description.detail.subtitle.act',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    imageUrl: 'resources/image_sg_code_act.png',
+                    height: 344,
+                },
+                {
+                    imageUrl: 'resources/image_sg_code_act2.png',
+                    height: 266,
+                },
+                {
+                    text: {
+                        text: 'content.unity.soomgo.description.detail.act',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.unity.soomgo.description.detail.subtitle.resources',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    imageUrl: 'resources/image_sg_room.png',
+                    height: 285,    
+                },
+                {
+                    imageUrl: 'resources/image_sg_gate.png',
+                    height: 324,    
+                },
+                {
+                    imageUrl: 'resources/image_sg_subway.png',
+                    height: 315,    
+                },
+                {
+                    imageUrl: 'resources/image_sg_gallery.png',
+                    height: 277,    
+                },
+                {
+                    imageUrl: 'resources/image_sg_bar.png',
+                    height: 281,    
+                },
+                {
+                    text: {
+                        text: 'content.unity.soomgo.description.detail.resources',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+            ]
+        }
         const unitySubstars: starInfo[] = [
             {
                 title: 'contents.unity.substar.smarthangul',
@@ -219,6 +455,7 @@ export class ContentsScene implements Scene {
                 size: 25,
                 index: 1,
                 depth: 2,
+                contents: cjeduContents,
             },
             {
                 title: 'contents.unity.substar.soomgo',
@@ -226,9 +463,335 @@ export class ContentsScene implements Scene {
                 size: 25,
                 index: 2,
                 depth: 2,
+                contents: soomgoContents,
             },
         ]
 
+        const jumpiosContents: contentsInfo = {
+            title: 'content.ios.jump.title',
+            contents: [
+                {
+                    application: {
+                        appIconUrl: 'resources/appIcon_jump.png',
+                        appRole: 'content.ios.jump.role',
+                        appAuthor: 'content.ios.jump.author',
+                        appStoreUrl: 'https://apps.apple.com/kr/app/jump-ar/id1459279731',
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.role.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.role.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.role.detail.subtitle',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.role.detail.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.subtitle.prototype',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.prototype',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.subtitle.nativeplugin',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.nativeplugin1',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },  
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.nativeplugin2',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_jp_code_ios_plugin1.png',
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.nativeplugin3',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_jp_code_ios_plugin2.png',
+                    height: 340,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.subtitle.main',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.main',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_jp_code_ios_main.png',
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.subtitle.mypage',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.mypage1',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_jp_ios_mypage1.png',
+                    height: 182,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.mypage2',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_jp_ios_mypage2.png',
+                    height: 170,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.mypage3',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_jp_ios_mypage3.png',
+                    height: 235,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.mypage4',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_jp_ios_mypage4.png',
+                    height: 225,
+                },
+                {
+                    text: {
+                        text: 'content.ios.jump.description.detail.disclaimer',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 180,
+                }
+            ]
+        }
+        const miniiosContents: contentsInfo = {
+            title: 'content.ios.mini.title',
+            contents: [
+                {
+                    application: {
+                        appIconUrl: 'resources/appIcon_mini.png',
+                        appRole: 'content.ios.mini.role',
+                        appAuthor: 'content.ios.mini.author',
+                        appStoreUrl: 'https://apps.apple.com/kr/app/minirecord-ar-%ED%95%9C%EA%B8%80-%EB%AA%A8%EB%93%9C-%EC%97%90%EB%9F%AC/id1531355015',
+                        gitHubUrl: 'https://github.com/Kwanhong',
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.description.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.role.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.role.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.role.detail.subtitle',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.role.detail.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.description.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.description.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.description.detail.subtitle.video',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40, 
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.description.detail.video1',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 40,
+                },
+                {
+                    videoUrl: 'resources/video_mn_sample_main.mov',
+                    height: 360,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.description.detail.video2',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 40,
+                },
+                {
+                    videoUrl: 'resources/video_mn_sample_album.mov',
+                    height: 360,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.description.detail.video3',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 40,
+                },
+                {
+                    videoUrl: 'resources/video_mn_sample_binder1.mov',
+                    height: 360,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.description.detail.video4',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 40,
+                },
+                {
+                    videoUrl: 'resources/video_mn_sample_binder2.mov',
+                    height: 360,
+                },
+                {
+                    text: {
+                        text: 'content.ios.mini.description.detail.disclaimer',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+            ]
+        }
         const iosSubstars: starInfo[] = [
             {
                 title: 'contents.ios.substar.minirecord',
@@ -236,6 +799,7 @@ export class ContentsScene implements Scene {
                 size: 25,
                 index: 0,
                 depth: 2,
+                contents: miniiosContents,
             },
             {
                 title: 'contents.ios.substar.jump',
@@ -243,9 +807,217 @@ export class ContentsScene implements Scene {
                 size: 25,
                 index: 1,
                 depth: 2,
+                contents: jumpiosContents,
             },
         ]
 
+        const jumpmediaContents: contentsInfo = {
+            title: 'content.media.jump.title',
+            contents: [
+                {
+                    application: {
+                        appIconUrl: 'resources/appIcon_jump.png',
+                        appRole: 'content.media.jump.role',
+                        appAuthor: 'content.media.jump.author',
+                        appStoreUrl: 'https://apps.apple.com/kr/app/jump-ar/id1459279731',
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.media.jump.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.media.jump.description.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,    
+                },
+                {
+                    text: {
+                        text: 'content.media.jump.description.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.media.jump.description.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.media.jump.description.detail.subtitle.feature',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.media.jump.description.detail.feature',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.media.jump.description.detail.subtitle.workflow',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.media.jump.description.detail.workflow',
+                        textStyle: { ...defaultSourceCodeStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.media.jump.description.detail.subtitle.video',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    videoUrl: 'resources/video_jp_media.mov',
+                    height: 260,
+                },
+                {
+                    text: {
+                        text: 'content.media.jump.description.detail.sourcecode',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_jp_media_code1.png',
+                    height: 500,
+                },
+                {
+                    imageUrl: 'resources/image_jp_media_code2.png',
+                    height: 500,
+                },
+                {
+                    imageUrl: 'resources/image_jp_media_code3.png',
+                    height: 500,
+                },
+                {
+                    imageUrl: 'resources/image_jp_media_code4.png',
+                    height: 500,
+                },
+                {
+                    text: {
+                        text: 'content.media.jump.description.detail.disclaimer',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                }
+            ]
+        }
+        const minimediaContents: contentsInfo = {
+            title: 'content.media.mini.title',
+            contents: [
+                {
+                    application: {
+                        appIconUrl: 'resources/appIcon_mini.png',
+                        appRole: 'content.media.mini.role',
+                        appAuthor: 'content.media.mini.author',
+                        appStoreUrl: 'https://apps.apple.com/kr/app/minirecord-ar-%ED%95%9C%EA%B8%80-%EB%AA%A8%EB%93%9C-%EC%97%90%EB%9F%AC/id1531355015',
+                        gitHubUrl: 'https:github.com/Kwanhong',
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.media.mini.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.media.mini.description.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.media.mini.role.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.media.mini.role.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,    
+                },
+                {
+                    text: {
+                        text: 'content.media.mini.role.detail.subtitle',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.media.mini.role.detail.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.media.mini.description.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.media.mini.description.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.media.mini.description.detail.subtitle.video',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40, 
+                },
+                {
+                    videoUrl: 'resources/video_mn_media_mvplayer.mov',
+                    height: 360,
+                },
+                {
+                    text: {
+                        text: 'content.media.mini.description.detail.video',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.media.mini.description.detail.disclaimer',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+            ]
+        }
         const mediaSubstars: starInfo[] = [
             {
                 title: 'contents.media.substar.minirecord',
@@ -253,15 +1025,280 @@ export class ContentsScene implements Scene {
                 size: 25,
                 index: 0,
                 depth: 2,
+                contents: minimediaContents,
             }, {
                 title: 'contents.media.substar.jump',
                 fontSize: 5,
                 size: 25,
-                index: 0,
+                index: 1,
                 depth: 2,
+                contents: jumpmediaContents,
             },
         ]
 
+        const jumparContents: contentsInfo = {
+            title: 'content.ar.jump.title',
+            contents: [
+                {
+                    application: {
+                        appIconUrl: 'resources/appIcon_jump.png',
+                        appRole: 'content.ar.jump.role',
+                        appAuthor: 'content.ar.jump.author',
+                        appStoreUrl: 'https://apps.apple.com/kr/app/jump-ar/id1459279731',
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,    
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.role.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.role.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.role.detail.subtitle',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40, 
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.role.detail.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,    
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.subtitle.immigration',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40, 
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.immigration',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,    
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.subtitle.arrecording',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.arrecording',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,    
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.subtitle.sourcecode',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.arrecording.logic',
+                        textStyle: { ...defaultSourceCodeStyle, fontSize: 10 },
+                    },
+                    height: 200,    
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.arrecording.sourcecode1',
+                    },
+                    height: 300,    
+                },
+                {
+                    imageUrl: 'resources/image_jp_code_arr_objc1.png',
+                    height: 200,
+                },
+                {
+                    imageUrl: 'resources/image_jp_code_arr_objc2.png',
+                    height: 280,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.arrecording.sourcecode2',
+                    },
+                    height: 300,    
+                },
+                {
+                    imageUrl: 'resources/image_jp_code_arr_objc3.png',
+                    height: 380,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.arrecording.sourcecode3',
+                    },
+                    height: 300,    
+                },
+                {
+                    imageUrl: 'resources/image_jp_code_arr_objc4.png',
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.arrecording.sourcecode4',
+                    },
+                    height: 300,    
+                },
+                {
+                    imageUrl: 'resources/image_jp_code_arr_objc5.png',
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.arrecording.sourcecode5',
+                    },
+                    height: 300,    
+                },
+                {
+                    imageUrl: 'resources/image_jp_code_arr_unity1.png',
+                    height: 280,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.detail.arrecording.sourcecode6',
+                    },
+                    height: 300,    
+                },
+                {
+                    imageUrl: 'resources/image_jp_code_arr_unity2.png',
+                    height: 117,
+                },
+                {
+                    text: {
+                        text: 'content.ar.jump.description.disclaimer',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,    
+                }
+            ]
+        }
+        const miniarContents: contentsInfo = {
+            title: 'content.ar.mini.title',
+            contents: [
+                {
+                    application: {
+                        appIconUrl: 'resources/appIcon_mini.png',
+                        appRole: 'content.ar.mini.role',
+                        appAuthor: 'content.ar.mini.author',
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.ar.mini.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.ar.mini.description.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.ar.mini.role.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50, 
+                },
+                {
+                    text: {
+                        text: 'content.ar.mini.role.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,    
+                },
+                {
+                    text: {
+                        text: 'content.ar.mini.role.detail.subtitle',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'content.ar.mini.role.detail.sub',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,    
+                },
+                {
+                    text: {
+                        text: 'content.ar.mini.description.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    text: {
+                        text: 'content.ar.mini.description.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,    
+                },
+                {
+                    text: {
+                        text: 'content.ar.mini.description.detail.subtitle.image',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    imageUrl: 'resources/image_mn_ar.jpeg',
+                    height: 300,
+                },
+            ]
+        }
         const arSubstars: starInfo[] = [
             {
                 title: 'contents.ar.substar.jump',
@@ -269,6 +1306,7 @@ export class ContentsScene implements Scene {
                 size: 25,
                 index: 0,
                 depth: 2,
+                contents: jumparContents,
             },
             {
                 title: 'contents.ar.substar.minirecord',
@@ -276,8 +1314,149 @@ export class ContentsScene implements Scene {
                 size: 25,
                 index: 0,
                 depth: 2,
+                contents: miniarContents,
             },
         ]
+
+        const graphicsContents: contentsInfo = {
+            title: 'content.graphics.metal.title',
+            contents: [
+                {
+                    application: {
+                        appIconUrl: 'resources/appIcon_engine.png',
+                        appRole: 'content.graphics.metal.role',
+                        appAuthor: 'content.graphics.metal.author',
+                        gitHubUrl: 'https://github.com/kwanhongpark/Game-Engine',
+                    },
+                    height: 50, 
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.sub1',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.sub2',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.sub3',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.sub4',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.sub5',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.detail.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.detail',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.detail.subtitle.renderer',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    imageUrl: 'resources/image_code_ge_renderer1.png',
+                    height: 500,
+                },
+                {
+                    imageUrl: 'resources/image_code_ge_renderer2.png',
+                    height: 500,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.detail.renderer',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.detail.subtitle.scene',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    imageUrl: 'resources/image_code_ge_scene.png',
+                    height: 500,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.detail.scene',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.detail.subtitle.timing',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 40,
+                },
+                {
+                    imageUrl: 'resources/image_code_ge_timing.png',
+                    height: 500,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.detail.timing',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'content.graphics.metal.description.detail.subtitle.demo',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 200,
+                },
+                {
+                    videoUrl: 'resources/video_ge_demo.mov',
+                    height: 450,
+                },
+            ]
+        }
 
         const graphicsSubstars: starInfo[] = [
             {
@@ -286,6 +1465,7 @@ export class ContentsScene implements Scene {
                 size: 25,
                 index: 0,
                 depth: 2,
+                contents: graphicsContents,
             },
         ]
 

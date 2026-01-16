@@ -7,12 +7,13 @@ export class UIView extends UIObject {
         super();
 
         const geometry = this.roundedPlaneGeometry(bounds.width, bounds.height, roundCorner);
-        const material = new THREE.MeshPhysicalMaterial({
-            transmission: 1.0, // Fully transparent to the background capture
-            roughness: 0.3,    // Controls the amount of blur (0 is clear, 1 is very blurred)
-            thickness: 1.7,    // Required for roughness to take effect
-            ior: 1.5,          // Index of refraction
-        })
+        // const material = new THREE.MeshPhysicalMaterial({
+        //     transmission: 1.0, // Fully transparent to the background capture
+        //     roughness: 0.3,    // Controls the amount of blur (0 is clear, 1 is very blurred)
+        //     thickness: 1.7,    // Required for roughness to take effect
+        //     ior: 1.5,          // Index of refraction
+        // })
+        const material = new THREE.MeshBasicMaterial({ color: 0x222222, opacity: 0.6, transparent: true });
 
         this.cornerRadius = roundCorner;
         this.mesh = new THREE.Mesh(geometry, material);

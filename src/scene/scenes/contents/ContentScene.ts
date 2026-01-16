@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import type { Scene } from '../Scene'
 import { UIScrollView } from '@ui/base/UIScrollView'
-import type { starInfo } from '@objects/contents/ContentStar'
 import { UIButton, UIOpaqueBlurButton } from '@ui/base/UIButton'
 import { Camera } from '../../Camera'
 import { UIText } from '@ui/base/UIText'
@@ -11,8 +10,10 @@ import { UIImageView } from '@ui/base/UIImageView'
 import { FileManager } from '../../../core/FIleManager'
 import { UIView } from '@ui/base/UIView'
 import { UIVideoView } from '@ui/base/UIVideoView'
-import type { UIObject } from '@ui/base/UIObject'
+import { UIObject } from '@ui/base/UIObject'
 import { Language } from '@data/Language'
+import { Color } from '@data/Color'
+import { Helper } from '../../../core/Helper'
 
 export type textInfo = {
     text: string,
@@ -25,13 +26,22 @@ export type buttonInfo = {
     onClick: () => void,
 }
 
+export type applicationInfo = {
+    appIconUrl: string,
+    appRole?: string,
+    appAuthor?: string,
+    appStoreUrl?: string,
+    gitHubUrl?: string,
+}
+
 export type contentInfo = {
     text?: textInfo,
     button?: buttonInfo,
     imageUrl?: string,
     videoUrl?: string,
     height: number,
-    customView?: (scrollView: UIScrollView)=>UIObject,
+    application?: applicationInfo,
+    customView?: (scrollView: UIScrollView) => UIObject,
 }
 
 export type contentsInfo = {
@@ -58,8 +68,10 @@ export class ContentScene implements Scene {
     infos?: contentsInfo
     private needsToResize: boolean = false
     private anchors: UIObject[] = []
+    private dimmer: THREE.Mesh
 
     constructor(scene: THREE.Scene, onReturned: () => void = () => { }, onFinished: () => void = () => { }) {
+
         this.mother = scene
         this.mother.add(this.self)
         this.onFinished = onFinished
@@ -72,6 +84,7 @@ export class ContentScene implements Scene {
             text: 'Back',
             onClick: () => { this.return() }
         })
+
         this.self.add(returnButton)
         this.returnButton = returnButton
 
@@ -80,18 +93,30 @@ export class ContentScene implements Scene {
         this.self.add(scrollView)
         this.scrollView = scrollView
 
+        const dimmerGeometry = new THREE.PlaneGeometry(Camera.size.width, Camera.size.height);
+        const dimmerMaterial = new THREE.MeshBasicMaterial({ color: Color.helper.get('background.primary'), opacity: 1.0, transparent: true });
+        const dimmer = new THREE.Mesh(dimmerGeometry, dimmerMaterial);
+
+        this.self.add(dimmer);
+        this.dimmer = dimmer
     }
 
     run() {
         this.enabled = true
 
+        const margin = 10;
+
+        this.returnButton.position.set(
+            -Camera.size.width / 2 + this.returnButton.size.width / 2 + margin,
+            -Camera.size.height / 2 + this.returnButton.size.height / 2 + margin, 0
+        );
+
         if (!this.scrollView) return;
 
         this.scrollView.scrollTo(0);
         this.scrollView.clearStack();
-        Time.coroutineSec(0.1, () => {}, () => {
-            this.needsToResize = true
-        });
+
+        let waitCnt = 0
         this.anchors.forEach(anchor => {
             anchor.removeFromParent()
         });
@@ -111,43 +136,61 @@ export class ContentScene implements Scene {
                     width: Camera.size.width - 20,
                     height: info.height,
                     text: Language.helper.get('use.string.key', info.button.title),
-                    onClick: () => {
-                    }
+                    onClick: () => info.button!.onClick(),
+                    style: { ...defaultDescriptionStyle, ...info.button.textStyle }
                 });
                 contents.push(button)
             }
 
             if (info.text) {
-                const text = new UIText(Language.helper.get('use.string.key', info.text.text), { ...defaultDescriptionStyle, anchorX: 'left', anchorY: 'top', ...info.text.textStyle });
+                waitCnt++
+                const text = new UIText(Language.helper.get('use.string.key', info.text.text), { ...defaultDescriptionStyle, anchorX: 'left', anchorY: 'top', ...info.text.textStyle }, () => { waitCnt-- });
                 text.position.set(-this.scrollView.size.width / 2 + 10, this.scrollView.size.height / 2 - 10, 0);
                 text.setSize({ width: this.scrollView.size.width, height: this.scrollView.size.height });
                 contents.push(text)
             }
 
             if (info.imageUrl) {
-                const imageContainer = new UIView({ x: 0, y: 0, width: 500, height: 330 }, 20)
+                waitCnt++
+                const imageContainer = new UIView({ x: 0, y: 0, width: 500, height: info.height }, 20)
                 FileManager.loadTexture(info.imageUrl).then((texture) => {
 
-                    const height = Camera.size.height - 20
+                    const height = info.height - 20
                     const image = texture.image as HTMLImageElement
 
                     if (image) {
-                        const width = height * (image.width / image.height)
-                        const imageView = new UIImageView({ x: 0, y: -10, width: width, height: height }, texture, 15);
+                        const aspect = image.width / image.height
+                        let finalWidth = height * aspect
+                        let finalHeight = height
+
+                        const maxWidth = this.scrollView!.size.width - 40
+                        if (finalWidth > maxWidth) {
+                            finalWidth = maxWidth
+                            finalHeight = finalWidth / aspect
+                        }
+
+                        const imageView = new UIImageView({ x: 0, y: -10, width: finalWidth, height: finalHeight }, texture, 15);
+
                         imageContainer.add(imageView);
                         imageView.position.z = 100;
-                        imageContainer.size = { width: width, height: height + 20 };
+                        imageContainer.size = { width: finalWidth, height: finalHeight + 20 };
                     }
+                    waitCnt--;
                 });
                 contents.push(imageContainer);
             }
 
             if (info.videoUrl) {
-                const videoContainer = new UIView({ x: 0, y: 40, width: 500, height: 330 }, 20)
-                const videoView = new UIVideoView({ x: 0, y: -10, width: 440, height: 310 }, 'resources/video.mov', 15);
+                const videoContainer = new UIView({ x: 0, y: 40, width: 500, height: info.height }, 20)
+                const videoView = new UIVideoView({ x: 0, y: -10, width: 440, height: info.height - 20 }, info.videoUrl, 15);
                 videoContainer.add(videoView);
-                videoView.videoPlayer.play();
                 contents.push(videoContainer);
+            }
+
+            if (info.application) {
+                waitCnt++
+                const anchor = this.constructAppDetailView(info.application, () => { waitCnt-- })
+                this.anchors.push(anchor)
             }
 
             if (info.customView) {
@@ -158,6 +201,90 @@ export class ContentScene implements Scene {
         for (const content of contents) {
             this.scrollView.addStack(content)
         }
+
+        const material = this.dimmer.material as THREE.MeshBasicMaterial;
+        material.opacity = 1.0;
+        Time.coroutine(() => { return waitCnt === 0 }, () => { }, () => {
+            this.needsToResize = true
+            Time.coroutineSec(0.3, () => { }, () => {
+                this.scrollView?.scrollTo(0)
+                Time.coroutineSec(0.5, () => {
+                    const opacity = Helper.lerp(material.opacity, 0, 0.1);
+                    material.opacity = opacity;
+                }, () => {
+                    material.opacity = 0.0;
+                });
+            });
+        });
+    }
+
+
+    constructAppDetailView(info: applicationInfo, onFinished?: () => void): UIObject {
+        const view = new UIView({ x: 0, y: 0, width: 300, height: 150 }, 47)
+
+        const leftAnchor = new UIObject()
+        leftAnchor.position.set(0, 0, 0)
+        view.add(leftAnchor)
+
+        FileManager.loadTexture(info.appIconUrl).then((texture) => {
+            const imageView = new UIImageView(
+                { x: 65, y: -10, width: 130, height: 130 },
+                texture, 37
+            )
+            imageView.position.set(0, 0, 100)
+            leftAnchor.add(imageView)
+            onFinished?.()
+        })
+
+        const author = new UIText(Language.helper.get(info.appAuthor as any), {
+            ...defaultDescriptionStyle,
+            fontSize: 10,
+        }, (_, size) => {
+            const role = new UIText(Language.helper.get(info.appRole as any), {
+                ...defaultDescriptionStyle,
+                fontSize: 10,
+            })
+            role.position.set(285, -size.height - 50, 0)
+            role.setSize({ width: 280, height: 50 })
+            leftAnchor.add(role)
+        })
+
+        author.setSize({ width: 280, height: 130 })
+        author.position.set(285, -40, 100)
+        leftAnchor.add(author)
+
+        const style: TextStyle = { ...defaultBaselineStyle, fontSize: 10, anchorX: 'center', anchorY: 'middle', textAlign: 'center' }
+        const btnAppstore = new UIOpaqueBlurButton({
+            width: 30,
+            height: 30,
+            cornerRadius: 8,
+            text: 'APP',
+            style: style,
+            onClick: () => {
+                window.open(info.appStoreUrl, '_blank')
+            }
+        })
+
+        const btnGithub = new UIOpaqueBlurButton({
+            width: 30,
+            height: 30,
+            cornerRadius: 8,
+            text: 'GIT',
+            style: style,
+            onClick: () => {
+                window.open(info.gitHubUrl, '_blank')
+            }
+        })
+
+        btnGithub.position.set(203, -111, 0)
+        leftAnchor.add(btnGithub)
+        btnAppstore.position.set(163, -111, 0)
+        leftAnchor.add(btnAppstore)
+
+
+        this.scrollView?.addStack(view)
+
+        return leftAnchor
     }
 
     refresh(): void {

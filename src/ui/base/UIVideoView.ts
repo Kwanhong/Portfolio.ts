@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { UIView } from "./UIView";
 import { UIObject } from "./UIObject";
+import { EventManager } from "../../event/EventManager";
+import { Camera } from "../../scene/Camera";
 
 export class UIVideoView extends UIView {
     videoPlayer: VideoPlayer;
@@ -11,6 +13,23 @@ export class UIVideoView extends UIView {
         this.videoPlayer = new VideoPlayer(videoSrc, bounds.width, bounds.height, roundCorner);
         this.add(this.videoPlayer);
         this.videoPlayer.position.set(bounds.x, bounds.y - bounds.height / 2, 0.1); // UIView 위에 위치하도록 z축 약간 이동
+    
+        EventManager.self.addPointerMoveListener((event) => {
+            const rect = Camera.getMouseWorldPosition(event);
+            if (this.isPointInside(rect.x, rect.y)) {
+                this.videoPlayer.play();
+            } else {
+                this.videoPlayer.pause();
+            }
+        });
+    }
+
+    isPointInside(x: number, y: number): boolean {
+        const localPos = new THREE.Vector3();
+        this.worldToLocal(localPos.set(x, y, 0));
+        const halfWidth = this.size.width / 2;
+        const halfHeight = this.size.height / 2;
+        return localPos.x >= -halfWidth && localPos.x <= halfWidth && localPos.y >= -halfHeight * 2 && localPos.y <= 0;
     }
 
     playVideo(): void {
@@ -50,10 +69,12 @@ export class VideoPlayer extends UIObject {
         this.videoTexture.magFilter = THREE.LinearFilter;
         this.videoTexture.format = THREE.RGBFormat;
 
+        this.videoTexture.colorSpace = THREE.SRGBColorSpace;
         // 3. VideoMaterial 생성
         this.videoMaterial = new THREE.MeshBasicMaterial({
             map: this.videoTexture,
             side: THREE.DoubleSide,
+            color: 0xffffff,
         });
 
         // 4. PlaneGeometry를 사용해 비디오 화면 생성
@@ -65,11 +86,13 @@ export class VideoPlayer extends UIObject {
     // 비디오 재생
     play(): void {
         this.videoElement.play();
+        this.videoMaterial.color.set(0xffffff); // 비디오 재생 시 원래 색상으로 설정
     }
 
     // 비디오 일시정지
     pause(): void {
         this.videoElement.pause();
+        this.videoMaterial.color.set(0x777777); // 비디오 일시정지 시 회색조로 변경
     }
 
     // 비디오 시크 (초 단위)
