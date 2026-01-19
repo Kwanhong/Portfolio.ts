@@ -33,6 +33,8 @@ export class UIButton extends UIObject {
     status: buttonStatus = 'hover'
     shape: buttonShape = 'rectangle'
 
+    scaleFactor: number = 1.0;
+
     private color: THREE.Color = new THREE.Color(1, 1, 1);
     private _eventEnabled: boolean = true;
     set eventEnabled(value: boolean) {
@@ -47,6 +49,12 @@ export class UIButton extends UIObject {
 
     update(dt: number): void {
         super.update(dt);
+
+        if (this.isHovered) {
+            this.scale.lerp(new THREE.Vector3(1.08 * this.scaleFactor, 1.08 * this.scaleFactor, 1.08 * this.scaleFactor), 0.3);
+        } else {
+            this.scale.lerp(new THREE.Vector3(0.9 * this.scaleFactor, 0.9 * this.scaleFactor, 0.9 * this.scaleFactor), 0.3);
+        }
     }
 
     private onClick?: () => void
@@ -71,6 +79,7 @@ export class UIButton extends UIObject {
         material.transparent = true;
         material.opacity = this.backgroundMeshMaxOpacity
         this.status = 'blur'
+        this.isHovered = false
     }
 
     onHover(): void {
@@ -79,6 +88,7 @@ export class UIButton extends UIObject {
         material.transparent = true;
         material.opacity = this.backgroundMeshMaxOpacity
         this.status = 'hover'
+        this.isHovered = true
     }
 
     onPress(): void {

@@ -6,6 +6,7 @@ import { Language } from '@data/Language'
 import { Camera } from '../Camera'
 import { Time } from '../../core/Time'
 import {
+    defaultBaselineStyle,
     defaultDescriptionStyle,
     defaultHeadlineStyle
 } from '@styles/TextStyle'
@@ -34,13 +35,14 @@ export class MainScene implements Scene {
     private offsetX: number = 0
     private headlineText: UIText
     private descriptionText: UIText
-    private autherText: UIText
+    private authorText: UIText
     private lastMousePosition: THREE.Vector3 = new THREE.Vector3()
 
     private animationMixer?: THREE.AnimationMixer
     private clips: THREE.AnimationClip[] = []
     private previousAction?: THREE.AnimationAction
     private blowing: boolean = false
+    private button!: UIOpaqueBlurButton
 
     constructor(scene: THREE.Scene, onFinished: () => void = () => { }) {
 
@@ -51,23 +53,26 @@ export class MainScene implements Scene {
 
         const headlineStyle = { ...defaultHeadlineStyle, fontSize: 72, color: Color.helper.getHex('text.primary') }
         const descriptionStyle = { ...defaultDescriptionStyle, color: Color.helper.getHex('text.secondary') }
-        const autherStyle = { ...descriptionStyle, fontSize: 13, color: Color.helper.getHex('foreground.primary') }
+        const authorStyle = { ...descriptionStyle, fontSize: 13, color: Color.helper.getHex('foreground.primary') }
         const button = new UIOpaqueBlurButton({
-            width: 100,
-            height: 40,
+            width: 80,
+            height: 36,
+            cornerRadius: 18,
+            style: {...defaultBaselineStyle, fontSize: 11, anchorX: 'center', textAlign: 'center' },
             text: Language.helper.get('main.button.start'),
             onClick: () => {
                 this.finish()
             }
         })
+        this.button = button
         button.visible = false
 
-        this.autherText = new UIText(Language.helper.get('main.auther'), autherStyle)
+        this.authorText = new UIText(Language.helper.get('main.author'), authorStyle)
         this.descriptionText = new UIText(Language.helper.get('main.description'), descriptionStyle)
         this.headlineText = new UIText(Language.helper.get('main.headline'), headlineStyle, (_, size) => {
             this.headlineText.setSize(size)
             this.descriptionText.setSize(size)
-            this.autherText.setSize(size)
+            this.authorText.setSize(size)
             let opacity = 0
             let fadeInDuration = 1
             button.visible = true
@@ -75,7 +80,7 @@ export class MainScene implements Scene {
                 opacity += Time.self!.deltaTime / fadeInDuration
                 this.headlineText.setOpacity(opacity)
                 this.descriptionText.setOpacity(opacity)
-                this.autherText.setOpacity(opacity)
+                this.authorText.setOpacity(opacity)
                 button.setOpacity(opacity)
             }, () => {
                 button.eventEnabled = true
@@ -84,19 +89,19 @@ export class MainScene implements Scene {
 
         this.headlineText.position.set(0, 0, 100)
         this.descriptionText.position.set(5, -60, 100)
-        this.autherText.position.set(5, -87, 100)
+        this.authorText.position.set(5, -87, 100)
 
         button.position.set(0, -150, 100)
         button.setOpacity(0)
         button.eventEnabled = false
 
-        this.autherText.setOpacity(0)
+        this.authorText.setOpacity(0)
         this.descriptionText.setOpacity(0)
         this.headlineText.setOpacity(0)
 
         this.self.add(this.headlineText)
         this.self.add(this.descriptionText)
-        this.self.add(this.autherText)
+        this.self.add(this.authorText)
         this.self.add(button)
 
         this.flow = new FlowField(30, Camera.size.width, Camera.size.height)
@@ -152,7 +157,7 @@ export class MainScene implements Scene {
         donwload.then((data) => {
             let object = data.scene
             object.scale.set(0.1, 0.1, 0.1)
-            object.position.set(0, 90, -100)
+            object.position.set(0, 100, -100)
             this.self.add(object)
             this.head = object
             this.clips = data.animations
@@ -222,7 +227,7 @@ export class MainScene implements Scene {
         if (!this.enabled) return
 
         let radius = 17
-        let headPos = this.lastMousePosition.clone().normalize().multiplyScalar(radius).add(new THREE.Vector3(0, 90, -100))
+        let headPos = this.lastMousePosition.clone().normalize().multiplyScalar(radius).add(new THREE.Vector3(0, 100, -100))
         this.head?.position.lerp(headPos, 0.1)
         let originalZ = this.head?.rotation.z ?? 0
         let target = new THREE.Vector3(this.lastMousePosition.x, this.lastMousePosition.y, 500)
@@ -255,6 +260,8 @@ export class MainScene implements Scene {
                 agent.scatter(this.lastMousePosition)
             }
         }
+
+        this.button.update(dt);
         this.animationMixer?.update(dt)
     }
 

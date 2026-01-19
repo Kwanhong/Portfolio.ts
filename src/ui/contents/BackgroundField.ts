@@ -4,13 +4,14 @@ import { Color } from "@data/Color";
 import { UIMover } from "@objects/main/Mover";
 import { EventManager } from "../../event/EventManager";
 import { Camera } from "../../scene/Camera";
+import { Helper } from "../../core/Helper";
 
 class Blob extends UIMover {
 
     pivots: THREE.Vector3[] = []
     pivotIndex: number = 0;
     private springConstant: number = 20;
-    private friction: number = 0.9;
+    private friction: number = 0.95;
     private color: THREE.Color = new THREE.Color();
 
     constructor(radius: number, color: string) {
@@ -23,7 +24,7 @@ class Blob extends UIMover {
     }
 
     update(dt: number): void {
-        this.acceleration.clampScalar(-300, 300);
+        this.acceleration.clampScalar(-1500, 1500);
         super.update(dt);
 
         // Pivot로 돌아가기 위한 힘 적용
@@ -40,10 +41,11 @@ class Blob extends UIMover {
         this.velocity.multiplyScalar(this.friction);
         this.position.z = -200;
 
-        const diff = new THREE.Vector3().subVectors(this.pivots[this.pivotIndex], this.position).length();
+        let diff = new THREE.Vector3().subVectors(this.pivots[this.pivotIndex], this.position).length();
+        diff = Helper.map(diff, 0, 50, 0.4, 1);
         const material = (this.children[0] as THREE.Mesh).material as THREE.MeshBasicMaterial
         // Getting Lighter color when far from pivot
-        material.color = this.color.clone().multiplyScalar(0.5 + Math.min(diff * diff / 200, 0.5));
+        material.color = this.color.clone().multiplyScalar(diff);
     }
 }
 
@@ -95,8 +97,8 @@ export class BackgroundField extends UIObject {
     private needsToUpdate = false
     constructor(size: { width: number; height: number }, resolution: number) {
 
-        size.width = size.width + resolution
-        size.height = size.height + resolution
+        size.width = size.width + resolution * 2
+        size.height = size.height + resolution * 2
 
         super();
 
@@ -188,13 +190,13 @@ export class BackgroundField extends UIObject {
         super.update(dt);
 
         if (!this.visible) return
-        if (EventManager.self.pointerPressed) {
+        // if (EventManager.self.pointerPressed) {
             const randX = (Math.random() - 0.5) * 0.5;
             const randY = (Math.random() - 0.5) * 0.5;
             const force = new THREE.Vector3(randX, randY, 0).multiplyScalar(500000000);
             const target = Camera.getMouseWorldPosition(this.lastPointerEvent);
             this.applyForce(target, force);
-        }
+        // }
 
         if (!this.needsToUpdate) return;
         this.blobs.forEach(blob => blob.update(dt));
