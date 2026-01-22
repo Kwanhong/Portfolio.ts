@@ -57,12 +57,13 @@ export class MainScene implements Scene {
             width: 80,
             height: 36,
             cornerRadius: 18,
-            style: {...defaultBaselineStyle, fontSize: 11, anchorX: 'center', textAlign: 'center' },
+            style: { ...defaultBaselineStyle, fontSize: 11, anchorX: 'center', textAlign: 'center' },
             text: Language.helper.get('main.button.start'),
             onClick: () => {
                 this.finish()
             }
         })
+        
         this.button = button
         button.visible = false
 
@@ -72,19 +73,24 @@ export class MainScene implements Scene {
             this.headlineText.setSize(size)
             this.descriptionText.setSize(size)
             this.authorText.setSize(size)
-            let opacity = 0
-            let fadeInDuration = 1
-            button.visible = true
-            Time.coroutineSec(fadeInDuration, () => {
-                opacity += Time.self!.deltaTime / fadeInDuration
-                this.headlineText.setOpacity(opacity)
-                this.descriptionText.setOpacity(opacity)
-                this.authorText.setOpacity(opacity)
-                button.setOpacity(opacity)
-            }, () => {
-                button.eventEnabled = true
-            })
         });
+
+        button.visible = true
+        let opacity = 0
+        let fadeInDuration = 1
+        Time.coroutineSec(fadeInDuration, () => {
+            opacity += Time.self!.deltaTime / fadeInDuration
+            this.headlineText.setOpacity(opacity)
+            this.descriptionText.setOpacity(opacity)
+            this.authorText.setOpacity(opacity)
+            button.setOpacity(opacity)
+        }, () => {
+            button.eventEnabled = true
+            button.setOpacity(1)
+            this.headlineText.setOpacity(1)
+            this.descriptionText.setOpacity(1)
+            this.authorText.setOpacity(1)
+        })
 
         this.headlineText.position.set(0, 0, 100)
         this.descriptionText.position.set(5, -60, 100)
