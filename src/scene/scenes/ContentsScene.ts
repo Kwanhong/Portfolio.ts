@@ -58,7 +58,7 @@ export class ContentsScene implements Scene {
 
         const info = getStarInfo()
         info.onClick = () => { 
-            this.currentStar.applyForce(400);
+            this.currentStar.applyForce(200);
          }
         for (let substar of info?.substars ?? []) {
             substar.onClick = () => {
@@ -112,7 +112,7 @@ export class ContentsScene implements Scene {
 
         if (this.currentDepth > 0) {
             this.setDepth(this.currentDepth - 1, this.currentStar.superstar!)
-            this.currentStar.applyForce(500);
+            this.currentStar.applyForce(400);
         } else {
             this.return()
         }
@@ -140,7 +140,7 @@ export class ContentsScene implements Scene {
 
     onPointerMove(event: PointerEvent): void {
         let deltaX = event.clientX - this.lastPressedPointer.clientX;
-        this.currentStar.applyForce(-deltaX * 0.2);
+        this.currentStar.applyForce(-deltaX * 0.05);
         this.lastPressedPointer = event;
     }
 
