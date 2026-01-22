@@ -22,7 +22,7 @@ export class SceneObject extends THREE.Object3D {
         }
     }
 
-    update(dt: number) {}
+    update(_dt: number) {}
 
     onHover() {}
     onBlur() {}

@@ -32,7 +32,6 @@ export class MainScene implements Scene {
     }
 
     private head?: THREE.Object3D
-    private offsetX: number = 0
     private headlineText: UIText
     private descriptionText: UIText
     private authorText: UIText

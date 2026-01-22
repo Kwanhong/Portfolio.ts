@@ -1,5 +1,4 @@
 import { UIObject } from './UIObject';
-import * as THREE from 'three';
 import type { UIText } from './UIText';
 import type { UIButton } from './UIButton';
 
