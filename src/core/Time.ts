@@ -25,7 +25,7 @@ export class Time {
         return Helper.noise(time * speed, 0)
     }
 
-    private static terminationThreshold: number = 3
+    private static terminationThreshold: number = 100
     private static terminationCount: number = 0
 
     static async coroutine(waitUntil: () => boolean, update: () => void = () => { }, complete: () => void = () => { }) {
@@ -60,6 +60,7 @@ export class Time {
         return new Promise<void>((resolve) => {
             if (this.terminationCount > this.terminationThreshold) {
                 console.warn('Coroutine termination threshold exceeded. Cannot start new coroutine.')
+                complete()
                 resolve()
                 return
             }
@@ -74,6 +75,7 @@ export class Time {
                     if (this.terminationCount > this.terminationThreshold) {
                         console.warn('Coroutine termination threshold exceeded. Forcing termination.')
                         this.terminationCount--
+                        complete()
                         resolve()
                     }
                     requestAnimationFrame(checkCondition)
