@@ -48,7 +48,7 @@ export class ContentsScene implements Scene {
         this.enabled = false;
 
         // Construct Base UIs
-        this.backgroundField = new BackgroundField(Camera.size, 47)
+        this.backgroundField = new BackgroundField(Camera.size, 51)
         this.backgroundField.position.set(-12, 24, -250)
         this.self.add(this.backgroundField)
 

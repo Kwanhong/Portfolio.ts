@@ -65,7 +65,6 @@ export class MainScene implements Scene {
         })
 
         this.button = button
-        button.visible = false
 
         this.authorText = new UIText(Language.helper.get('main.author'), authorStyle)
         this.descriptionText = new UIText(Language.helper.get('main.description'), descriptionStyle)
@@ -75,6 +74,7 @@ export class MainScene implements Scene {
             this.authorText.setSize(size)
         });
 
+        button.visible = false
         Time.coroutineSec(2, () => { }, () => {
             button.visible = true
             let opacity = 0

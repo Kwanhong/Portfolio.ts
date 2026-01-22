@@ -17,13 +17,16 @@ export class Engine {
         this.renderer = new THREE.WebGLRenderer({
             antialias: false,
             powerPreference: 'high-performance',
+            alpha: false,              // 투명 배경 불필요 시 성능 향상
+            stencil: false,            // 스텐실 버퍼 비활성화
+            depth: true,               // 3D 깊이 테스트 필요
+            preserveDrawingBuffer: false, // 프레임 버퍼 보존 불필요
+            failIfMajorPerformanceCaveat: false, // 소프트웨어 렌더링 허용 (호환성)
         })
-
-        this.renderer.autoClearStencil = false
 
         console.log('RENDERER OK')
 
-        this.renderer.setPixelRatio(window.devicePixelRatio)
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
         this.renderer.setSize(window.innerWidth, window.innerHeight)
         // document.body.requestFullscreen();
         const canvas = this.renderer.domElement
