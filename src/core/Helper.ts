@@ -22,6 +22,10 @@ export class Helper {
         return (1 - amt) * start + amt * end;
     }
 
+    static clamp(n: number, low: number, high: number): number {
+        return Math.max(Math.min(n, high), low);
+    }
+    
     static noise(x: number, y: number) {
         return PerlinNoise.default.noise2D(x, y)
     }

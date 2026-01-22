@@ -63,7 +63,7 @@ export class MainScene implements Scene {
                 this.finish()
             }
         })
-        
+
         this.button = button
         button.visible = false
 
@@ -75,22 +75,29 @@ export class MainScene implements Scene {
             this.authorText.setSize(size)
         });
 
-        button.visible = true
-        let opacity = 0
-        let fadeInDuration = 1
-        Time.coroutineSec(fadeInDuration, () => {
-            opacity += Time.self!.deltaTime / fadeInDuration
-            this.headlineText.setOpacity(opacity)
-            this.descriptionText.setOpacity(opacity)
-            this.authorText.setOpacity(opacity)
-            button.setOpacity(opacity)
-        }, () => {
-            button.eventEnabled = true
-            button.setOpacity(1)
-            this.headlineText.setOpacity(1)
-            this.descriptionText.setOpacity(1)
-            this.authorText.setOpacity(1)
+        Time.coroutineSec(2, () => { }, () => {
+            button.visible = true
+            let opacity = 0
+            let fadeInDuration = 3
+            Time.coroutineSec(fadeInDuration, () => {
+                const tol = Time.self!.deltaTime / fadeInDuration
+                const sinTol = Math.sin(tol * Math.PI / 2)
+                opacity += sinTol
+                opacity = Helper.clamp(opacity, 0, 1)
+                button.setOpacity(opacity)
+                this.headlineText.setOpacity(opacity)
+                this.descriptionText.setOpacity(opacity)
+                this.authorText.setOpacity(opacity)
+                button.setOpacity(opacity)
+            }, () => {
+                button.eventEnabled = true
+                button.setOpacity(1)
+                this.headlineText.setOpacity(1)
+                this.descriptionText.setOpacity(1)
+                this.authorText.setOpacity(1)
+            })
         })
+
 
         this.headlineText.position.set(0, 0, 100)
         this.descriptionText.position.set(5, -60, 100)
