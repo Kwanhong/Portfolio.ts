@@ -1,19 +1,20 @@
 import * as THREE from 'three'
 import type { Scene } from '../Scene'
-import { UIScrollView } from '@ui/base/UIScrollView'
-import { UIButton, UIOpaqueBlurButton } from '@ui/base/UIButton'
+import { UIScrollView } from '@ui/components/UIScrollView'
+import { UIButton, UIImageButton, UIOpaqueBlurButton } from '@ui/base/UIButton'
 import { Camera } from '../../Camera'
 import { UIText } from '@ui/base/UIText'
 import { defaultHeadlineStyle, defaultBaselineStyle, defaultDescriptionStyle, type TextStyle } from '@styles/TextStyle'
 import { Time } from '../../../core/Time'
-import { UIImageView } from '@ui/base/UIImageView'
+import { UIImageView } from '@ui/components/UIImageView'
 import { FileManager } from '../../../core/FIleManager'
 import { UIView } from '@ui/base/UIView'
-import { UIVideoView } from '@ui/base/UIVideoView'
+import { UIVideoView } from '@ui/components/UIVideoView'
 import { UIObject } from '@ui/base/UIObject'
 import { Language } from '@data/Language'
 import { Color } from '@data/Color'
 import { Helper } from '../../../core/Helper'
+import type { applicationInfo, contentInfo, contentsInfo } from '@data/Info'
 
 export class ContentScene implements Scene {
 
@@ -49,7 +50,7 @@ export class ContentScene implements Scene {
             width: 80,
             height: 36,
             cornerRadius: 18,
-            style: {...defaultBaselineStyle, fontSize: 11, anchorX: 'center', textAlign: 'center' },
+            style: { ...defaultBaselineStyle, fontSize: 11, anchorX: 'center', textAlign: 'center' },
             text: Language.helper.get('content.button.back'),
             onClick: () => { this.return() }
         })
@@ -157,7 +158,7 @@ export class ContentScene implements Scene {
 
         const view = new UIView({ x: 0, y: 0, width: 300, height: 150 }, 47)
         const leftAnchor = new UIObject()
-        
+
         leftAnchor.position.set(0, 0, 0)
         view.add(leftAnchor)
 
@@ -181,7 +182,7 @@ export class ContentScene implements Scene {
                 ...defaultDescriptionStyle,
                 fontSize: 10,
             })
-            
+
             role.position.set(287, -size.height - 45, 0)
             role.setSize({ width: 280, height: 50 })
             leftAnchor.add(role)
@@ -194,37 +195,37 @@ export class ContentScene implements Scene {
         const style: TextStyle = {
             ...defaultBaselineStyle,
             fontSize: 7,
-            anchorX: 'center', 
+            anchorX: 'center',
             anchorY: 'middle',
             textAlign: 'center'
         }
 
-        const btnAppstore = new UIOpaqueBlurButton({
-            width: 25,
-            height: 25,
-            cornerRadius: 8,
-            text: 'APP',
-            style: style,
-            onClick: () => {
-                window.open(info.appStoreUrl, '_blank')
-            }
-        })
-
-        const btnGithub = new UIOpaqueBlurButton({
-            width: 25,
-            height: 25,
-            cornerRadius: 8,
-            text: 'GIT',
-            style: style,
-            onClick: () => {
-                window.open(info.gitHubUrl, '_blank')
-            }
-        })
-
-        btnGithub.position.set(196, -111, 0)
-        leftAnchor.add(btnGithub)
-        btnAppstore.position.set(160, -111, 0)
-        leftAnchor.add(btnAppstore)
+        FileManager.loadTexture('resources/icon_appstore.png').then((texture) => {
+            const btnAppstore = new UIImageButton(texture, {
+                width: 25,
+                height: 25,
+                cornerRadius: 12.5,
+                style: style,
+                onClick: () => {
+                    window.open(info.appStoreUrl, '_blank')
+                }
+            });
+            btnAppstore.position.set(160, -111, 0)
+            leftAnchor.add(btnAppstore)
+        }).catch(() => { });
+        FileManager.loadTexture('resources/icon_github.png').then((texture) => {
+            const btnGithub = new UIImageButton(texture, {
+                width: 25,
+                height: 25,
+                cornerRadius: 12.5,
+                style: style,
+                onClick: () => {
+                    window.open(info.gitHubUrl, '_blank')
+                }
+            });
+            btnGithub.position.set(196, -111, 0)
+            leftAnchor.add(btnGithub)
+        }).catch(() => { });
 
         this.scrollView?.addStack(view)
 
@@ -368,39 +369,4 @@ export class ContentScene implements Scene {
     }
 
     refresh(): void { }
-}
-
-///TODO: Move to data folder
-export type textInfo = {
-    text: string,
-    textStyle?: TextStyle
-}
-
-export type buttonInfo = {
-    title: string,
-    textStyle?: TextStyle,
-    onClick: () => void,
-}
-
-export type applicationInfo = {
-    appIconUrl: string,
-    appRole?: string,
-    appAuthor?: string,
-    appStoreUrl?: string,
-    gitHubUrl?: string,
-}
-
-export type contentInfo = {
-    text?: textInfo,
-    button?: buttonInfo,
-    imageUrl?: string,
-    videoUrl?: string,
-    height: number,
-    application?: applicationInfo,
-    customView?: (scrollView: UIScrollView) => UIObject,
-}
-
-export type contentsInfo = {
-    title: string,
-    contents: contentInfo[],
 }

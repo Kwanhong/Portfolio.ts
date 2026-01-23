@@ -13,6 +13,8 @@ export class FlowField {
     indicators: THREE.Object3D[]
 
     constructor(resolution: number, width: number, height: number) {
+        width = Math.min(width, 800)
+        height = Math.min(height, 600)
         this.resolution = resolution;
         this.cols = Math.floor(width / this.resolution);
         this.rows = Math.floor(height / this.resolution);

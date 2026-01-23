@@ -36,7 +36,7 @@ export class EpilogueScene implements Scene {
     }
 
     finish(): void {
-        this.enabled = false
         this.onFinished?.()
+        this.enabled = false
     }
 }   

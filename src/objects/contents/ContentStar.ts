@@ -6,22 +6,8 @@ import { FileManager } from "../../core/FIleManager";
 import { Helper } from "../../core/Helper";
 import { Language } from "@data/Language";
 import { defaultBaselineStyle, defaultHeadlineStyle } from "@ui/styles/TextStyle";
-import type { contentsInfo } from "../../scene/scenes/contents/ContentScene";
+import type { starInfo } from "@data/Info";
 
-export type starInfo = {
-    title: string,
-    fontSize?: number,
-    size: number,
-    depth: number
-    index?: number,
-    radius?: number,
-    buttonImageUrl?: string,
-    backgroundImageUrl?: string,
-    urlUuid?: string,
-    contents?: contentsInfo,
-    substars?: starInfo[]
-    onClick?: () => void
-}
 
 export class ContentStar extends UIObject {
     substars: ContentStar[] = []

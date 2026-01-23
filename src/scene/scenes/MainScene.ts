@@ -15,7 +15,7 @@ import { Agent } from '@objects/main/Agent'
 import { EventManager } from '../../event/EventManager'
 import { FileManager } from '../../core/FIleManager'
 import { Helper } from '../../core/Helper'
-import { UIOpaqueBlurButton } from '@ui/base/UIButton'
+import { UIImageButton, UIOpaqueBlurButton } from '@ui/base/UIButton'
 
 
 export class MainScene implements Scene {
@@ -42,6 +42,8 @@ export class MainScene implements Scene {
     private previousAction?: THREE.AnimationAction
     private blowing: boolean = false
     private button!: UIOpaqueBlurButton
+
+    private githubButton!: UIImageButton
 
     constructor(scene: THREE.Scene, onFinished: () => void = () => { }) {
 
@@ -90,7 +92,6 @@ export class MainScene implements Scene {
                 this.authorText.setOpacity(opacity)
                 button.setOpacity(opacity)
             }, () => {
-                button.eventEnabled = true
                 button.setOpacity(1)
                 this.headlineText.setOpacity(1)
                 this.descriptionText.setOpacity(1)
@@ -105,7 +106,6 @@ export class MainScene implements Scene {
 
         button.position.set(0, -150, 100)
         button.setOpacity(0)
-        button.eventEnabled = false
 
         this.authorText.setOpacity(0)
         this.descriptionText.setOpacity(0)
@@ -119,6 +119,7 @@ export class MainScene implements Scene {
         this.flow = new FlowField(30, Camera.size.width, Camera.size.height)
 
         EventManager.self.addPointerDownListener((event: PointerEvent) => {
+            
             this.lastMousePosition = Camera.getMouseWorldPosition(event)
             this.playAnimation('blow', THREE.LoopOnce)
             let inhale = 0.7
@@ -198,6 +199,19 @@ export class MainScene implements Scene {
             this.self.add(agent)
             this.agents.push(agent)
         }
+
+        FileManager.loadTexture('resources/icon_github.png',).then((texture) => {
+
+            this.githubButton = new UIImageButton(texture, {
+                width: 30,
+                height: 30,
+                onClick: () => {
+                    window.open('https://github.com/kwanhong/Portfolio.ts')
+                }
+            })
+            this.githubButton.position.set(Camera.bounds.right - 30, Camera.bounds.bottom + 30, 100)
+            this.self.add(this.githubButton)
+        })
     }
 
     private pointerDuration: number = 0
@@ -290,5 +304,8 @@ export class MainScene implements Scene {
     }
 
     resize(): void {
+        if (this.githubButton) {
+            this.githubButton.position.set(Camera.bounds.right - 30, Camera.bounds.bottom + 30, 100)
+        }
     }
 }

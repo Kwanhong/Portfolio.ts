@@ -6,7 +6,7 @@ import { EventManager } from '../../event/EventManager';
 import { Camera } from '../../scene/Camera';
 import { Helper } from '../../core/Helper';
 import { Time } from '../../core/Time';
-import { UIImageView } from './UIImageView';
+import { UIImageView } from '../components/UIImageView';
 
 interface UIButtonOptions {
     width?: number;

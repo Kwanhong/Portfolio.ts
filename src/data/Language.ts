@@ -214,10 +214,98 @@ type ScriptType =
        'content.graphics.metal.description.detail.timing' |
        'content.graphics.metal.description.detail.subtitle.demo' |
 
-       'epilogue.message'
+       'epilogue.message' |
 
+       'overlay.main.title' |
+       'overlay.main.message' |
+       'overlay.main.page1.title' |
+       'overlay.main.page1.message' |
+       'overlay.main.page2.title' |       
+       'overlay.main.page2.message' |
+       'overlay.main.page3.title' |
+       'overlay.main.page3.message' |
+
+       'overlay.contents.title' |
+       'overlay.contents.message' |
+       'overlay.contents.page1.title' |
+       'overlay.contents.page1.message' |
+       'overlay.contents.page2.title' |
+       'overlay.contents.page2.message' |
+
+       'overlay.content.title' |
+       'overlay.content.message' |
+       'overlay.content.page1.title' |
+       'overlay.content.page1.message' |
+       'overlay.content.page2.title' |
+       'overlay.content.page2.message' |
+       'overlay.content.page3.title' |
+       'overlay.content.page3.message' |
+       'overlay.content.page4.title' |
+       'overlay.content.page4.message' |
+
+       'overlay.epilogue.title' | 
+       'overlay.epilogue.message' 
+ 
 const scripts = {
        en: {
+
+              // 영문 버전으로 번역
+              // Overlay Scene
+              // 'overlay.main.title': '메인 화면 도움말',
+              // 'overlay.main.message': '마우스를 움직이거나 클릭해 화면이 어떻게 반응하는지 확인해보세요.',
+              // 'overlay.main.page1.title': '마우스 이동',
+              // 'overlay.main.page1.message': '마우스를 움직이면 캐릭터의 시선이 커서를 따라갑니다.',
+              // 'overlay.main.page2.title': '마우스 클릭',
+              // 'overlay.main.page2.message': '마우스를 클릭하면 주변의 Flocking Agent들이 흩어집니다.',
+              // 'overlay.main.page3.title': '프로젝트 보기',
+              // 'overlay.main.page3.message': '화면 하단의 프로젝트 보기 버튼을 눌러 다음 화면으로 이동하세요.',
+
+              // 'overlay.contents.title': '콘텐츠 선택 도움말',
+              // 'overlay.contents.message': '클릭과 드래그로 프로젝트를 탐색할 수 있습니다.',
+              // 'overlay.contents.page1.title': '포커스 이동',
+              // 'overlay.contents.page1.message': '가운데 항성 버튼을 클릭하면 포커스가 다음 행성으로 이동합니다.',
+              // 'overlay.contents.page2.title': '회전 및 확대',
+              // 'overlay.contents.page2.message': '배경이나 행성을 드래그해 회전할 수 있습니다. 포커스된 행성을 클릭하면 확대되며, 위성을 클릭해 프로젝트로 이동합니다.',
+
+              // 'overlay.content.title': '프로젝트 상세 도움말',
+              // 'overlay.content.message': '마우스로 상세 내용을 확인하세요.',
+              // 'overlay.content.page1.title': '외부 링크',
+              // 'overlay.content.page1.message': '프로젝트 관련 외부 링크 버튼을 클릭하면 새 탭에서 열립니다.',
+              // 'overlay.content.page2.title': '스크롤',
+              // 'overlay.content.page2.message': '마우스를 클릭한 채로 드래그하면 아래 내용을 볼 수 있습니다.',
+              // 'overlay.content.page3.title': '시연 영상',
+              // 'overlay.content.page3.message': '영상 위에 마우스를 올리면 재생됩니다. 벗어나면 정지됩니다.',
+              // 'overlay.content.page4.title': '뒤로가기',
+              // 'overlay.content.page4.message': '화면 왼쪽 하단의 뒤로가기 버튼을 눌러 이전 화면으로 돌아갑니다.',
+
+              // Overlay Scene
+              'overlay.main.title': 'Main Screen Help',
+              'overlay.main.message': 'Move or click the mouse to see how the screen responds.',
+              'overlay.main.page1.title': 'Mouse Movement',
+              'overlay.main.page1.message': 'When you move the mouse, the character\'s gaze follows the cursor.',
+              'overlay.main.page2.title': 'Mouse Click',
+              'overlay.main.page2.message': 'Clicking the mouse scatters the surrounding Flocking Agents.',
+              'overlay.main.page3.title': 'View Projects',
+              'overlay.main.page3.message': 'Press the View Projects button at the bottom of the screen to proceed to the next screen.',
+
+              'overlay.contents.title': 'Content Selection Help',
+              'overlay.contents.message': 'You can navigate through projects by clicking and dragging.',
+              'overlay.contents.page1.title': 'Focus Movement',
+              'overlay.contents.page1.message': 'Clicking the central star button moves the focus to the next planet.',
+              'overlay.contents.page2.title': 'Rotation and Zoom',
+              'overlay.contents.page2.message': 'You can rotate by dragging the background or planets. Clicking on a focused planet zooms in, and clicking on a satellite takes you to the project.',
+              
+              'overlay.content.title': 'Project Details Help',
+              'overlay.content.message': 'Use the mouse to view detailed content.',
+              'overlay.content.page1.title': 'External Links',
+              'overlay.content.page1.message': 'Clicking on external link buttons related to the project opens them in a new tab.',
+              'overlay.content.page2.title': 'Scrolling',
+              'overlay.content.page2.message': 'Click and drag the mouse to see the content below.',
+              'overlay.content.page3.title': 'Demo Video',
+              'overlay.content.page3.message': 'Hover the mouse over the video to play it. It stops when you move away.',
+              'overlay.content.page4.title': 'Go Back',
+              'overlay.content.page4.message': 'Press the back button at the bottom left of the screen to return to the previous screen.',
+
               // Main Scene
               'main.headline': 'PORTFOL.iO',
               'main.description': 'focused on real-time graphics and interactive systems engineering.',
@@ -754,6 +842,34 @@ const scripts = {
               'epilogue.message': 'Thank you for visiting my portfolio! Feel free to reach out for collaborations or inquiries.'
        },
        kr: {
+              // Overlay Scene
+              'overlay.main.title': '메인 화면 도움말',
+              'overlay.main.message': '마우스를 움직이거나 클릭해 화면이 어떻게 반응하는지 확인해보세요.',
+              'overlay.main.page1.title': '마우스 이동',
+              'overlay.main.page1.message': '마우스를 움직이면 캐릭터의 시선이 커서를 따라갑니다.',
+              'overlay.main.page2.title': '마우스 클릭',
+              'overlay.main.page2.message': '마우스를 클릭하면 주변의 Flocking Agent들이 흩어집니다.',
+              'overlay.main.page3.title': '프로젝트 보기',
+              'overlay.main.page3.message': '화면 하단의 프로젝트 보기 버튼을 눌러 다음 화면으로 이동하세요.',
+
+              'overlay.contents.title': '콘텐츠 선택 도움말',
+              'overlay.contents.message': '클릭과 드래그로 프로젝트를 탐색할 수 있습니다.',
+              'overlay.contents.page1.title': '포커스 이동',
+              'overlay.contents.page1.message': '가운데 항성 버튼을 클릭하면 포커스가 다음 행성으로 이동합니다.',
+              'overlay.contents.page2.title': '회전 및 확대',
+              'overlay.contents.page2.message': '배경이나 행성을 드래그해 회전할 수 있습니다. 포커스된 행성을 클릭하면 확대되며, 위성을 클릭해 프로젝트로 이동합니다.',
+
+              'overlay.content.title': '프로젝트 상세 도움말',
+              'overlay.content.message': '마우스로 상세 내용을 확인하세요.',
+              'overlay.content.page1.title': '외부 링크',
+              'overlay.content.page1.message': '프로젝트 관련 외부 링크 버튼을 클릭하면 새 탭에서 열립니다.',
+              'overlay.content.page2.title': '스크롤',
+              'overlay.content.page2.message': '마우스를 클릭한 채로 드래그하면 아래 내용을 볼 수 있습니다.',
+              'overlay.content.page3.title': '시연 영상',
+              'overlay.content.page3.message': '영상 위에 마우스를 올리면 재생됩니다. 벗어나면 정지됩니다.',
+              'overlay.content.page4.title': '뒤로가기',
+              'overlay.content.page4.message': '화면 왼쪽 하단의 뒤로가기 버튼을 눌러 이전 화면으로 돌아갑니다.',
+
               // Main Scene
               'main.headline': 'PORTFOL.iO',
               'main.description': '실시간 그래픽과 인터랙션 시스템을 중심으로 한 개인 포트폴리오입니다.',

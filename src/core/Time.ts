@@ -25,7 +25,7 @@ export class Time {
         return Helper.noise(time * speed, 0)
     }
 
-    private static terminationThreshold: number = 3
+    private static terminationThreshold: number = 10
     private static terminationCount: number = 0
 
     static async coroutine(waitUntil: () => boolean, update: () => void = () => { }, complete: () => void = () => { }) {
