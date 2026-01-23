@@ -30,7 +30,7 @@ export class UIPage extends UIObject {
 
             // 메시지
             const descriptionStyle: TextStyle = { ...defaultDescriptionStyle, textAlign: 'left', anchorX: 'left', anchorY: 'top' };
-            const message = new UIText(Language.helper.get('use.string.key', info.message), descriptionStyle, (bounds, dSize) => {
+            const message = new UIText(Language.helper.get('use.string.key', info.message), descriptionStyle, () => {
                 message.setSize({ width: this.size.width - mediaWidth - 60, height: Infinity });
                 message.position.set(message.size.width / 2, -this.size.height / 2 - hSize.height - 10, 0.1);
                 message.translateX(-this.size.width / 2 + mediaWidth + 40);

@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import type { Scene } from './Scene';
-import { Data, type overlayInfo } from '@data/Info';
+import { type overlayInfo } from '@data/Info';
 import { UIPagingView } from '@ui/components/UIPagingView';
 import { UIText } from '@ui/base/UIText';
 import { defaultDescriptionStyle, defaultHeadlineStyle, type TextStyle } from '@ui/styles/TextStyle';
@@ -10,7 +10,6 @@ import { Time } from '../../core/Time';
 
 export class OverlayScene implements Scene {
 
-    static instance?: OverlayScene;
     mother: THREE.Scene
     self: THREE.Object3D = new THREE.Object3D()
     onFinished?: (() => void) | undefined
@@ -31,7 +30,6 @@ export class OverlayScene implements Scene {
     }
 
     constructor(mother: THREE.Scene, onFinished?: () => void) {
-        OverlayScene.instance = this;
         this.mother = mother
         this.mother.add(this.self)
         this.self.position.set(0, 0, 1000)

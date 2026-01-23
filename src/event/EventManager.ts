@@ -1,5 +1,3 @@
-import { OverlayScene } from "../scene/scenes/OverlayScene";
-
 type pointerStatus = 'up' | 'down' | 'none';
 export class EventManager {
     private static _self: EventManager;
