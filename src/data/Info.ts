@@ -78,12 +78,12 @@ export class Data {
                 {
                     title: 'overlay.main.page1.title',
                     message: 'overlay.main.page1.message',
-                    videoUrl: 'resources/help_scene1_1.mov',
+                    videoUrl: 'resources/help_scene1_1.mp4',
                 },
                 {
                     title: 'overlay.main.page2.title',
                     message: 'overlay.main.page2.message',
-                    videoUrl: 'resources/help_scene1_2.mov',
+                    videoUrl: 'resources/help_scene1_2.mp4',
                 },
                 {
                     title: 'overlay.main.page3.title',
@@ -101,12 +101,12 @@ export class Data {
                 {
                     title: 'overlay.contents.page1.title',
                     message: 'overlay.contents.page1.message',
-                    videoUrl: 'resources/help_scene2_1.mov',
+                    videoUrl: 'resources/help_scene2_1.mp4',
                 },
                 {
                     title: 'overlay.contents.page2.title',
                     message: 'overlay.contents.page2.message',
-                    videoUrl: 'resources/help_scene2_2.mov',
+                    videoUrl: 'resources/help_scene2_2.mp4',
                 },
             ],
         }
@@ -119,17 +119,17 @@ export class Data {
                 {
                     title: 'overlay.content.page1.title',
                     message: 'overlay.content.page1.message',
-                    videoUrl: 'resources/help_scene3_1.mov',
+                    videoUrl: 'resources/help_scene3_1.mp4',
                 },
                 {
                     title: 'overlay.content.page2.title',   
                     message: 'overlay.content.page2.message',
-                    videoUrl: 'resources/help_scene3_2.mov',
+                    videoUrl: 'resources/help_scene3_2.mp4',
                 },
                 {
                     title: 'overlay.content.page3.title',
                     message: 'overlay.content.page3.message',
-                    videoUrl: 'resources/help_scene3_3.mov',
+                    videoUrl: 'resources/help_scene3_3.mp4',
                 },
                 {
                     title: 'overlay.content.page4.title',
@@ -228,11 +228,11 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_sh_animation.mov',
+                    videoUrl: 'resources/video_sh_animation.mp4',
                     height: 230,
                 },
                 {
-                    videoUrl: 'resources/video_sh_particle.mov',
+                    videoUrl: 'resources/video_sh_particle.mp4',
                     height: 180,
                 },
                 {
@@ -243,15 +243,15 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_sh_puzzle.mov',
+                    videoUrl: 'resources/video_sh_puzzle.mp4',
                     height: 230,
                 },
                 {
-                    videoUrl: 'resources/video_sh_cards.mov',
+                    videoUrl: 'resources/video_sh_cards.mp4',
                     height: 230,
                 },
                 {
-                    videoUrl: 'resources/video_sh_all.mov',
+                    videoUrl: 'resources/video_sh_all.mp4',
                     height: 230,
                 },
             ]
@@ -335,7 +335,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    videoUrl: 'resources/video_cj_prototype.mov',
+                    videoUrl: 'resources/video_cj_prototype.mp4',
                     height: 260,
                 },
                 {
@@ -353,7 +353,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    videoUrl: 'resources/video_cj_addressable.mov',
+                    videoUrl: 'resources/video_cj_addressable.mp4',
                     height: 200,
                 },
                 {
@@ -396,7 +396,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    videoUrl: 'resources/video_cj_content.mov',
+                    videoUrl: 'resources/video_cj_content.mp4',
                     height: 130,
                 },
                 {
@@ -462,7 +462,7 @@ export class Data {
                     height: 50,
                 },
                 {
-                    videoUrl: 'resources/video_sg_all.mov',
+                    videoUrl: 'resources/video_sg_all.mp4',
                     height: 270,
                 },
                 {
@@ -853,7 +853,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_mn_sample_main.mov',
+                    videoUrl: 'resources/video_mn_sample_main.mp4',
                     height: 360,
                 },
                 {
@@ -864,7 +864,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_mn_sample_album.mov',
+                    videoUrl: 'resources/video_mn_sample_album.mp4',
                     height: 360,
                 },
                 {
@@ -875,7 +875,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_mn_sample_binder1.mov',
+                    videoUrl: 'resources/video_mn_sample_binder1.mp4',
                     height: 360,
                 },
                 {
@@ -886,7 +886,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_mn_sample_binder2.mov',
+                    videoUrl: 'resources/video_mn_sample_binder2.mp4',
                     height: 360,
                 },
                 {
@@ -994,7 +994,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_jp_media.mov',
+                    videoUrl: 'resources/video_jp_media.mp4',
                     height: 260,
                 },
                 {
@@ -1106,7 +1106,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_mn_media_mvplayer.mov',
+                    videoUrl: 'resources/video_mn_media_mvplayer.mp4',
                     height: 360,
                 },
                 {
@@ -1561,7 +1561,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    videoUrl: 'resources/video_ge_demo.mov',
+                    videoUrl: 'resources/video_ge_demo.mp4',
                     height: 450,
                 },
             ]
