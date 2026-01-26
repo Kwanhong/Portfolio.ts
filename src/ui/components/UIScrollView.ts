@@ -7,6 +7,10 @@ export class UIScrollView extends UIObject {
     contentView: UIContentView
     eventEnabled: boolean = true;
 
+    get isEmpty(): boolean {
+        return this.contentView.stack.uiChildren.length === 0;
+    }
+
     constructor(bounds: { x: number; y: number; width: number; height: number }) {
         super();
         const view = new UIContentView(this, { x: 0, y: 0, width: bounds.width, height: bounds.height })
@@ -43,12 +47,12 @@ export class UIScrollView extends UIObject {
 export class UIContentView extends UIObject {
 
     private scrollView: UIScrollView;
-    private stack: UIStackView;
     private mesh: THREE.Mesh;
 
     velocity: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
     acceleration: THREE.Vector3 = new THREE.Vector3(0, 0, 0);
 
+    stack: UIStackView;
     private dragStartPosition: THREE.Vector2 | null = null;
     private fraction = 0.9;
     private forceFactor = 100

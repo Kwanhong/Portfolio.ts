@@ -64,7 +64,9 @@ export class SceneManager {
             this.overlay.run()
         })
 
-        let epilogueScene = new EpilogueScene(this.mother)
+        let epilogueScene = new EpilogueScene(this.mother, ()=> {
+            this.scenes[0]?.run()
+        })
 
         this.scenes.push(mainScene)
         this.scenes.push(contentsScene)

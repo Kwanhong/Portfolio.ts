@@ -38,6 +38,8 @@ export class UIObject extends SceneObject {
         this.bounds = { max: { x: size.width / 2, y: size.height / 2 }, min: { x: -size.width / 2, y: -size.height / 2 } }
     }
 
+    // Generate Custom Geometries
+    
     roundedDiamondGeometry(width: number, height: number, radius: number) {
         const shape = new THREE.Shape();
 

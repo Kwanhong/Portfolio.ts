@@ -128,7 +128,8 @@ export class ContentScene implements Scene {
             }
 
             if (info.videoUrl) {
-                this.constructVideoView(info, contents)
+                waitCnt++
+                this.constructVideoView(info, scrollView, contents, () => { waitCnt-- })
             }
 
             if (info.customView) {
@@ -200,7 +201,7 @@ export class ContentScene implements Scene {
             textAlign: 'center'
         }
 
-        FileManager.loadTexture('resources/icon_appstore.png').then((texture) => {
+        FileManager.loadTexture('resources/images/icon_appstore.png').then((texture) => {
             const btnAppstore = new UIImageButton(texture, {
                 width: 25,
                 height: 25,
@@ -213,7 +214,7 @@ export class ContentScene implements Scene {
             btnAppstore.position.set(160, -111, 0)
             leftAnchor.add(btnAppstore)
         }).catch(() => { });
-        FileManager.loadTexture('resources/icon_github.png').then((texture) => {
+        FileManager.loadTexture('resources/images/icon_github.png').then((texture) => {
             const btnGithub = new UIImageButton(texture, {
                 width: 25,
                 height: 25,
@@ -296,13 +297,35 @@ export class ContentScene implements Scene {
         contents.push(imageContainer);
     }
 
-    constructVideoView(info: contentInfo, contents: UIObject[]) {
+    constructVideoView(info: contentInfo, scrollView: UIScrollView, contents: UIObject[], finished: () => void) {
 
         if (!info.videoUrl) return;
 
         const videoContainer = new UIView({ x: 0, y: 40, width: 500, height: info.height }, 20)
-        const videoView = new UIVideoView({ x: 0, y: -10, width: 440, height: info.height - 20 }, info.videoUrl, 15);
-        videoContainer.add(videoView);
+        
+        // 비디오 메타데이터를 로드해서 dimensions 가져오기
+        const video = document.createElement('video')
+        video.src = info.videoUrl
+        video.preload = 'metadata'
+        
+        video.onloadedmetadata = () => {
+            const aspect = video.videoWidth / video.videoHeight
+            const finalWidth = 440
+            const finalHeight = finalWidth / aspect
+            
+            const videoView = new UIVideoView({ x: 0, y: -10, width: finalWidth, height: finalHeight }, info.videoUrl!, 15);
+            videoContainer.add(videoView);
+            videoContainer.size = { width: finalWidth, height: finalHeight + 20 };
+            finished();
+        }
+        
+        video.onerror = () => {
+            // 에러 시 기본 크기로 생성
+            const videoView = new UIVideoView({ x: 0, y: -10, width: 440, height: info.height - 20 }, info.videoUrl!, 15);
+            videoContainer.add(videoView);
+            finished();
+        }
+        
         contents.push(videoContainer);
     }
 

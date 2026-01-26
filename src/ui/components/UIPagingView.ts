@@ -76,7 +76,7 @@ export class UIPagingView extends UIView {
     private currentPageIndex: number = 0;
     private indicatorDots: THREE.Mesh[] = [];
 
-    constructor(pages: overlayPageInfo[], bounds: { x: number; y: number; width: number; height: number }) {
+    constructor(pages: overlayPageInfo[], bounds: { x: number; y: number; width: number; height: number }, blockUi?: ()=>boolean) {
         super(bounds);
         const material = new THREE.MeshPhysicalMaterial({
             transmission: 1.0, // Fully transparent to the background capture
@@ -115,6 +115,9 @@ export class UIPagingView extends UIView {
         }
 
         EventManager.self.addPointerDownListener((event) => {
+            if (blockUi?.()) {
+                return;
+            }
             const rect = Camera.getMouseWorldPosition(event);
             if (this.isPointInside(rect.x, rect.y)) {
                 const localX = rect.x - this.mesh.position.x;

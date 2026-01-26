@@ -1,4 +1,4 @@
-import { defaultBaselineStyle, defaultDescriptionStyle, defaultSourceCodeStyle, type TextStyle } from "@styles/TextStyle";
+import { defaultBaselineStyle, defaultDescriptionStyle, defaultHeadlineStyle, defaultSourceCodeStyle, uiBaselineStyle, type TextStyle } from "@styles/TextStyle";
 import type { UIScrollView } from "@ui/components/UIScrollView";
 import type { UIObject } from "@ui/base/UIObject";
 
@@ -70,7 +70,24 @@ export class Data {
 
     static getOverlayInfo(sceneIndex: number): overlayInfo {
 
-        const mainOverlayInfo: overlayInfo = {
+        const mainOverlayInfo: overlayInfo = this.mainOverlayInfo
+
+        const contentsOverlayInfo: overlayInfo = this.contentsOverlayInfo
+
+        const contentOverlayInfo: overlayInfo = this.contentOverlayInfo
+
+        const overlayInfos: overlayInfo[] = [
+            mainOverlayInfo,
+            contentsOverlayInfo,
+            contentOverlayInfo,
+        ]
+
+        return overlayInfos[sceneIndex];
+    }
+
+    static get mainOverlayInfo(): overlayInfo {
+
+        return {
             title: 'overlay.main.title',
             message: 'overlay.main.message',
             index: 0,
@@ -92,8 +109,10 @@ export class Data {
                 }
             ],
         }
+    }
 
-        const contentsOverlayInfo: overlayInfo = {
+    static get contentsOverlayInfo(): overlayInfo {
+        return {
             title: 'overlay.contents.title',
             message: 'overlay.contents.message',
             index: 1,
@@ -110,8 +129,11 @@ export class Data {
                 },
             ],
         }
+    }
 
-        const contentOverlayInfo: overlayInfo = {
+    static get contentOverlayInfo(): overlayInfo {
+        
+        return {
             title: 'overlay.content.title',
             message: 'overlay.content.message',
             index: 2,
@@ -138,14 +160,6 @@ export class Data {
                 }
             ],
         }
-
-        const overlayInfos: overlayInfo[] = [
-            mainOverlayInfo,
-            contentsOverlayInfo,
-            contentOverlayInfo,
-        ]
-
-        return overlayInfos[sceneIndex];
     }
 
     static get starInfo(): starInfo {
@@ -1635,5 +1649,226 @@ export class Data {
         }
 
         return info
+    }
+
+    static get epilogueInfo(): contentsInfo {
+        return {
+            title: 'epilogue.howbuilt.title',
+            contents: [
+                // How was this built? - 소개
+                {
+                    text: {
+                        text: 'epilogue.howbuilt.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 100,
+                },
+                
+                // Character
+                {
+                    text: {
+                        text: 'epilogue.character.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    videoUrl: 'resources/videos/video_epilogue_1.mp4',
+                    height: 280,
+                },
+                {
+                    text: {
+                        text: 'epilogue.character.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 120,
+                },
+                
+                // Flocking Simulation
+                {
+                    text: {
+                        text: 'epilogue.flocking.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    videoUrl: 'resources/videos/help_scene1_2.mp4',
+                    height: 280,
+                },
+                {
+                    text: {
+                        text: 'epilogue.flocking.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 150,
+                },
+                
+                // Mover
+                {
+                    text: {
+                        text: 'epilogue.mover.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    imageUrl: 'resources/images/image_epilogue_2.png',
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'epilogue.mover.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 120,
+                },
+                
+                // Agent
+                {
+                    text: {
+                        text: 'epilogue.agent.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    imageUrl: 'resources/images/image_epilogue_3.png',
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'epilogue.agent.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 120,
+                },
+                
+                // PerlinNoise
+                {
+                    text: {
+                        text: 'epilogue.perlin.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    imageUrl: 'resources/images/image_epilogue_4.png',
+                    height: 300,
+                },
+                {
+                    imageUrl: 'resources/images/image_epilogue_5.png',
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'epilogue.perlin.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 120,
+                },
+                
+                // UI Objects & UI System
+                {
+                    text: {
+                        text: 'epilogue.ui.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    imageUrl: 'resources/images/image_epilogue_6.png',
+                    height: 300,
+                },
+                {
+                    imageUrl: 'resources/images/image_epilogue_7.png',
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'epilogue.ui.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 150,
+                },
+                
+                // Tree-Based UI / UX (Solar System Layout)
+                {
+                    text: {
+                        text: 'epilogue.tree.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    videoUrl: 'resources/videos/help_scene2_2.mp4',
+                    height: 280,
+                },
+                {
+                    text: {
+                        text: 'epilogue.tree.description',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 150,
+                },
+                
+                // Gravity-Field Background Interaction
+                {
+                    text: {
+                        text: 'epilogue.gravity.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    imageUrl: 'resources/images/image_epilogue_8.png',
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'epilogue.gravity.subtitle',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 12 },
+                    },
+                    height: 40,
+                },
+                {
+                    text: {
+                        text: 'epilogue.gravity.description1',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 80,
+                },
+                {
+                    imageUrl: 'resources/images/image_epilogue_9.png',
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'epilogue.gravity.description2',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 120,
+                },
+                
+                // Learn More
+                {
+                    text: {
+                        text: 'epilogue.learnmore.title',
+                        textStyle: { ...defaultBaselineStyle, fontSize: 14 },
+                    },
+                    height: 50,
+                },
+                {
+                    button: {
+                        title: 'epilogue.learnmore.description',
+                        onClick: () => {
+                            window.open('https://github.com/Kwanhong/Portfolio.ts', '_blank');
+                        },
+                        textStyle: { ...uiBaselineStyle, fontSize: 12, letterSpacing: 0.01 },
+                    },
+                    height: 40,
+                }
+            ]
+        }
     }
 }

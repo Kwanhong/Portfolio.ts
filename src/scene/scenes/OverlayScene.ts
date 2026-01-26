@@ -75,7 +75,7 @@ export class OverlayScene implements Scene {
         this.alreadyDisplayed[info.index] = true
         const size = this.size
 
-        this.pagingView = new UIPagingView(info.pages, { x: 0, y: size.height / 2, width: size.width, height: size.height });
+        this.pagingView = new UIPagingView(info.pages, { x: 0, y: size.height / 2, width: size.width, height: size.height }, ()=>{ return this.closeButton.isHovered });
         this.self.add(this.pagingView);
         this.pagingView.position.set(0, 40, 0.1);
 
@@ -100,11 +100,11 @@ export class OverlayScene implements Scene {
         });
         this.pagingView.add(helpText);
 
-        this.pagingView.scale.set(0, 0, 0);
         this.closeButton.scale.set(0, 0, 0);
+        this.pagingView.scale.set(0, 0, 0);
 
         // 확대 애니메이션
-        const delay = info.index === 0 ? 2 : 1;
+        const delay = info.index === 0 ? 2.5 : 1;
         const animationDuration = 0.3; // 애니메이션 지속 시간 (초)
         let elapsedTime = 0;
 
@@ -114,10 +114,17 @@ export class OverlayScene implements Scene {
                 const t = Math.min(elapsedTime / animationDuration, 1);
                 const scale = Math.sin((t * Math.PI) / 2); // Sin 보간
                 this.pagingView.scale.set(scale, scale, scale);
-                this.closeButton.scale.set(scale, scale, scale);
             }, () => {
                 this.pagingView.scale.set(1, 1, 1);
-                this.closeButton.scale.set(1, 1, 1);
+                let elapsedTime = 0;
+                Time.coroutineSec(animationDuration, () => {
+                    elapsedTime += Time.self!.deltaTime;
+                    const t = Math.min(elapsedTime / animationDuration, 1);
+                    const scale = Math.sin((t * Math.PI) / 2); // Sin 보간
+                    this.closeButton.scale.set(scale, scale, scale);
+                }, () => {
+                    this.closeButton.scale.set(1, 1, 1);
+                })
             });
         });
     }
@@ -137,19 +144,43 @@ export class OverlayScene implements Scene {
     }
 
     finish(): void {
-        if (this.title) {
-            this.self.remove(this.title);
-            this.title = undefined;
-        }
-        if (this.message) {
-            this.self.remove(this.message);
-            this.message = undefined;
-        }
-        if (this.pagingView) {
-            this.self.remove(this.pagingView);
-        }
 
-        this.enabled = false
-        this.onFinished?.()
+        // 축소 애니메이션
+        const animationDuration = 0.3; // 애니메이션 지속 시간 (초)
+        let elapsedTime = 0;
+
+        Time.coroutineSec(animationDuration, () => {
+            elapsedTime += Time.self!.deltaTime;
+            const t = Math.min(elapsedTime / animationDuration, 1);
+            const scale = Math.cos((t * Math.PI) / 2); // Sin 보간
+            this.closeButton.scale.set(scale, scale, scale);
+        }, () => {
+            this.closeButton.scale.set(0, 0, 0);
+
+            let elapsedTime = 0;
+            Time.coroutineSec(animationDuration, () => {
+                elapsedTime += Time.self!.deltaTime;
+                const t = Math.min(elapsedTime / animationDuration, 1);
+                const scale = Math.cos((t * Math.PI) / 2); // Sin 보간
+                this.pagingView.scale.set(scale, scale, scale);
+            }, () => {
+                this.pagingView.scale.set(0, 0, 0)
+
+                if (this.title) {
+                    this.self.remove(this.title);
+                    this.title = undefined;
+                }
+                if (this.message) {
+                    this.self.remove(this.message);
+                    this.message = undefined;
+                }
+                if (this.pagingView) {
+                    this.self.remove(this.pagingView);
+                }
+
+                this.enabled = false
+                this.onFinished?.()
+            });
+        })
     }
 }

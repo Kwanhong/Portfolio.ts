@@ -10,6 +10,7 @@ class Blob extends UIMover {
 
     pivots: THREE.Vector3[] = []
     pivotIndex: number = 0;
+
     private springConstant: number = 20;
     private friction: number = 0.95;
     private color: THREE.Color = new THREE.Color();
@@ -50,11 +51,14 @@ class Blob extends UIMover {
 }
 
 class Line extends UIObject {
-    blob1: UIObject
-    blob2: UIObject
+
+    blob1: UIObject // connected blob from
+    blob2: UIObject // connected blob to
+
     mesh: THREE.Mesh
     weight: number
     color: string
+
     constructor(blob1: UIObject, blob2: UIObject, weight: number, color: string) {
         super()
         this.blob1 = blob1
@@ -92,9 +96,15 @@ class Line extends UIObject {
 }
 
 export class BackgroundField extends UIObject {
-    blobs: Blob[] = [];
-    lines: Line[] = [];
+
     private needsToUpdate = false
+    private blobs: Blob[] = [];
+    private lines: Line[] = [];
+
+    private lastPointerEvent: PointerEvent = new PointerEvent('pointermove');
+
+    // en: Generate blobs and lines
+    // kr: Blob들과 Line들을 생성합니다.
     constructor(size: { width: number; height: number }, resolution: number) {
 
         size.width = size.width + resolution * 2
@@ -162,22 +172,8 @@ export class BackgroundField extends UIObject {
         EventManager.self.addPointerMoveListener((event) => this.lastPointerEvent = event);
     }
 
-    lastPointerEvent: PointerEvent = new PointerEvent('pointermove');
-
-    run() {
-        this.setDepth(0);
-    }
-
-    setDepth(index: number): void {
-        this.blobs.forEach(blob => {
-            blob.pivotIndex = index;
-        });
-        this.needsToUpdate = true
-
-        // Start motion
-        this.blobs[Math.floor(this.blobs.length / 2)].velocity.set(10, 0, 0);
-    }
-
+    // en: Apply tension force to blobs
+    // kr: Blob들에게 장력(force)을 적용합니다.
     applyForce(target: THREE.Vector3, force: THREE.Vector3): void {
         this.blobs.forEach(blob => {
             const direction = new THREE.Vector3().subVectors(blob.position, target);
@@ -189,6 +185,20 @@ export class BackgroundField extends UIObject {
         this.needsToUpdate = true
     }
 
+    // en: Set depth level of blobs(focus effect)
+    // kr: Blob들의 깊이 레벨을 설정합니다(포커스 효과).
+    setDepth(index: number): void {
+        this.blobs.forEach(blob => {
+            blob.pivotIndex = index;
+        });
+        this.needsToUpdate = true
+
+        // Start motion
+        this.blobs[Math.floor(this.blobs.length / 2)].velocity.set(10, 0, 0);
+    }
+
+    // en: Update blobs and lines
+    // kr: Blob들과 Line들을 업데이트합니다.
     update(dt: number): void {
         super.update(dt);
 
@@ -211,4 +221,9 @@ export class BackgroundField extends UIObject {
 
         this.lines.forEach(line => line.update(dt));
     }
+
+    run() {
+        this.setDepth(0);
+    }
+
 }  

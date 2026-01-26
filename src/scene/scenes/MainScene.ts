@@ -200,7 +200,7 @@ export class MainScene implements Scene {
             this.agents.push(agent)
         }
 
-        FileManager.loadTexture('resources/icon_github.png',).then((texture) => {
+        FileManager.loadTexture('resources/images/icon_github.png').then((texture) => {
 
             this.githubButton = new UIImageButton(texture, {
                 width: 30,

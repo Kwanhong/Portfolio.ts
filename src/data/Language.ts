@@ -214,8 +214,6 @@ type ScriptType =
        'content.graphics.metal.description.detail.timing' |
        'content.graphics.metal.description.detail.subtitle.demo' |
 
-       'epilogue.message' |
-
        'overlay.main.title' |
        'overlay.main.message' |
        'overlay.main.help' |
@@ -244,8 +242,41 @@ type ScriptType =
        'overlay.content.page4.title' |
        'overlay.content.page4.message' |
 
-       'overlay.epilogue.title' | 
-       'overlay.epilogue.message' 
+       'epilogue.title' |
+       'epilogue.message' |
+       
+       'epilogue.howbuilt.title' |
+       'epilogue.howbuilt.description' |
+       
+       'epilogue.character.title' |
+       'epilogue.character.description' |
+       
+       'epilogue.flocking.title' |
+       'epilogue.flocking.description' |
+       
+       'epilogue.mover.title' |
+       'epilogue.mover.description' |
+       
+       'epilogue.agent.title' |
+       'epilogue.agent.description' |
+       
+       'epilogue.perlin.title' |
+       'epilogue.perlin.description' |
+       
+       'epilogue.ui.title' |
+       'epilogue.ui.description' |
+       
+       'epilogue.tree.title' |
+       'epilogue.tree.description' |
+       
+       'epilogue.gravity.title' |
+       'epilogue.gravity.subtitle' |
+       'epilogue.gravity.description1' |
+       'epilogue.gravity.description2' |
+       
+       'epilogue.learnmore.title' |
+       'epilogue.learnmore.description'
+
  
 const scripts = {
        en: {
@@ -810,7 +841,40 @@ const scripts = {
               'content.graphics.metal.description.detail.subtitle.demo': 'Demo Video',
 
               // Epilogue Scene
-              'epilogue.message': 'Thank you for visiting my portfolio! Feel free to reach out for collaborations or inquiries.'
+              'epilogue.title': 'Epilogue & Technical Overview',
+              'epilogue.message': 'Thank you for visiting my portfolio! Feel free to reach out for collaborations or inquiries.',
+              
+              'epilogue.howbuilt.title': 'How was this built?',
+              'epilogue.howbuilt.description': 'This page explains the technical structure and design decisions behind PORTFOL.iO.',
+              
+              'epilogue.character.title': 'Character',
+              'epilogue.character.description': 'The main character was modeled and animated using Blender.\nThe animation is played directly from the raw animation data and used as a visual anchor for the main scene.',
+              
+              'epilogue.flocking.title': 'Flocking Simulation',
+              'epilogue.flocking.description': 'The background motion is based on a flocking simulation, inspired by collective movement patterns such as bird flocks.\nEach agent updates its behavior based on nearby agents and its own velocity, producing stable group motion without predefined paths.',
+              
+              'epilogue.mover.title': 'Mover',
+              'epilogue.mover.description': 'Mover is the base physics object used throughout PORTFOL.iO.\nIt defines position, velocity, and acceleration, and provides a unified interface for time-based motion updates.',
+              
+              'epilogue.agent.title': 'Agent',
+              'epilogue.agent.description': 'Agent extends Mover and represents a single unit in the flocking simulation.\nIt adds neighborhood detection and steering behaviors, allowing group dynamics to emerge from local rules.',
+              
+              'epilogue.perlin.title': 'PerlinNoise',
+              'epilogue.perlin.description': 'PerlinNoise is used to introduce controlled randomness.\nIt prevents uniform movement patterns and adds subtle variation to motion without breaking overall stability.',
+              
+              'epilogue.ui.title': 'UI Objects & UI System',
+              'epilogue.ui.description': 'All UI elements inherit from a generic base class, UIObject.\nThis class defines lifecycle, layout updates, and geometry generation, allowing UI elements to be treated as interactive objects rather than static overlays.',
+              
+              'epilogue.tree.title': 'Tree-Based UI / UX (Solar System Layout)',
+              'epilogue.tree.description': 'The project selection UI is based on a three-level tree structure.\nThis structure is visualized as a solar-system-like layout, where hierarchy and relationships are expressed through distance and orbit rather than nested menus.',
+              
+              'epilogue.gravity.title': 'Gravity-Field Background Interaction',
+              'epilogue.gravity.subtitle': 'BackgroundField',
+              'epilogue.gravity.description1': 'The background interaction simulates a gravity-like field using spring-based physics.',
+              'epilogue.gravity.description2': 'Blob objects (derived from Mover) are connected by Line constraints and arranged in a grid. Their collective response produces a flexible field effect instead of a static background.',
+              
+              'epilogue.learnmore.title': 'Learn More',
+              'epilogue.learnmore.description': 'For detailed implementation and source-level explanations, visit the project repository on GitHub.'
        },
        kr: {
               // Overlay Scene
@@ -1212,7 +1276,40 @@ const scripts = {
               'content.graphics.metal.description.detail.subtitle.demo': '데모 시연 영상',
 
               // Epilogue Scene
-              'epilogue.message': '포트폴리오를 방문해 주셔서 감사합니다! 협업이나 문의 사항이 있으면 언제든지 연락해 주세요.'
+              'epilogue.title': '에필로그: 기술적 구조 설명',
+              'epilogue.message': '포트폴리오를 방문해 주셔서 감사합니다! 협업이나 문의 사항이 있으면 언제든지 연락해 주세요.',
+              
+              'epilogue.howbuilt.title': '어떻게 만들었을까요?',
+              'epilogue.howbuilt.description': '이 페이지는 PORTFOL.iO를 구성하는 기술적 구조와 설계 의도를 설명합니다.',
+              
+              'epilogue.character.title': '캐릭터',
+              'epilogue.character.description': '메인 캐릭터는 Blender를 사용해 모델링 및 애니메이션을 제작했습니다.\n애니메이션은 원본 애니메이션 데이터 그대로 재생되며, 메인 씬의 시각적 기준점 역할을 합니다.',
+              
+              'epilogue.flocking.title': '플로킹 시뮬레이션',
+              'epilogue.flocking.description': '백그라운드의 움직임은 플로킹 시뮬레이션을 기반으로 구현되었습니다.\n각 에이전트는 주변 개체와 자신의 속도를 기준으로 동작하며, 사전에 정의된 경로 없이도 안정적인 군집 움직임을 형성합니다.',
+              
+              'epilogue.mover.title': 'Mover',
+              'epilogue.mover.description': 'Mover는 PORTFOL.iO 전반에서 사용되는 기본 물리 오브젝트입니다.\n위치, 속도, 가속도를 정의하며, 시간 기반 이동을 위한 공통 업데이트 인터페이스를 제공합니다.',
+              
+              'epilogue.agent.title': 'Agent',
+              'epilogue.agent.description': 'Agent는 Mover를 상속받아 플로킹 시뮬레이션의 개별 단위를 구성합니다.\n주변 에이전트 탐색 및 조향 로직을 추가하여, 로컬 규칙에 기반한 집단 행동이 발생하도록 설계되었습니다.',
+              
+              'epilogue.perlin.title': 'PerlinNoise',
+              'epilogue.perlin.description': 'PerlinNoise는 제어된 랜덤성을 추가하기 위해 사용되었습니다.\n움직임 패턴의 균일함을 방지하면서도 전체적인 안정성을 해치지 않도록 미세한 변화를 제공합니다.',
+              
+              'epilogue.ui.title': 'UI 오브젝트 및 UI 시스템',
+              'epilogue.ui.description': 'PORTFOL.iO의 모든 UI 요소는 제너릭 기반 클래스인 UIObject를 상속받아 구현되었습니다.\nUIObject는 라이프사이클, 레이아웃 업데이트, 지오메트리 생성을 담당하며, UI를 단순한 오버레이가 아닌 인터랙티브 오브젝트로 다룰 수 있도록 설계되었습니다.',
+              
+              'epilogue.tree.title': '트리 구조 기반 UI / UX (태양계 레이아웃)',
+              'epilogue.tree.description': '프로젝트 선택 화면의 데이터 구조는 3단계 트리로 구성되어 있습니다.\n이 계층 구조를 시각적으로 표현하기 위해, 중첩 메뉴 대신 태양계 형태의 레이아웃을 채택했습니다. 거리와 궤도를 통해 항목 간 관계를 표현하도록 설계되었습니다.',
+              
+              'epilogue.gravity.title': '중력장을 형상화한 백그라운드 인터랙션',
+              'epilogue.gravity.subtitle': 'BackgroundField',
+              'epilogue.gravity.description1': '백그라운드 인터랙션은 스프링 기반 물리 모델을 사용해 중력장 형태로 구현되었습니다.',
+              'epilogue.gravity.description2': 'Mover를 상속한 Blob 오브젝트들을 격자 형태로 배치하고, 각 Blob을 Line 제약으로 연결하여 고정된 배경이 아닌 유연한 필드 반응을 생성합니다.',
+              
+              'epilogue.learnmore.title': '더 자세히 보고 싶다면',
+              'epilogue.learnmore.description': '구현 세부 사항과 코드 구조에 대한 설명은 GitHub 저장소에서 확인할 수 있습니다.'
        }
 }
 
