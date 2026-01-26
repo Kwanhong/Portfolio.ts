@@ -188,7 +188,6 @@ export class EpilogueScene implements Scene {
         const imageContainer = new UIView({ x: 0, y: 0, width: 500, height: info.height }, 20)
         FileManager.loadTexture(info.imageUrl).then((texture) => {
 
-            const height = info.height - 20
             const image = texture.image as HTMLImageElement
 
             if (image) {

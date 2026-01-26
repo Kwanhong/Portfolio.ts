@@ -1,4 +1,4 @@
-import { defaultBaselineStyle, defaultDescriptionStyle, defaultHeadlineStyle, defaultSourceCodeStyle, uiBaselineStyle, type TextStyle } from "@styles/TextStyle";
+import { defaultBaselineStyle, defaultDescriptionStyle, defaultSourceCodeStyle, uiBaselineStyle, type TextStyle } from "@styles/TextStyle";
 import type { UIScrollView } from "@ui/components/UIScrollView";
 import type { UIObject } from "@ui/base/UIObject";
 

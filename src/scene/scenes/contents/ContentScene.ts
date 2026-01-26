@@ -129,7 +129,7 @@ export class ContentScene implements Scene {
 
             if (info.videoUrl) {
                 waitCnt++
-                this.constructVideoView(info, scrollView, contents, () => { waitCnt-- })
+                this.constructVideoView(info, contents, () => { waitCnt-- })
             }
 
             if (info.customView) {
@@ -297,7 +297,7 @@ export class ContentScene implements Scene {
         contents.push(imageContainer);
     }
 
-    constructVideoView(info: contentInfo, scrollView: UIScrollView, contents: UIObject[], finished: () => void) {
+    constructVideoView(info: contentInfo, contents: UIObject[], finished: () => void) {
 
         if (!info.videoUrl) return;
 
