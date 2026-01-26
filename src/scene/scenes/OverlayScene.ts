@@ -93,6 +93,13 @@ export class OverlayScene implements Scene {
         });
         this.pagingView.add(this.title);
 
+        const helpTextStyle: TextStyle = { ...defaultDescriptionStyle, fontSize: 12, textAlign: 'center', anchorX: 'center', anchorY: 'bottom' };
+        const helpText = new UIText(Language.helper.get('overlay.main.help'), helpTextStyle, (_, hSize) => {
+            helpText.setSize({ width: hSize.width, height: hSize.height });
+            helpText.position.set(15, -size.height / 2 + hSize.height + 20, 1);
+        });
+        this.pagingView.add(helpText);
+
         this.pagingView.scale.set(0, 0, 0);
         this.closeButton.scale.set(0, 0, 0);
 

@@ -78,17 +78,17 @@ export class Data {
                 {
                     title: 'overlay.main.page1.title',
                     message: 'overlay.main.page1.message',
-                    videoUrl: 'resources/help_scene1_1.mp4',
+                    videoUrl: 'resources/videos/help_scene1_1.mp4',
                 },
                 {
                     title: 'overlay.main.page2.title',
                     message: 'overlay.main.page2.message',
-                    videoUrl: 'resources/help_scene1_2.mp4',
+                    videoUrl: 'resources/videos/help_scene1_2.mp4',
                 },
                 {
                     title: 'overlay.main.page3.title',
                     message: 'overlay.main.page3.message',
-                    imageUrl: 'resources/help_scene1_3.png',
+                    imageUrl: 'resources/images/help_scene1_3.png',
                 }
             ],
         }
@@ -101,12 +101,12 @@ export class Data {
                 {
                     title: 'overlay.contents.page1.title',
                     message: 'overlay.contents.page1.message',
-                    videoUrl: 'resources/help_scene2_1.mp4',
+                    videoUrl: 'resources/videos/help_scene2_1.mp4',
                 },
                 {
                     title: 'overlay.contents.page2.title',
                     message: 'overlay.contents.page2.message',
-                    videoUrl: 'resources/help_scene2_2.mp4',
+                    videoUrl: 'resources/videos/help_scene2_2.mp4',
                 },
             ],
         }
@@ -119,22 +119,22 @@ export class Data {
                 {
                     title: 'overlay.content.page1.title',
                     message: 'overlay.content.page1.message',
-                    videoUrl: 'resources/help_scene3_1.mp4',
+                    videoUrl: 'resources/videos/help_scene3_1.mp4',
                 },
                 {
                     title: 'overlay.content.page2.title',   
                     message: 'overlay.content.page2.message',
-                    videoUrl: 'resources/help_scene3_2.mp4',
+                    videoUrl: 'resources/videos/help_scene3_2.mp4',
                 },
                 {
                     title: 'overlay.content.page3.title',
                     message: 'overlay.content.page3.message',
-                    videoUrl: 'resources/help_scene3_3.mp4',
+                    videoUrl: 'resources/videos/help_scene3_3.mp4',
                 },
                 {
                     title: 'overlay.content.page4.title',
                     message: 'overlay.content.page4.message',
-                    imageUrl: 'resources/help_scene3_4.png',
+                    imageUrl: 'resources/images/help_scene3_4.png',
                 }
             ],
         }
@@ -156,7 +156,7 @@ export class Data {
             contents: [
                 {
                     application: {
-                        appIconUrl: 'resources/appIcon_smart.png',
+                        appIconUrl: 'resources/images/appIcon_smart.png',
                         appRole: 'content.unity.smarthangul.role',
                         appAuthor: 'content.unity.smarthangul.author',
                         appStoreUrl: 'https://apps.apple.com/kr/app/%EC%8A%A4%EB%A7%88%ED%8A%B8-%ED%95%9C%EA%B8%80%EC%9D%B4-%ED%81%AC%EB%8A%94-%EB%82%98%EB%AC%B4/id1478712894',
@@ -228,11 +228,11 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_sh_animation.mp4',
+                    videoUrl: 'resources/videos/video_sh_animation.mp4',
                     height: 230,
                 },
                 {
-                    videoUrl: 'resources/video_sh_particle.mp4',
+                    videoUrl: 'resources/videos/video_sh_particle.mp4',
                     height: 180,
                 },
                 {
@@ -243,15 +243,15 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_sh_puzzle.mp4',
+                    videoUrl: 'resources/videos/video_sh_puzzle.mp4',
                     height: 230,
                 },
                 {
-                    videoUrl: 'resources/video_sh_cards.mp4',
+                    videoUrl: 'resources/videos/video_sh_cards.mp4',
                     height: 230,
                 },
                 {
-                    videoUrl: 'resources/video_sh_all.mp4',
+                    videoUrl: 'resources/videos/video_sh_all.mp4',
                     height: 230,
                 },
             ]
@@ -261,7 +261,7 @@ export class Data {
             contents: [
                 {
                     application: {
-                        appIconUrl: 'resources/appIcon_none.png',
+                        appIconUrl: 'resources/images/appIcon_none.png',
                         appRole: 'content.unity.cjedu.role',
                         appAuthor: 'content.unity.cjedu.author',
                     },
@@ -324,7 +324,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_cj_prototype.png',
+                    imageUrl: 'resources/images/image_cj_prototype.png',
                     height: 150,
                 },
                 {
@@ -335,7 +335,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    videoUrl: 'resources/video_cj_prototype.mp4',
+                    videoUrl: 'resources/videos/video_cj_prototype.mp4',
                     height: 260,
                 },
                 {
@@ -353,7 +353,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    videoUrl: 'resources/video_cj_addressable.mp4',
+                    videoUrl: 'resources/videos/video_cj_addressable.mp4',
                     height: 200,
                 },
                 {
@@ -378,7 +378,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_cj_sqlite.png',
+                    imageUrl: 'resources/images/image_cj_sqlite.png',
                     height: 283,
                 },
                 {
@@ -396,7 +396,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    videoUrl: 'resources/video_cj_content.mp4',
+                    videoUrl: 'resources/videos/video_cj_content.mp4',
                     height: 130,
                 },
                 {
@@ -420,7 +420,7 @@ export class Data {
             contents: [
                 {
                     application: {
-                        appIconUrl: 'resources/appIcon_soomgo.png',
+                        appIconUrl: 'resources/images/appIcon_soomgo.png',
                         appRole: 'content.unity.soomgo.role',
                         appAuthor: 'content.unity.soomgo.author',
                     },
@@ -462,7 +462,7 @@ export class Data {
                     height: 50,
                 },
                 {
-                    videoUrl: 'resources/video_sg_all.mp4',
+                    videoUrl: 'resources/videos/video_sg_all.mp4',
                     height: 270,
                 },
                 {
@@ -473,7 +473,7 @@ export class Data {
                     height: 50,
                 },
                 {
-                    imageUrl: 'resources/image_sg_navmesh1.png',
+                    imageUrl: 'resources/images/image_sg_navmesh1.png',
                     height: 170,
                 },
                 {
@@ -484,7 +484,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_sg_navmesh2.png',
+                    imageUrl: 'resources/images/image_sg_navmesh2.png',
                     height: 203,
                 },
                 {
@@ -495,11 +495,11 @@ export class Data {
                     height: 50,
                 },
                 {
-                    imageUrl: 'resources/image_sg_code_act.png',
+                    imageUrl: 'resources/images/image_sg_code_act.png',
                     height: 344,
                 },
                 {
-                    imageUrl: 'resources/image_sg_code_act2.png',
+                    imageUrl: 'resources/images/image_sg_code_act2.png',
                     height: 266,
                 },
                 {
@@ -517,23 +517,23 @@ export class Data {
                     height: 50,
                 },
                 {
-                    imageUrl: 'resources/image_sg_room.png',
+                    imageUrl: 'resources/images/image_sg_room.png',
                     height: 285,
                 },
                 {
-                    imageUrl: 'resources/image_sg_gate.png',
+                    imageUrl: 'resources/images/image_sg_gate.png',
                     height: 324,
                 },
                 {
-                    imageUrl: 'resources/image_sg_subway.png',
+                    imageUrl: 'resources/images/image_sg_subway.png',
                     height: 315,
                 },
                 {
-                    imageUrl: 'resources/image_sg_gallery.png',
+                    imageUrl: 'resources/images/image_sg_gallery.png',
                     height: 277,
                 },
                 {
-                    imageUrl: 'resources/image_sg_bar.png',
+                    imageUrl: 'resources/images/image_sg_bar.png',
                     height: 281,
                 },
                 {
@@ -578,7 +578,7 @@ export class Data {
             contents: [
                 {
                     application: {
-                        appIconUrl: 'resources/appIcon_jump.png',
+                        appIconUrl: 'resources/images/appIcon_jump.png',
                         appRole: 'content.ios.jump.role',
                         appAuthor: 'content.ios.jump.author',
                         appStoreUrl: 'https://apps.apple.com/kr/app/jump-ar/id1459279731',
@@ -677,7 +677,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_jp_code_ios_plugin1.png',
+                    imageUrl: 'resources/images/image_jp_code_ios_plugin1.png',
                     height: 300,
                 },
                 {
@@ -688,7 +688,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_jp_code_ios_plugin2.png',
+                    imageUrl: 'resources/images/image_jp_code_ios_plugin2.png',
                     height: 340,
                 },
                 {
@@ -706,7 +706,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_jp_code_ios_main.png',
+                    imageUrl: 'resources/images/image_jp_code_ios_main.png',
                     height: 300,
                 },
                 {
@@ -724,7 +724,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_jp_ios_mypage1.png',
+                    imageUrl: 'resources/images/image_jp_ios_mypage1.png',
                     height: 182,
                 },
                 {
@@ -735,7 +735,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_jp_ios_mypage2.png',
+                    imageUrl: 'resources/images/image_jp_ios_mypage2.png',
                     height: 170,
                 },
                 {
@@ -746,7 +746,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_jp_ios_mypage3.png',
+                    imageUrl: 'resources/images/image_jp_ios_mypage3.png',
                     height: 235,
                 },
                 {
@@ -757,7 +757,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_jp_ios_mypage4.png',
+                    imageUrl: 'resources/images/image_jp_ios_mypage4.png',
                     height: 225,
                 },
                 {
@@ -774,7 +774,7 @@ export class Data {
             contents: [
                 {
                     application: {
-                        appIconUrl: 'resources/appIcon_mini.png',
+                        appIconUrl: 'resources/images/appIcon_mini.png',
                         appRole: 'content.ios.mini.role',
                         appAuthor: 'content.ios.mini.author',
                         appStoreUrl: 'https://apps.apple.com/kr/app/minirecord-ar-%ED%95%9C%EA%B8%80-%EB%AA%A8%EB%93%9C-%EC%97%90%EB%9F%AC/id1531355015',
@@ -853,7 +853,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_mn_sample_main.mp4',
+                    videoUrl: 'resources/videos/video_mn_sample_main.mp4',
                     height: 360,
                 },
                 {
@@ -864,7 +864,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_mn_sample_album.mp4',
+                    videoUrl: 'resources/videos/video_mn_sample_album.mp4',
                     height: 360,
                 },
                 {
@@ -875,7 +875,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_mn_sample_binder1.mp4',
+                    videoUrl: 'resources/videos/video_mn_sample_binder1.mp4',
                     height: 360,
                 },
                 {
@@ -886,7 +886,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_mn_sample_binder2.mp4',
+                    videoUrl: 'resources/videos/video_mn_sample_binder2.mp4',
                     height: 360,
                 },
                 {
@@ -923,7 +923,7 @@ export class Data {
             contents: [
                 {
                     application: {
-                        appIconUrl: 'resources/appIcon_jump.png',
+                        appIconUrl: 'resources/images/appIcon_jump.png',
                         appRole: 'content.media.jump.role',
                         appAuthor: 'content.media.jump.author',
                         appStoreUrl: 'https://apps.apple.com/kr/app/jump-ar/id1459279731',
@@ -994,7 +994,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_jp_media.mp4',
+                    videoUrl: 'resources/videos/video_jp_media.mp4',
                     height: 260,
                 },
                 {
@@ -1005,19 +1005,19 @@ export class Data {
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_jp_media_code1.png',
+                    imageUrl: 'resources/images/image_jp_media_code1.png',
                     height: 389,
                 },
                 {
-                    imageUrl: 'resources/image_jp_media_code2.png',
+                    imageUrl: 'resources/images/image_jp_media_code2.png',
                     height: 310,
                 },
                 {
-                    imageUrl: 'resources/image_jp_media_code3.png',
+                    imageUrl: 'resources/images/image_jp_media_code3.png',
                     height: 360,
                 },
                 {
-                    imageUrl: 'resources/image_jp_media_code4.png',
+                    imageUrl: 'resources/images/image_jp_media_code4.png',
                     height: 310,
                 },
                 {
@@ -1034,7 +1034,7 @@ export class Data {
             contents: [
                 {
                     application: {
-                        appIconUrl: 'resources/appIcon_mini.png',
+                        appIconUrl: 'resources/images/appIcon_mini.png',
                         appRole: 'content.media.mini.role',
                         appAuthor: 'content.media.mini.author',
                         appStoreUrl: 'https://apps.apple.com/kr/app/minirecord-ar-%ED%95%9C%EA%B8%80-%EB%AA%A8%EB%93%9C-%EC%97%90%EB%9F%AC/id1531355015',
@@ -1106,7 +1106,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    videoUrl: 'resources/video_mn_media_mvplayer.mp4',
+                    videoUrl: 'resources/videos/video_mn_media_mvplayer.mp4',
                     height: 360,
                 },
                 {
@@ -1149,7 +1149,7 @@ export class Data {
             contents: [
                 {
                     application: {
-                        appIconUrl: 'resources/appIcon_jump.png',
+                        appIconUrl: 'resources/images/appIcon_jump.png',
                         appRole: 'content.ar.jump.role',
                         appAuthor: 'content.ar.jump.author',
                         appStoreUrl: 'https://apps.apple.com/kr/app/jump-ar/id1459279731',
@@ -1261,11 +1261,11 @@ export class Data {
                     height: 300,
                 },
                 {
-                    imageUrl: 'resources/image_jp_code_arr_objc1.png',
+                    imageUrl: 'resources/images/image_jp_code_arr_objc1.png',
                     height: 200,
                 },
                 {
-                    imageUrl: 'resources/image_jp_code_arr_objc2.png',
+                    imageUrl: 'resources/images/image_jp_code_arr_objc2.png',
                     height: 280,
                 },
                 {
@@ -1275,7 +1275,7 @@ export class Data {
                     height: 300,
                 },
                 {
-                    imageUrl: 'resources/image_jp_code_arr_objc3.png',
+                    imageUrl: 'resources/images/image_jp_code_arr_objc3.png',
                     height: 380,
                 },
                 {
@@ -1285,7 +1285,7 @@ export class Data {
                     height: 300,
                 },
                 {
-                    imageUrl: 'resources/image_jp_code_arr_objc4.png',
+                    imageUrl: 'resources/images/image_jp_code_arr_objc4.png',
                     height: 300,
                 },
                 {
@@ -1295,7 +1295,7 @@ export class Data {
                     height: 300,
                 },
                 {
-                    imageUrl: 'resources/image_jp_code_arr_objc5.png',
+                    imageUrl: 'resources/images/image_jp_code_arr_objc5.png',
                     height: 300,
                 },
                 {
@@ -1305,7 +1305,7 @@ export class Data {
                     height: 300,
                 },
                 {
-                    imageUrl: 'resources/image_jp_code_arr_unity1.png',
+                    imageUrl: 'resources/images/image_jp_code_arr_unity1.png',
                     height: 280,
                 },
                 {
@@ -1315,7 +1315,7 @@ export class Data {
                     height: 300,
                 },
                 {
-                    imageUrl: 'resources/image_jp_code_arr_unity2.png',
+                    imageUrl: 'resources/images/image_jp_code_arr_unity2.png',
                     height: 117,
                 },
                 {
@@ -1332,7 +1332,7 @@ export class Data {
             contents: [
                 {
                     application: {
-                        appIconUrl: 'resources/appIcon_mini.png',
+                        appIconUrl: 'resources/images/appIcon_mini.png',
                         appRole: 'content.ar.mini.role',
                         appAuthor: 'content.ar.mini.author',
                     },
@@ -1402,7 +1402,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    imageUrl: 'resources/image_mn_ar.jpeg',
+                    imageUrl: 'resources/images/image_mn_ar.jpeg',
                     height: 300,
                 },
             ]
@@ -1432,7 +1432,7 @@ export class Data {
             contents: [
                 {
                     application: {
-                        appIconUrl: 'resources/appIcon_engine.png',
+                        appIconUrl: 'resources/images/appIcon_engine.png',
                         appRole: 'content.graphics.metal.role',
                         appAuthor: 'content.graphics.metal.author',
                         gitHubUrl: 'https://github.com/kwanhong/Game-Engine',
@@ -1503,11 +1503,11 @@ export class Data {
                     height: 40,
                 },
                 {
-                    imageUrl: 'resources/image_code_ge_renderer1.png',
+                    imageUrl: 'resources/images/image_code_ge_renderer1.png',
                     height: 437,
                 },
                 {
-                    imageUrl: 'resources/image_code_ge_renderer2.png',
+                    imageUrl: 'resources/images/image_code_ge_renderer2.png',
                     height: 328,
                 },
                 {
@@ -1525,7 +1525,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    imageUrl: 'resources/image_code_ge_scene.png',
+                    imageUrl: 'resources/images/image_code_ge_scene.png',
                     height: 347,
                 },
                 {
@@ -1543,7 +1543,7 @@ export class Data {
                     height: 40,
                 },
                 {
-                    imageUrl: 'resources/image_code_ge_timing.png',
+                    imageUrl: 'resources/images/image_code_ge_timing.png',
                     height: 315,
                 },
                 {
@@ -1561,7 +1561,7 @@ export class Data {
                     height: 200,
                 },
                 {
-                    videoUrl: 'resources/video_ge_demo.mp4',
+                    videoUrl: 'resources/videos/video_ge_demo.mp4',
                     height: 450,
                 },
             ]
