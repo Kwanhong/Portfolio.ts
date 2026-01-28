@@ -55,7 +55,7 @@ export class EpilogueScene implements Scene {
             text: Language.helper.get('content.button.back'),
             onClick: () => { this.finish() }
         })
-
+        returnButton.text.textKey = 'content.button.back'
         this.self.add(returnButton)
         this.returnButton = returnButton
 

@@ -35,8 +35,10 @@ export class UIPage extends UIObject {
                 message.position.set(message.size.width / 2, -this.size.height / 2 - hSize.height - 10, 0.1);
                 message.translateX(-this.size.width / 2 + mediaWidth + 40);
             });
+            message.textKey = info.message
             this.add(message);
         });
+        title.textKey = info.title
         this.add(title);
 
         if (this.info.imageUrl) {
@@ -75,6 +77,8 @@ export class UIPagingView extends UIView {
     private pages: UIObject[] = [];
     private currentPageIndex: number = 0;
     private indicatorDots: THREE.Mesh[] = [];
+    
+    eventEnabled: boolean = true;
 
     constructor(pages: overlayPageInfo[], bounds: { x: number; y: number; width: number; height: number }, blockUi?: ()=>boolean) {
         super(bounds);
@@ -113,11 +117,11 @@ export class UIPagingView extends UIView {
             this.indicatorDots.push(dot);
             this.add(dot);
         }
-
+        
         EventManager.self.addPointerDownListener((event) => {
-            if (blockUi?.()) {
-                return;
-            }
+            if (!this.eventEnabled) return;
+            if (blockUi?.()) return;
+            
             const rect = Camera.getMouseWorldPosition(event);
             if (this.isPointInside(rect.x, rect.y)) {
                 const localX = rect.x - this.mesh.position.x;

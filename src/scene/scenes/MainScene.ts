@@ -65,7 +65,7 @@ export class MainScene implements Scene {
                 this.finish()
             }
         })
-
+        button.text.textKey = 'main.button.start'
         this.button = button
 
         this.authorText = new UIText(Language.helper.get('main.author'), authorStyle)
@@ -75,6 +75,10 @@ export class MainScene implements Scene {
             this.descriptionText.setSize(size)
             this.authorText.setSize(size)
         });
+        
+        this.authorText.textKey = 'main.author'  
+        this.descriptionText.textKey = 'main.description'
+        this.headlineText.textKey = 'main.headline'
 
         button.visible = false
         Time.coroutineSec(2, () => { }, () => {

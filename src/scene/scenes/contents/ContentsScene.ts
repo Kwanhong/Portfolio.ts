@@ -90,7 +90,7 @@ export class ContentsScene implements Scene {
             text: Language.helper.get('contents.button.back'),
             onClick: this.onBackButtonClicked.bind(this)
         })
-
+        this.returnButton.text.textKey = 'contents.button.back'
         this.finishButton = new UIOpaqueBlurButton({
             width: 80,
             height: 36,
@@ -99,7 +99,7 @@ export class ContentsScene implements Scene {
             text: Language.helper.get('contents.button.finish'),
             onClick: this.finish.bind(this)
         })
-
+        this.finishButton.text.textKey = 'contents.button.finish'
         this.self.add(this.returnButton)
         this.self.add(this.finishButton)
 
@@ -197,13 +197,7 @@ export class ContentsScene implements Scene {
     }
 
     updateSuperstarLayout(star: ContentStar): void {
-
-        // const superstarScaleFactor = 3
         star.superstar?.position.lerp(star.baseAnchor.clone().multiplyScalar(-1), 0.1)
-
-        // const scale = new THREE.Vector3(1, 1, 1).multiplyScalar(superstarScaleFactor)
-        // star.superstar?.button.scale.lerp(scale, 0.2)
-        // star.button.scale.lerp(new THREE.Vector3(1, 1, 1), 0.2)
     }
 
     updateSubstarLayout(star: ContentStar): void {

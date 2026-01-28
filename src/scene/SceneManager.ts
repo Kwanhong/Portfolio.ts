@@ -21,12 +21,15 @@ export class SceneManager {
     private scenes: Array<Scene> = []
     private overlay: OverlayScene
 
+    static self?: SceneManager = undefined;
+
     constructor() {
+        SceneManager.self = this;
         this.mother.background = Color.helper.get('background.primary')
         this.mother.add(this.camera.self)
         Lights.addToScene(this.mother)
 
-        Language.helper.set('kr')
+        Language.helper.set('en')
         PerlinNoise.setSeed(Math.random() * 65536)
 
         let mainScene = new MainScene(this.mother, () => {

@@ -3,17 +3,18 @@ import * as THREE from "three";
 export class UIView extends UIObject {
     mesh: THREE.Mesh;
     cornerRadius: number;
-    constructor(bounds: { x: number; y: number; width: number; height: number }, roundCorner: number = 7) {
+    crystalic: boolean = false;
+    constructor(bounds: { x: number; y: number; width: number; height: number }, roundCorner: number = 7, crystal: boolean = false) {
         super();
 
+        this.crystalic = crystal;
         const geometry = this.roundedPlaneGeometry(bounds.width, bounds.height, roundCorner);
-        // const material = new THREE.MeshPhysicalMaterial({
-        //     transmission: 1.0, // Fully transparent to the background capture
-        //     roughness: 0.3,    // Controls the amount of blur (0 is clear, 1 is very blurred)
-        //     thickness: 1.7,    // Required for roughness to take effect
-        //     ior: 1.5,          // Index of refraction
-        // })
-        const material = new THREE.MeshBasicMaterial({ color: 0x222222, opacity: 0.6, transparent: true });
+        const material = this.crystalic ? new THREE.MeshPhysicalMaterial({
+            transmission: 1.03, // Fully transparent to the background capture
+            roughness: 0.8,    // Controls the amount of blur (0 is clear, 1 is very blurred)
+            thickness: 1.0,    // Required for roughness to take effect
+            ior: 1.5,          // Index of refraction
+        }) : new THREE.MeshBasicMaterial({ color: 0x222222, opacity: 0.6, transparent: true });
 
         this.cornerRadius = roundCorner;
         this.mesh = new THREE.Mesh(geometry, material);
@@ -25,7 +26,7 @@ export class UIView extends UIObject {
     }
 
     setTexture(texture: THREE.Texture): void {
-        const material = this.mesh.material as THREE.MeshBasicMaterial;
+        const material = this.crystalic ? this.mesh.material as THREE.MeshPhysicalMaterial : this.mesh.material as THREE.MeshBasicMaterial;
         material.map = texture;
         material.needsUpdate = true;
     }
@@ -40,10 +41,9 @@ export class UIView extends UIObject {
     }
 
     setOpacity(opacity: number): void {
-        const material = this.mesh.material as THREE.MeshPhysicalMaterial;
+        const material = this.crystalic ? this.mesh.material as THREE.MeshPhysicalMaterial : this.mesh.material as THREE.MeshBasicMaterial;
         material.opacity = opacity;
         material.transparent = opacity < 1.0;
         material.needsUpdate = true;
     }
-
 }

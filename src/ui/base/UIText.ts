@@ -2,17 +2,19 @@ import { TextMesh } from '@objects/TextMesh'
 import { UIObject } from './UIObject'
 import type { TextStyle } from '@styles/TextStyle'
 import * as THREE from 'three'
+import { Language } from '@data/Language'
 
 export class UIText extends UIObject {
     textMesh: TextMesh
+    textKey?: string;
     get worldBounds() {
-        if (!this.bounds) return {min: {x: -50, y: -50}, max: {x: 50, y: 50}}
-        return {min: {x: this.bounds.min.x - this.position.x, y: this.bounds.min.y - this.position.y}, max: {x: this.bounds.max.x - this.position.x, y: this.bounds.max.y - this.position.y}}
+        if (!this.bounds) return { min: { x: -50, y: -50 }, max: { x: 50, y: 50 } }
+        return { min: { x: this.bounds.min.x - this.position.x, y: this.bounds.min.y - this.position.y }, max: { x: this.bounds.max.x - this.position.x, y: this.bounds.max.y - this.position.y } }
     }
-    constructor(text: string, style: TextStyle, onRender: ((bounds: { min: { x: number, y: number }, max: { x: number, y: number } }, size: { width: number, height: number }) => void) = ()=>{}) {
+    constructor(text: string, style: TextStyle, onRender: ((bounds: { min: { x: number, y: number }, max: { x: number, y: number } }, size: { width: number, height: number }) => void) = () => { }) {
         super()
 
-        this.textMesh = new TextMesh(text, style, (bounds, size)=>{
+        this.textMesh = new TextMesh(text, style, (bounds, size) => {
             this.bounds = bounds
             this.size = size
             onRender(bounds, size)
@@ -51,5 +53,13 @@ export class UIText extends UIObject {
     setText(text: string): void {
         this.textMesh.textMesh.text = text
         this.textMesh.textMesh.sync()
-    }   
+    }
+
+    updateText(lang?: string): void {
+        if (this.textKey && lang) {
+            const text = Language.helper.get(this.textKey as any, '', lang as any)
+            this.textMesh.textMesh.text = text
+            this.textMesh.textMesh.sync()
+        }
+    }
 }

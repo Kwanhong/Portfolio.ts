@@ -89,6 +89,7 @@ export class ContentStar extends UIObject {
             cornerRadius: info.size / 2,
             onClick: info.onClick
         })
+        this.button.text.textKey = info.title
         this.add(this.button)
     }
 
@@ -110,6 +111,7 @@ export class ContentStar extends UIObject {
             cornerRadius: info.size / 2,
             onClick: info.onClick
         })
+        this.button.text.textKey = info.title
         this.add(this.button)
     }
 

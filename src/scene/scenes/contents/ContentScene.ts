@@ -55,6 +55,7 @@ export class ContentScene implements Scene {
             onClick: () => { this.return() }
         })
 
+        returnButton.text.textKey = 'content.button.back'
         this.self.add(returnButton)
         this.returnButton = returnButton
 
