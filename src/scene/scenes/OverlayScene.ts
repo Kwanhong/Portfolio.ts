@@ -57,7 +57,7 @@ export class OverlayScene implements Scene {
 
         this.onFinished = onFinished;
 
-        this.settingsView = new UIView({ x: 0, y: Camera.size.height / 2, width: Camera.size.width, height: Camera.size.height }, 0, true);
+        this.settingsView = new UIView({ x: 0, y: Camera.size.height / 2 + 50, width: Camera.size.width + 100, height: Camera.size.height + 100 }, 0, true);
         this.self.add(this.settingsView);
         this.settingsView.translateZ(100)
 
