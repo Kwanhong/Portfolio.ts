@@ -3,7 +3,7 @@ import type { Scene } from './Scene';
 import { type overlayInfo } from '@data/Info';
 import { UIPagingView } from '@ui/components/UIPagingView';
 import { UIText } from '@ui/base/UIText';
-import { defaultDescriptionStyle, defaultHeadlineStyle, uiBaselineStyle, type TextStyle } from '@ui/styles/TextStyle';
+import { defaultDescriptionStyle, defaultHeadlineStyle, type TextStyle } from '@ui/styles/TextStyle';
 import { UIButton, UIOpaqueBlurButton } from '@ui/base/UIButton';
 import { Language } from '@data/Language';
 import { Time } from '../../core/Time';
