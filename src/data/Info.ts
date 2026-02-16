@@ -1877,7 +1877,7 @@ export class Data {
             title: 'introduction.title',
             contents: [
                 {
-                    imageUrl: 'resources/images/wallpaper1.png',
+                    imageUrl: 'resources/images/wallpaper2.png',
                     height: 300,
                 },
                 {
