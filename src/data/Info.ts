@@ -1871,4 +1871,37 @@ export class Data {
             ]
         }
     }
+
+    static get introductionInfo(): contentsInfo {
+        return {
+            title: 'introduction.title',
+            contents: [
+                {
+                    imageUrl: 'resources/images/wallpaper1.png',
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'introduction.message1',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 300,
+                },
+                {
+                    text: {
+                        text: 'introduction.message2',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                },
+                {
+                    text: {
+                        text: 'introduction.message3',
+                        textStyle: { ...defaultDescriptionStyle, fontSize: 10 },
+                    },
+                    height: 200,
+                }
+            ]
+        }
+    }
 }

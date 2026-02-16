@@ -9,6 +9,7 @@ type ScriptType =
     'main.description' |
     'main.author' |
     'main.button.start' |
+    'main.button.introduction' |
     'contents.title' |
     'contents.description' |
     'contents.button.back' |
@@ -252,13 +253,28 @@ type ScriptType =
     'epilogue.learnmore.title' |
     'epilogue.learnmore.description' |
     'setting.selection.title' |
-    'setting.selection.language'
-
+    'setting.selection.language' |
+    'introduction.title' |
+    'introduction.message1' |
+    'introduction.message2' |
+    'introduction.message3' 
 
 const scripts = {
     en: {
         'setting.selection.title': 'Please select your language',
         'setting.selection.language': 'English',
+
+       'introduction.title': 'About me',
+
+       'introduction.message1': `I approach problems from a systems perspective.
+Rather than focusing only on implementation, I try to understand the overall flow and context first.
+Clear and explainable design matters more than quick fixes.`,
+       'introduction.message2': `I have worked on connecting different layers — from Web-based 3D environments to AR integrations and native bridges.
+My focus is on defining clear boundaries between components and building systems that remain flexible over time.
+New technologies are evaluated in context, not by trend.`,
+       'introduction.message3': `I believe good code is not only functional, but understandable.
+My goal is to build systems that remain clear and explainable over time.
+I am always open to discussing new projects and opportunities, so please feel free to reach out!`,
 
         // Overlay Scene
         'overlay.main.title': 'Main Screen Help',
@@ -293,6 +309,7 @@ const scripts = {
         'main.description': 'focused on real-time graphics and interactive systems engineering.',
         'main.author': 'Created by Park Kwanhong',
         'main.button.start': 'View Projects',
+        'main.button.introduction': 'Introduction',
 
         // Contents Scene
         'contents.title': 'PORTFOL.iO',
@@ -860,6 +877,17 @@ const scripts = {
         'setting.selection.title': '표시될 언어를 선택해 주세요',
         'setting.selection.language': '한국어',
 
+       'introduction.title': 'About me',
+       'introduction.message1': `저는 기술을 기능의 집합이 아니라 하나의 시스템으로 바라보는 개발자입니다.
+개별 구현보다 전체 흐름을 먼저 이해하고, 어디에서 복잡성이 발생하는지 파악하는 데 시간을 씁니다.
+문제를 빠르게 해결하는 것보다, 왜 그렇게 구성되어야 하는지를 설명할 수 있는 상태를 더 중요하게 생각합니다.`,
+       'introduction.message2': `Web 기반 3D 환경, AR 연동, 네이티브 브리지 설계 등 서로 다른 영역을 연결하는 작업을 경험했습니다.
+각 레이어의 역할을 분리하고 경계를 명확히 하면서, 변경에 유연한 구조를 만드는 데 집중해왔습니다.
+새로운 기술을 도입할 때도 유행이나 난이도보다 프로젝트 맥락에 적합한지를 기준으로 판단합니다.`,
+       'introduction.message3': `좋은 코드는 동작하는 코드가 아니라, 이해할 수 있는 코드라고 생각합니다.
+시간이 지나도 설명 가능한 시스템을 만드는 것이 제 목표입니다.
+코드 리뷰, 문서화, 팀 내 지식 공유에도 적극적으로 참여하며, 협업에서 발생하는 의사소통 격차를 줄이는 데 노력합니다.`,
+
         // Overlay Scene
         'overlay.main.title': '메인 화면 도움말',
         'overlay.main.message': '마우스를 움직이거나 클릭해 화면이 어떻게 반응하는지 확인해보세요.',
@@ -894,6 +922,7 @@ const scripts = {
         'main.description': '실시간 그래픽과 인터랙션 시스템을 중심으로 한 개인 포트폴리오입니다.',
         'main.author': 'Created by Park Kwanhong',
         'main.button.start': '프로젝트 보기',
+        'main.button.introduction': '소개',
 
         // Contents Scene
         'contents.title': 'PORTFOL.iO',

@@ -41,11 +41,12 @@ export class MainScene implements Scene {
     private clips: THREE.AnimationClip[] = []
     private previousAction?: THREE.AnimationAction
     private blowing: boolean = false
-    private button!: UIOpaqueBlurButton
+    private startProjectButton!: UIOpaqueBlurButton
+    private startIntroductionButton!: UIOpaqueBlurButton
 
     private githubButton!: UIImageButton
 
-    constructor(scene: THREE.Scene, onFinished: () => void = () => { }) {
+    constructor(scene: THREE.Scene, onFinished: () => void = () => { }, onStartIntroduction: () => void = () => { }) {
 
         this.mother = scene
         this.mother.add(this.self)
@@ -55,7 +56,7 @@ export class MainScene implements Scene {
         const headlineStyle = { ...defaultHeadlineStyle, fontSize: 72, color: Color.helper.getHex('text.primary') }
         const descriptionStyle = { ...defaultDescriptionStyle, color: Color.helper.getHex('text.secondary') }
         const authorStyle = { ...descriptionStyle, fontSize: 13, color: Color.helper.getHex('foreground.primary') }
-        const button = new UIOpaqueBlurButton({
+        const startProjectButton = new UIOpaqueBlurButton({
             width: 80,
             height: 36,
             cornerRadius: 18,
@@ -65,8 +66,25 @@ export class MainScene implements Scene {
                 this.finish()
             }
         })
-        button.text.textKey = 'main.button.start'
-        this.button = button
+        startProjectButton.text.textKey = 'main.button.start'
+        this.startProjectButton = startProjectButton
+
+        const startIntroductionButton = new UIOpaqueBlurButton({
+            width: 80,
+            height: 36,
+            cornerRadius: 18,
+            style: { ...defaultBaselineStyle, fontSize: 11, anchorX: 'center', textAlign: 'center' },
+            text: Language.helper.get('main.button.introduction'),
+            onClick: () => {
+                this.enabled = false
+                onStartIntroduction()
+            }
+        })
+
+        startIntroductionButton.text.textKey = 'main.button.introduction'
+        startIntroductionButton.position.set(0, -200, 100)
+        this.startIntroductionButton = startIntroductionButton
+        this.self.add(startIntroductionButton)
 
         this.authorText = new UIText(Language.helper.get('main.author'), authorStyle)
         this.descriptionText = new UIText(Language.helper.get('main.description'), descriptionStyle)
@@ -80,9 +98,11 @@ export class MainScene implements Scene {
         this.descriptionText.textKey = 'main.description'
         this.headlineText.textKey = 'main.headline'
 
-        button.visible = false
+        startProjectButton.visible = false
+        startIntroductionButton.visible = false
         Time.coroutineSec(2, () => { }, () => {
-            button.visible = true
+            startProjectButton.visible = true
+            startIntroductionButton.visible = true
             let opacity = 0
             let fadeInDuration = 3
             Time.coroutineSec(fadeInDuration, () => {
@@ -90,13 +110,15 @@ export class MainScene implements Scene {
                 const sinTol = Math.sin(tol * Math.PI / 2)
                 opacity += sinTol
                 opacity = Helper.clamp(opacity, 0, 1)
-                button.setOpacity(opacity)
+                startProjectButton.setOpacity(opacity)
+                startIntroductionButton.setOpacity(opacity)
                 this.headlineText.setOpacity(opacity)
                 this.descriptionText.setOpacity(opacity)
                 this.authorText.setOpacity(opacity)
-                button.setOpacity(opacity)
+                startProjectButton.setOpacity(opacity)
             }, () => {
-                button.setOpacity(1)
+                startProjectButton.setOpacity(1)
+                startIntroductionButton.setOpacity(1)
                 this.headlineText.setOpacity(1)
                 this.descriptionText.setOpacity(1)
                 this.authorText.setOpacity(1)
@@ -108,8 +130,8 @@ export class MainScene implements Scene {
         this.descriptionText.position.set(5, -60, 100)
         this.authorText.position.set(5, -87, 100)
 
-        button.position.set(0, -150, 100)
-        button.setOpacity(0)
+        startProjectButton.position.set(0, -150, 100)
+        startProjectButton.setOpacity(0)
 
         this.authorText.setOpacity(0)
         this.descriptionText.setOpacity(0)
@@ -118,7 +140,7 @@ export class MainScene implements Scene {
         this.self.add(this.headlineText)
         this.self.add(this.descriptionText)
         this.self.add(this.authorText)
-        this.self.add(button)
+        this.self.add(startProjectButton)
 
         this.flow = new FlowField(30, Camera.size.width, Camera.size.height)
 
@@ -291,7 +313,8 @@ export class MainScene implements Scene {
             }
         }
 
-        this.button.update(dt);
+        this.startProjectButton.update(dt);
+        this.startIntroductionButton.update(dt);
         this.animationMixer?.update(dt)
     }
 

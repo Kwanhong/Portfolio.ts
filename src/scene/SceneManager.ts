@@ -14,6 +14,7 @@ import { ContentScene } from './scenes/contents/ContentScene'
 import { Data } from '@data/Info'
 import { UIButton } from '@ui/base/UIButton'
 import { UIScrollView } from '@ui/components/UIScrollView'
+import { IntroductionScene } from './scenes/IntroductionScene'
 
 export class SceneManager {
     mother = new THREE.Scene()
@@ -43,12 +44,14 @@ export class SceneManager {
             }
             this.overlay.setOverlay(Data.getOverlayInfo(1));
             this.overlay.run()
+        }, () => {
+            introductionScene.run()
         })
         let contentScene = new ContentScene(this.mother, () => {
-            this.scenes[1]?.run()
+            contentsScene.run()
         })
         let contentsScene = new ContentsScene(this.mother, () => {
-            this.scenes[0]?.run()
+            mainScene.run()
         }, (info) => {
             contentScene.infos = info
             contentScene.run()
@@ -62,24 +65,29 @@ export class SceneManager {
             this.overlay.setOverlay(Data.getOverlayInfo(2));
             this.overlay.run()
         }, () => {
-            this.scenes[3]?.run()
+            epilogueScene.run()
             this.overlay.setOverlay(Data.getOverlayInfo(3));
             this.overlay.run()
         })
 
         let epilogueScene = new EpilogueScene(this.mother, ()=> {
-            this.scenes[0]?.run()
+            mainScene.run()
+        })
+
+        let introductionScene = new IntroductionScene(this.mother, () => {
+            mainScene.run()
         })
 
         this.scenes.push(mainScene)
         this.scenes.push(contentsScene)
         this.scenes.push(contentScene)
         this.scenes.push(epilogueScene)
+        this.scenes.push(introductionScene)
 
-        this.scenes[0].run()
+        mainScene.run()
 
 
-        this.recursivelySetUIButtonEnabled(this.scenes[0].self, false)
+        this.recursivelySetUIButtonEnabled(mainScene.self, false)
         this.overlay = new OverlayScene(this.mother, () => {
             for (const scene of this.scenes) {
                 this.recursivelySetUIButtonEnabled(scene.self, true)
